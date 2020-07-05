@@ -2,13 +2,14 @@ import React, { useState, useContext } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // マテリアル
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-const Login = ({ history }) => {
+const SignIn = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const user = useContext(AuthContext);
@@ -85,7 +86,9 @@ const Login = ({ history }) => {
         </Button>
         <div>
           新規登録は
-          <a style={{ textDecoration: "underline" }}>こちら</a>
+          <Link to="/SignUp" style={{ textDecoration: "underline" }}>
+            こちら
+          </Link>
         </div>
         <div>
           パスワードをお忘れの方は
@@ -96,4 +99,4 @@ const Login = ({ history }) => {
   );
 };
 
-export default Login;
+export default SignIn;

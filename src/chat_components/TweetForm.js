@@ -10,11 +10,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 
 const TweetForm = ({
   text,
   setText,
-  tweets,
   addTweet,
   setEmojiType,
   emojiType,
@@ -22,6 +22,8 @@ const TweetForm = ({
   setImage,
   imageUrl,
   setImageUrl,
+  upload,
+  setUpload,
 }) => {
   // ツイート追加
   const onClickTweet = (e) => {
@@ -52,8 +54,6 @@ const TweetForm = ({
   };
 
   // 画像
-  const [upload, setUpload] = useState(false);
-
   const handleImage = (e) => {
     const image = e.target.files[0];
     setImage(image);
@@ -126,9 +126,14 @@ const TweetForm = ({
             style={{ marginRight: 30, marginLeft: 30 }}
           />
           <form>
-            <textarea
+            <TextField
+              id="outlined-multiline-static"
+              label="140文字以内でメッセージを入力してください"
+              multiline
+              rows={4}
+              defaultValue="Default Value"
+              variant="outlined"
               type="text"
-              placeholder="140文字以内でメッセージを入力してください"
               value={text}
               onChange={(e) => setText(e.target.value)}
               style={{ height: 100, width: 400, border: "none" }}

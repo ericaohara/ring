@@ -1,7 +1,7 @@
 import React from "react";
 import TweetItem from "./TweetItem";
 
-const TweetList = ({ tweets, imageUrl, deleteTweet }) => {
+const TweetList = ({ tweets, deleteTweet }) => {
   return (
     <>
       {tweets.map((tweet) => {
@@ -9,7 +9,7 @@ const TweetList = ({ tweets, imageUrl, deleteTweet }) => {
           <TweetItem
             content={tweet.content}
             time={tweet.time}
-            imageUrl={imageUrl}
+            imageUrl={tweet.image}
             id={tweet.id}
             deleteTweet={deleteTweet}
           />

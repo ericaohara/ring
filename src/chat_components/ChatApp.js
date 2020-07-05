@@ -13,13 +13,21 @@ const ChatApp = () => {
   const [tweets, setTweets] = useState([]);
 
   const addTweet = (text) => {
-    if (text.trim() === "") {
+    if (text.trim() === "" && upload === false) {
       alert("メッセージを入力してください");
     } else if (text.length > 140) {
       alert("メッセージは140文字以内で入力してください");
     } else {
-      setTweets([{ content: text, time, id: shortid.generate() }, ...tweets]);
+      setTweets([
+        { content: text, time, id: shortid.generate(), image: imageUrl },
+        ...tweets,
+      ]);
     }
+    setImageUrl("");
+  };
+
+  const deleteTweet = (id) => {
+    setTweets(tweets.filter((tweet) => tweet.id !== id));
   };
 
   // 時間
@@ -29,11 +37,12 @@ const ChatApp = () => {
   const day = now.getDate();
   const hour = now.getHours();
   const min = now.getMinutes();
-  const time = `${hour}:${min}  ${mon}.${day} (${year})`;
+  const time = `${hour}:${min}   ${mon}/${day} (${year})`;
 
   // 画像
   const [image, setImage] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [upload, setUpload] = useState(false);
 
   // 絵文字
   const [emojiType, setEmojiType] = useState(null);
@@ -43,10 +52,6 @@ const ChatApp = () => {
     setEmojiType(!emojiType);
     // 絵文字を表示させるようにする
     setText(text + emoji.native);
-  };
-
-  const deleteTweet = (id) => {
-    setTweets(tweets.filter((tweet) => tweet.id !== id));
   };
 
   return (
@@ -62,6 +67,8 @@ const ChatApp = () => {
         setImage={setImage}
         imageUrl={imageUrl}
         setImageUrl={setImageUrl}
+        upload={upload}
+        setUpload={setUpload}
       />
       {emojiType && (
         <Picker
@@ -90,12 +97,7 @@ const ChatApp = () => {
         />
       )}
 
-      <TweetList
-        tweets={tweets}
-        imageUrl={imageUrl}
-        tweets={tweets}
-        deleteTweet={deleteTweet}
-      />
+      <TweetList tweets={tweets} deleteTweet={deleteTweet} />
     </>
   );
 };

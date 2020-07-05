@@ -7,6 +7,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
+import { DialogContent } from "@material-ui/core";
 
 const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
   const useStyles = makeStyles((theme) => ({
@@ -21,7 +22,11 @@ const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
 
   const image = () => {
     return (
-      <img src={imageUrl} alt="uploaded" style={{ height: 250, width: 500 }} />
+      <img
+        src={imageUrl}
+        alt="uploadImage"
+        style={{ height: 250, width: 500 }}
+      />
     );
   };
 
@@ -40,6 +45,7 @@ const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
           <ListItemText secondary={time}>{content}</ListItemText>
           <Button onClick={onDeleteClick}>削除</Button>
         </ListItem>
+        {imageUrl ? image() : null}
         <Divider variant="inset" component="li" />
       </List>
     </div>

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unmount = firebase.auth().onAuthStateChanged((user) => {
       setUser(user);
+      console.log(user);
 
       // unmount
       return () => {
