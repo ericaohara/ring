@@ -1,9 +1,29 @@
-.position-all {
-  position: relative;
+html,
+body,
+.app {
+  height: 100vh;
+  /* background: #fff5ee; */
+  padding: 1em;
 }
 
-.position-center {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
+.signUp__color {
+  color: #b0c4de;
+}
+
+.signIn__color {
+  color: #ffdab9;
+}
+
+/* .main__tweet {
+  height: 100vh;
+  overflow-y: scroll;
+} */
+
+.tweet__form {
+  /* position: fixed !important;
+  margin-left: 150px;
+  margin-top: 0;
+  left: 0;
+  right: 1rem;   */
+  z-index: 10;
 }

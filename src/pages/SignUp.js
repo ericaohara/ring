@@ -1,26 +1,22 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import firebase from "../config/firebase";
-import "../style.css";
 
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(() => {
-  createStyles({
-    root: {
-      color: "#FFB549",
-    },
-  });
-});
+import {
+  Grid,
+  Form,
+  Segment,
+  Button,
+  Header,
+  Icon,
+  Message,
+} from "semantic-ui-react";
 
 const SignUp = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [userName, setUserName] = useState("");
-
-  const classes = useStyles();
 
   const onClickSubmit = (e) => {
     e.preventDefault();
@@ -34,12 +30,14 @@ const SignUp = ({ history }) => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
+        // ユーザーのプロフィールを更新
         const user = firebase.auth().currentUser;
 
         user
           .updateProfile({
-            displayName: "Jane Q. User",
-            photoURL: "https://example.com/jane-q-user/profile.jpg",
+            displayName: userName,
+            email: email,
+            password: password,
           })
           .then(function () {
             history.push("/");
@@ -53,78 +51,76 @@ const SignUp = ({ history }) => {
       });
   };
 
+  // FavoriteBorderRoundedIcon
+
   return (
     <>
-      <div className="position-all">
-        <div className="position-center">
-          <h1>新規登録</h1>
-          <form onSubmit={onClickSubmit} className={classes.root}>
-            <div>
-              <TextField
-                required
-                id="userName"
-                label="ユーザー名"
-                type="userName"
-                id="userName"
+      <Grid textAlign="center" verticalAlign="middle" className="app">
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as="h2" icon color="grey" textAlign="center">
+            <Icon name="chess queen" className="signUp__color" size="mini" />
+            新規登録
+          </Header>
+          <Form onSubmit={onClickSubmit} size="large">
+            <Segment stacked>
+              <Form.Input
+                fluid
+                type="text"
                 name="userName"
+                icon="user"
+                iconPosition="left"
                 placeholder="ユーザー名"
                 value={userName}
                 onChange={(e) => {
                   setUserName(e.target.value);
                 }}
               />
-            </div>
-            <div>
-              <TextField
-                required
-                id="Email"
-                label="Email"
+              <Form.Input
+                fluid
                 type="email"
-                id="email"
                 name="email"
-                placeholder="Email"
+                icon="mail"
+                iconPosition="left"
+                placeholder="メールアドアレス"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
               />
-            </div>
-            <div>
-              <TextField
-                required
-                label="パスワード"
+              <Form.Input
+                fluid
                 type="password"
-                id="password"
                 name="password"
-                placeholder="password"
-                style={{ marginTop: 10 }}
+                icon="lock"
+                iconPosition="left"
+                placeholder="パスワード"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
               />
-            </div>
-            <div>
-              <TextField
-                required
-                label="パスワード再確認用"
+              <Form.Input
+                fluid
                 type="password"
-                id="confirmPassword"
                 name="confirmPassword"
-                placeholder="password"
-                style={{ marginTop: 10 }}
+                icon="lock"
+                iconPosition="left"
+                placeholder="パスワード確認用"
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                 }}
               />
-            </div>
-            <Button type="submit" style={{ marginTop: "30px" }}>
-              アカウントを登録する
-            </Button>
-          </form>
-        </div>
-      </div>
+              <Button basic fluid size="large">
+                アカウントを登録する
+              </Button>
+            </Segment>
+          </Form>
+          <Message>
+            アカウント登録済みの方は <Link to="/SignIn">こちら</Link>
+          </Message>
+        </Grid.Column>
+      </Grid>
     </>
   );
 };

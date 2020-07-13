@@ -1,5 +1,5 @@
 import React from "react";
-import Checkbox from "@material-ui/core/Checkbox";
+import { Checkbox } from "semantic-ui-react";
 
 const Item = ({ value, todos, setTodos, isDone, id }) => {
   // 一個のチェックボックスだけにチェック出来る処理
@@ -31,8 +31,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
     <>
       <li>
         <Checkbox
-          color="primary"
-          inputProps={{ "aria-label": "checkbox" }}
+          color="blue"
           // valueにstate入れるのと同じ考え方
           checked={isDone}
           name={id}

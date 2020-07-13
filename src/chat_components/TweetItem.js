@@ -1,25 +1,9 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
-import { DialogContent } from "@material-ui/core";
+import React, { useContext } from "react";
+import { AuthContext } from "../AuthService";
+
+import { Button, Comment } from "semantic-ui-react";
 
 const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      width: "100%",
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  }));
-
-  const classes = useStyles();
-
   const image = () => {
     return (
       <img
@@ -34,21 +18,30 @@ const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
     deleteTweet(id);
   };
 
+  const user = useContext(AuthContext);
+
   return (
-    <div style={{ marginLeft: 10, marginTop: 30 }}>
-      <List className={classes.root}>
-        <ListItem>
-          <ListItemAvatar>
-            <ListItemText secondary="name" />
-            <Avatar />
-          </ListItemAvatar>
-          <ListItemText secondary={time}>{content}</ListItemText>
-          <Button onClick={onDeleteClick}>削除</Button>
-        </ListItem>
-        {imageUrl ? image() : null}
-        <Divider variant="inset" component="li" />
-      </List>
-    </div>
+    <>
+      <Comment flid>
+        <Comment.Avatar src={user.avatar} />
+        <Comment.Content>
+          <Comment.Author as="a">{user.displayName}</Comment.Author>
+          <Comment.Text>{content}</Comment.Text>
+          <Comment.Metadata style={{ color: "grey" }}>
+            <div>{time}</div>
+          </Comment.Metadata>
+          <Comment.Text>{imageUrl ? image() : null}</Comment.Text>
+          <Button
+            circular
+            basic
+            icon="times"
+            size="mini"
+            color="red"
+            onClick={onDeleteClick}
+          />
+        </Comment.Content>
+      </Comment>
+    </>
   );
 };
 

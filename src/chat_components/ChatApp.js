@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import firebase from "../config/firebase";
 import TweetForm from "./TweetForm";
 import TweetList from "./TweetList";
 import shortid from "shortid";
+import { Segment } from "semantic-ui-react";
 
 // 絵文字
 import { Picker } from "emoji-mart";
@@ -91,13 +93,15 @@ const ChatApp = () => {
           }}
           style={{
             position: "absolute",
-            zIndex: "1",
+            zIndex: "20",
           }}
           native
         />
       )}
-
-      <TweetList tweets={tweets} deleteTweet={deleteTweet} />
+      <Segment>
+        {/* <Comment.Group className="main__tweet" /> */}
+        <TweetList tweets={tweets} deleteTweet={deleteTweet} />
+      </Segment>
     </>
   );
 };

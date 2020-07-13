@@ -1,8 +1,7 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import Icon from "@material-ui/core/Icon";
+import React, { useState } from "react";
+import { Button, Input, Grid } from "semantic-ui-react";
 
-const Form = ({ value, setValue, addTodo, deleteTodo, todos, allCheckBox }) => {
+const Form = ({ value, setValue, addTodo, deleteTodo, allCheckBox }) => {
   // 追加
   const onButtonClick = (e) => {
     e.preventDefault();
@@ -24,25 +23,31 @@ const Form = ({ value, setValue, addTodo, deleteTodo, todos, allCheckBox }) => {
 
   return (
     <>
-      <input
+      <Input
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        style={{ height: 30, width: 250, fontSize: 18 }}
       />
       <br />
       <br />
-      <div>
-        <Button onClick={deleteButton}>
-          <Icon className="fa fa-trash-alt" />
-        </Button>
-        <Button onClick={allSelectButton}>
-          <Icon className="far fa-check-square" />
-        </Button>
-        <Button onClick={onButtonClick}>
-          <Icon className="fa fa-pencil-alt" />
-        </Button>
-      </div>
+      <Grid>
+        <Grid.Row columns={4}>
+          <Grid.Column>
+            <Button
+              basic
+              circular
+              icon="trash alternate outline"
+              onClick={deleteButton}
+            />
+          </Grid.Column>
+          <Grid.Column>
+            <Button basic circular icon="check" onClick={allSelectButton} />
+          </Grid.Column>
+          <Grid.Column>
+            <Button basic circular icon="edit" onClick={onButtonClick} />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </>
   );
 };

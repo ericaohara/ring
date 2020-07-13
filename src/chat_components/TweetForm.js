@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import firebase, { storage } from "../config/firebase";
 
-// マテリアル
-import Avatar from "@material-ui/core/Avatar";
-import Icon from "@material-ui/core/Icon";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import { Modal, Segment, Input, Button } from "semantic-ui-react";
 
 const TweetForm = ({
   text,
@@ -25,6 +16,9 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
+  // firebase
+  const [message, setMessage] = useState("");
+
   // ツイート追加
   const onClickTweet = (e) => {
     e.preventDefault();
@@ -35,12 +29,8 @@ const TweetForm = ({
 
   // ダイアログ
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // 絵文字
   const onClickEmoji = () => {
@@ -67,10 +57,8 @@ const TweetForm = ({
     console.log(snapshot);
   };
 
-  const error = (error) => {
-    // エラーハンドリング
-    console.log(error);
-  };
+  // エラーハンドリング
+  const error = (error) => console.log(error);
 
   const complete = () => {
     // 完了後の処理
@@ -103,6 +91,7 @@ const TweetForm = ({
   const uploadClick = () => {
     setUpload(true);
     setOpen(false);
+    console.log(imageUrl);
   };
 
   const preview = () => {
@@ -118,69 +107,59 @@ const TweetForm = ({
   };
 
   return (
-    <>
-      <form>
-        <div style={{ display: "flex", marginTop: 30 }}>
-          <Avatar
-            alt="Cindy Baker"
-            style={{ marginRight: 30, marginLeft: 30 }}
-          />
-          <form>
-            <TextField
-              id="outlined-multiline-static"
-              label="140文字以内でメッセージを入力してください"
-              multiline
-              rows={4}
-              defaultValue="Default Value"
-              variant="outlined"
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              style={{ height: 100, width: 400, border: "none" }}
-            />
-            {upload ? preview() : false}
+    <Segment className="tweet__form">
+      {/* <Avatar alt="Cindy Baker" style={{ marginRight: 30, marginLeft: 30 }} /> */}
+      <Input
+        placeholder="140文字以内でメッセージを入力してください"
+        // style={{ minHeight: 100, width: 400 }}
+        fluid
+        transparent
+        focus
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      {upload ? preview() : false}
+      <br />
+      <Button
+        basic
+        circular
+        icon="camera"
+        iconPosition="right"
+        size="medium"
+        onClick={handleOpen}
+      />
+      <Modal basic open={open} onClose={handleClose}>
+        <Modal.Header>写真をアップロード</Modal.Header>
+        <Modal.Content>
+          ファイルを選択から画像を選択して決定を押してください
+          <form onSubmit={onSubmit}>
+            <Input type="file" onChange={handleImage} />
+            <button onClick={uploadClick}>決定</button>
           </form>
-        </div>
-        <br />
+        </Modal.Content>
+        <Button onClick={handleClose}>戻る</Button>
+      </Modal>
 
-        <div style={{ marginLeft: 100 }}>
-          <Button onClick={handleOpen}>
-            <Icon className="fa fa-camera-retro" />
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"写真をアップロード"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                ファイルを選択から画像を選択して決定を押してください
-              </DialogContentText>
-              <div>
-                <form onSubmit={onSubmit}>
-                  <input type="file" onChange={handleImage} />
-                  <button onClick={uploadClick}>決定</button>
-                </form>
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>戻る</Button>
-            </DialogActions>
-          </Dialog>
-
-          <Button onClick={onClickEmoji}>
-            <Icon className="far fa-smile" />
-          </Button>
-          <Button onClick={onClickTweet}>
-            <Icon className="far fa-comment" />
-          </Button>
-        </div>
-      </form>
-    </>
+      <Button
+        basic
+        circular
+        icon="smile outline"
+        iconPosition="right"
+        size="medium"
+        onClick={onClickEmoji}
+      />
+      <Button
+        basic
+        circular
+        icon="paper plane outline"
+        iconPosition="right"
+        size="medium"
+        onClick={onClickTweet}
+      >
+        つぶやく
+      </Button>
+    </Segment>
   );
 };
 

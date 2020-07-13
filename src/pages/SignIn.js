@@ -5,25 +5,20 @@ import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 // マテリアル
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  Grid,
+  Form,
+  Segment,
+  Button,
+  Header,
+  Message,
+  Icon,
+} from "semantic-ui-react";
 
 const SignIn = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const user = useContext(AuthContext);
-
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      "& .MuiTextField-root": {
-        margin: theme.spacing(1),
-        width: "25ch",
-      },
-    },
-  }));
-
-  const classes = useStyles();
 
   const onClickSubmit = (e) => {
     e.preventDefault();
@@ -44,57 +39,59 @@ const SignIn = ({ history }) => {
 
   return (
     <>
-      <h1>Login</h1>
-      <form>
-        <div>
-          <TextField
-            required
-            id="standard-required"
-            label="Email"
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <TextField
-            label="Password"
-            type="password"
-            id="password"
-            name="password"
-            placeholder="password"
-            style={{ marginTop: 10 }}
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-        </div>
-        <Button
-          variant="contained"
-          size="medium"
-          className={classes.margin}
-          style={{ marginTop: 10 }}
-          onClick={onClickSubmit}
-        >
-          Login
-        </Button>
-        <div>
-          新規登録は
-          <Link to="/SignUp" style={{ textDecoration: "underline" }}>
-            こちら
-          </Link>
-        </div>
-        <div>
-          パスワードをお忘れの方は
-          <a style={{ textDecoration: "underline" }}>こちら</a>
-        </div>
-      </form>
+      <Grid textAlign="center" verticalAlign="middle" className="app">
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as="h2" icon color="grey" textAlign="center">
+            <Icon name="lightbulb outline" className="signIn__color" />
+            ログイン
+          </Header>
+          <Form>
+            <Segment stacked>
+              <Form.Input
+                fluid
+                type="email"
+                icon="mail"
+                iconPosition="left"
+                name="email"
+                placeholder="メールアドレス"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <Form.Input
+                fluid
+                type="password"
+                icon="lock open"
+                iconPosition="left"
+                name="password"
+                placeholder="パスワード"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <Button
+                basic
+                variant="contained"
+                size="medium"
+                style={{ marginTop: 10 }}
+                onClick={onClickSubmit}
+              >
+                ログイン
+              </Button>
+            </Segment>
+          </Form>
+          <Message>
+            新規登録は
+            <Link to="/SignUp">こちら</Link>
+          </Message>
+          <Message>
+            パスワードをお忘れの方は
+            <Link>こちら</Link>
+          </Message>
+        </Grid.Column>
+      </Grid>
     </>
   );
 };
