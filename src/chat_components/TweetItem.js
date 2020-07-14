@@ -1,9 +1,14 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
+import firebase from "../config/firebase";
+import moment from "moment";
 import { AuthContext } from "../AuthService";
 
-import { Button, Comment } from "semantic-ui-react";
+import { Button, List, Segment, Grid } from "semantic-ui-react";
 
-const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
+const TweetItem = ({ imageUrl, id, content, setTweets }) => {
+  const user = useContext(AuthContext);
+  const db = firebase.firestore();
+
   const image = () => {
     return (
       <img
@@ -14,33 +19,45 @@ const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
     );
   };
 
-  const onDeleteClick = () => {
-    deleteTweet(id);
+  const deleteData = (id) => {
+    db.collection("chat")
+      .doc(id)
+      .delete()
+      .then(() => console.log("削除成功"))
+      .catch((err) => console.log(err));
   };
 
-  const user = useContext(AuthContext);
+  // メッセージが作成されてからの経過時間がわかる→momentのfromNowメソッド
+  const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   return (
     <>
-      <Comment>
-        <Comment.Avatar src={user.avatar} />
-        <Comment.Content>
-          <Comment.Author as="a">{user.displayName}</Comment.Author>
-          <Comment.Text>{content}</Comment.Text>
-          <Comment.Metadata style={{ color: "grey" }}>
-            <div>{time}</div>
-          </Comment.Metadata>
-          <Comment.Text>{imageUrl ? image() : null}</Comment.Text>
-          <Button
-            circular
-            basic
-            icon="times"
-            size="mini"
-            color="red"
-            onClick={onDeleteClick}
-          />
-        </Comment.Content>
-      </Comment>
+      <Segment vertical>
+        <Grid columns={3} divided>
+          <Grid.Row stretched>
+            <List.Icon src={user.avatar} verticalAlign="middle" />
+            <List.Item>
+              <List.Header as="a">{user.displayName}</List.Header>
+              <List.Content>{content}</List.Content>
+              <List.Description style={{ color: "grey" }}>
+                <div>{timeFromNow(content.timestamp)}</div>
+              </List.Description>
+              <div>{imageUrl ? image() : null}</div>
+              <Button
+                circular
+                basic
+                // floated="right"
+                icon="times"
+                size="mini"
+                color="red"
+                onClick={() => {
+                  deleteData(id);
+                }}
+              />
+            </List.Item>
+          </Grid.Row>
+        </Grid>
+      </Segment>
     </>
   );
 };

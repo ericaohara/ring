@@ -24,18 +24,18 @@ const SideBar = () => {
   const openChangeGroupModal = () => setModalChangeGroup(true);
   const closeChangeGroupModal = () => setModalChangeGroup(false);
 
-  // パスワードの再設定メールを送信する
-  const auth = firebase.auth();
-  const emailAddress = user.email;
+  // // パスワードの再設定メールを送信する
+  // const auth = firebase.auth();
+  // const emailAddress = user.email;
 
-  auth
-    .sendPasswordResetEmail(emailAddress)
-    .then(function () {
-      // Email sent.
-    })
-    .catch(function (error) {
-      // An error happened.
-    });
+  // auth
+  //   .sendPasswordResetEmail(emailAddress)
+  //   .then(function () {
+  //     // Email sent.
+  //   })
+  //   .catch(function (error) {
+  //     // An error happened.
+  //   });
 
   return (
     <>
@@ -48,7 +48,9 @@ const SideBar = () => {
         width="thin"
       >
         <Divider style={{ marginBottom: 30 }} />
-        <span style={{ fontSize: "50px", fontFamily: "PMingLiU" }}>rinG</span>
+        <span style={{ fontSize: "50px", fontFamily: "Pacifico,cursive" }}>
+          rinG
+        </span>
         <Grid.Row>
           <Grid.Column style={{ marginTop: 30 }}>
             <Popup

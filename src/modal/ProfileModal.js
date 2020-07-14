@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthService";
 
-import { Button, Modal, Icon, Image } from "semantic-ui-react";
+import { Button, Modal, Icon, Image, Form } from "semantic-ui-react";
 
 const ProfileModal = ({ modal, closeModal }) => {
   const user = useContext(AuthContext);
@@ -12,6 +12,14 @@ const ProfileModal = ({ modal, closeModal }) => {
         <Modal.Header>プロフィール</Modal.Header>
         <Modal.Content>
           <Image src="/" size="medium" circular />
+          <Form>
+            <Form.Field>
+              <input type="text" placeholder="名前" />
+            </Form.Field>
+            <Form.Field>
+              <input type="date" placeholder="生年月日" />
+            </Form.Field>
+          </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button color="green" inverted>

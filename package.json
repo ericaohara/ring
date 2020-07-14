@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "emoji-mart": "^3.0.0",
     "firebase": "^7.15.5",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dates": "^21.8.0",
     "react-dom": "^16.13.1",

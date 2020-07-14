@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
+import { AuthContext } from "../AuthService";
 
 import { Modal, Segment, Input, Button, Form, Image } from "semantic-ui-react";
 
 const TweetForm = ({
   text,
   setText,
-  addTweet,
+  setTweets,
   setEmojiType,
   emojiType,
   image,
@@ -16,15 +17,61 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
+  const user = useContext(AuthContext);
+
   // firebase
-  // const [message, setMessage] = useState("");
+  const db = firebase.firestore();
+
+  // firebaseに追加した値を取得
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("chat")
+      // chatの変更を監視
+      // 変更があったらコールバック関数を発火
+      // 引数は変更後の値
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        const message = snapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+        // firebaseから複製した配列でstateを更新
+        setTweets(message);
+      });
+  }, []);
+
+  // firebaseにデータを追加
+  const data = () => {
+    db.collection("chat")
+      .doc()
+      .set({
+        // タイムスタンプ
+        createdAt: new Date(),
+        content: text,
+        user: {
+          id: user.uid,
+          name: user.displayName,
+          avatar: user.photoURL,
+        },
+      })
+      .then(() => {
+        console.log("データ追加成功");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // db.collection("chat");
 
   // ツイート追加
   const onClickTweet = (e) => {
     e.preventDefault();
-    addTweet(text);
+    // addTweet(text);
     setText("");
     setUpload(false);
+    // addData();
+    data();
   };
 
   // ダイアログ
@@ -53,8 +100,9 @@ const TweetForm = ({
     e.preventDefault();
     if (image === "") {
       console.log("ファイルが選択されていません");
+      return;
     }
-
+    console.log(imageUrl);
     // アップロード処理
     const uploadTask = storage.ref(`/images/${image.name}`).put(image);
     uploadTask.on(
@@ -104,53 +152,51 @@ const TweetForm = ({
     <>
       <Segment className="tweet__form">
         <Image avatar src="/" />
-        <Form>
-          <Input
-            placeholder="140文字以内でメッセージを入力してください"
-            fluid
-            transparent
-            focus
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          {upload ? preview() : false}
-          <br />
-          <Button
-            basic
-            circular
-            icon="camera"
-            iconPosition="right"
-            size="medium"
-            onClick={handleOpen}
-          />
+        <Input
+          placeholder="140文字以内でメッセージを入力してください"
+          fluid
+          transparent
+          focus
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        {upload ? preview() : false}
+        <br />
+        <Button
+          basic
+          circular
+          icon="camera"
+          iconPosition="right"
+          size="medium"
+          onClick={handleOpen}
+        />
 
-          <Button
-            basic
-            circular
-            icon="smile outline"
-            iconPosition="right"
-            size="medium"
-            onClick={onClickEmoji}
-          />
-          <Button
-            basic
-            circular
-            icon="paper plane outline"
-            iconPosition="right"
-            size="medium"
-            onClick={onClickTweet}
-          >
-            つぶやく
-          </Button>
-        </Form>
+        <Button
+          basic
+          circular
+          icon="smile outline"
+          iconPosition="right"
+          size="medium"
+          onClick={onClickEmoji}
+        />
+        <Button
+          basic
+          circular
+          icon="paper plane outline"
+          iconPosition="right"
+          size="medium"
+          onClick={onClickTweet}
+        >
+          つぶやく
+        </Button>
       </Segment>
 
       <Modal open={open} onClose={handleClose}>
-        <Modal.Header>写真をアップロード</Modal.Header>
+        <Modal.Header>{"写真をアップロード"}</Modal.Header>
         <Modal.Content>
           ファイルを選択から画像を選択して決定を押してください
-          <form onSubmit={onSubmit}>
+          <Form onSubmit={onSubmit}>
             <Input type="file" onChange={handleImage} />
             <Button basic color="green" onClick={uploadClick}>
               決定
@@ -158,7 +204,7 @@ const TweetForm = ({
             <Button basic color="red" onClick={handleClose}>
               戻る
             </Button>
-          </form>
+          </Form>
         </Modal.Content>
       </Modal>
     </>

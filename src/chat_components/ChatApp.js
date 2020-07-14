@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import firebase from "../config/firebase";
+import React, { useState, useContext } from "react";
 import TweetForm from "./TweetForm";
 import TweetList from "./TweetList";
-import shortid from "shortid";
 import { Segment } from "semantic-ui-react";
 
 // 絵文字
@@ -19,17 +17,8 @@ const ChatApp = () => {
       alert("メッセージを入力してください");
     } else if (text.length > 140) {
       alert("メッセージは140文字以内で入力してください");
-    } else {
-      setTweets([
-        { content: text, time, id: shortid.generate(), image: imageUrl },
-        ...tweets,
-      ]);
     }
     setImageUrl("");
-  };
-
-  const deleteTweet = (id) => {
-    setTweets(tweets.filter((tweet) => tweet.id !== id));
   };
 
   // 時間
@@ -62,6 +51,7 @@ const ChatApp = () => {
         text={text}
         setText={setText}
         tweets={tweets}
+        setTweets={setTweets}
         addTweet={addTweet}
         setEmojiType={setEmojiType}
         emojiType={emojiType}
@@ -100,7 +90,7 @@ const ChatApp = () => {
       )}
       <Segment>
         {/* <Comment.Group className="main__tweet" /> */}
-        <TweetList tweets={tweets} deleteTweet={deleteTweet} />
+        <TweetList tweets={tweets} setTweets={setTweets} />
       </Segment>
     </>
   );

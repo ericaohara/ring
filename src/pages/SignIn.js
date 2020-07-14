@@ -4,7 +4,6 @@ import { AuthContext } from "../AuthService";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-// マテリアル
 import {
   Grid,
   Form,
