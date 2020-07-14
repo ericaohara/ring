@@ -22,7 +22,7 @@ const TweetItem = ({ content, time, imageUrl, deleteTweet, id }) => {
 
   return (
     <>
-      <Comment flid>
+      <Comment>
         <Comment.Avatar src={user.avatar} />
         <Comment.Content>
           <Comment.Author as="a">{user.displayName}</Comment.Author>

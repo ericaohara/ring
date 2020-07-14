@@ -1,52 +1,28 @@
 import React, { useState, useContext } from "react";
+import ProfileModal from "./modal/ProfileModal";
+import ConfigModal from "./modal/ConfigModal";
+import ChangeGroupModal from "./modal/ChangeGroupModal";
 import firebase from "./config/firebase";
 import { AuthContext } from "./AuthService";
 
-import {
-  Sidebar,
-  Menu,
-  Divider,
-  Button,
-  Modal,
-  Icon,
-  Label,
-  Grid,
-} from "semantic-ui-react";
+import { Sidebar, Menu, Divider, Button, Grid, Popup } from "semantic-ui-react";
 
 const SideBar = () => {
-  // const [openProfile, setOpenProfile] = useState(false);
-  // const [openConfig, setOpenConfig] = useState(false);
-  // const [openChangeGroup, setOpenChangeGroup] = useState(false);
+  const [modalProfile, setModalProfile] = useState(false);
+  const [modalConfig, setModalConfig] = useState(false);
+  const [modalChangeGroup, setModalChangeGroup] = useState(false);
+
   const user = useContext(AuthContext);
 
-  const [modal, setModal] = useState(false);
+  // モーダル
+  const openProfileModal = () => setModalProfile(true);
+  const closeProfileModal = () => setModalProfile(false);
 
-  const openModal = () => setModal(true);
-  const closeModal = () => setModal(false);
+  const openConfigModal = () => setModalConfig(true);
+  const closeConfigModal = () => setModalConfig(false);
 
-  const profile = () => {
-    return (
-      <>
-        <Modal open={modal} onClose={closeModal}>
-          <Modal.Header>プロフィール</Modal.Header>
-          <Modal.Content>
-            <Label content="Primary Color" />
-            <Label content="Secondary Color" />
-          </Modal.Content>
-          <Modal.Actions>
-            <Button color="green" inverted>
-              <Icon name="checkmark" />
-              　保存
-            </Button>
-            <Button color="red" inverted onClick={closeModal}>
-              <Icon name="remove" />
-              　キャンセル
-            </Button>
-          </Modal.Actions>
-        </Modal>
-      </>
-    );
-  };
+  const openChangeGroupModal = () => setModalChangeGroup(true);
+  const closeChangeGroupModal = () => setModalChangeGroup(false);
 
   // パスワードの再設定メールを送信する
   const auth = firebase.auth();
@@ -63,86 +39,6 @@ const SideBar = () => {
 
   return (
     <>
-      {/* <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h4" style={{ fontFamily: "PMingLiU" }}>
-          rinG
-        </Typography>
-
-        <div style={{ paddingLeft: 150 }}>
-          <div>
-            <Button onClick={profileOpen}>
-              <Icon className="far fa-user" />
-              　プロフィール
-            </Button>
-            <Dialog
-              open={openProfile}
-              onClose={profileClose}
-              aria-labelledby="form-dialog-title"
-            >
-              <DialogTitle id="alert-dialog-title">
-                プロフィール編集
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <TextField label={user.displayName} type="text" />
-                </DialogContentText>
-                <Button id="alert-dialog-description">アイコン変更</Button>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={profileClose} color="primary">
-                  戻る
-                </Button>
-                <Button onClick={profileClose} color="primary">
-                  決定
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-
-          <Button onClick={configOpen}>
-            <Icon className="fa fa-tools" />
-            　設定
-          </Button>
-          <Dialog
-            open={openConfig}
-            onClose={configClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">設定</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <TextField label="メンバーを招待" type="text" />
-              </DialogContentText>
-              <DialogContentText id="alert-dialog-description">
-                <TextField label="メールアドレス変更" type="text" />
-              </DialogContentText>
-              <DialogContentText id="alert-dialog-description">
-                <TextField label="パスワード変更" type="text" />
-              </DialogContentText>
-              <DialogContentText id="alert-dialog-description">
-                <TextField label="グループ名変更" type="text" />
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={configClose} color="primary">
-                戻る
-              </Button>
-              <Button onClick={configClose} color="primary" autoFocus>
-                決定
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          <Button
-            style={{ color: "red" }}
-            onClick={() => firebase.auth().signOut()}
-          >
-            ログアウト
-          </Button>
-        </div>
-      </Toolbar> */}
       <Sidebar
         as={Menu}
         animation="push"
@@ -152,42 +48,78 @@ const SideBar = () => {
         width="thin"
       >
         <Divider style={{ marginBottom: 30 }} />
-        <span style={{ fontSize: "50px", fontFamily: "Fredoka One" }}>
-          rinG
-        </span>
+        <span style={{ fontSize: "50px", fontFamily: "PMingLiU" }}>rinG</span>
         <Grid.Row>
           <Grid.Column style={{ marginTop: 30 }}>
-            <Button
-              circular
-              color="blue"
-              size="huge"
-              icon="user circle"
-              onClick={profile()}
+            <Popup
+              trigger={
+                <Button
+                  // プロフィール
+                  circular
+                  color="blue"
+                  size="huge"
+                  icon="user circle"
+                  onClick={openProfileModal}
+                />
+              }
+              content="プロフィール"
+              basic
             />
           </Grid.Column>
+          <ProfileModal modal={modalProfile} closeModal={closeProfileModal} />
           <Grid.Column style={{ marginTop: 30 }}>
-            <Button
-              circular
-              size="huge"
-              color="orange"
-              icon="sync alternate"
-              onClick={openModal}
+            <Popup
+              trigger={
+                <Button
+                  // グループ設定
+                  circular
+                  size="huge"
+                  color="orange"
+                  icon="sync alternate"
+                  onClick={openChangeGroupModal}
+                />
+              }
+              content="グループ設定/切替"
+              basic
             />
           </Grid.Column>
+          <ChangeGroupModal
+            modal={modalChangeGroup}
+            closeModal={closeChangeGroupModal}
+          />
           <Grid.Column style={{ marginTop: 30 }}>
-            <Button circular size="huge" icon="cog" onClick={openModal} />
+            <Popup
+              trigger={
+                <Button
+                  // 設定
+                  circular
+                  size="huge"
+                  icon="cog"
+                  onClick={openConfigModal}
+                />
+              }
+              content="設定"
+              basic
+            />
           </Grid.Column>
+          <ConfigModal modal={modalConfig} closeModal={closeConfigModal} />
           <Grid.Column
             style={{
               marginTop: 30,
             }}
           >
-            <Button
-              size="huge"
-              icon="sign-out"
-              circular
-              color="red"
-              onClick={() => firebase.auth().signOut()}
+            <Popup
+              trigger={
+                <Button
+                  size="huge"
+                  icon="sign-out"
+                  circular
+                  color="red"
+                  onClick={() => firebase.auth().signOut()}
+                />
+              }
+              content="ログアウト"
+              basic
             />
           </Grid.Column>
         </Grid.Row>

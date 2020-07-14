@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import firebase, { storage } from "../config/firebase";
 
-import { Modal, Segment, Input, Button } from "semantic-ui-react";
+import { Modal, Segment, Input, Button, Form, Image } from "semantic-ui-react";
 
 const TweetForm = ({
   text,
@@ -17,7 +17,7 @@ const TweetForm = ({
   setUpload,
 }) => {
   // firebase
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   // ツイート追加
   const onClickTweet = (e) => {
@@ -49,29 +49,6 @@ const TweetForm = ({
     setImage(image);
   };
 
-  const next = (snapshot) => {
-    // 進行中のsnapshotを得る
-    // アップロードの進行度を表示
-    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log(percent + "% done");
-    console.log(snapshot);
-  };
-
-  // エラーハンドリング
-  const error = (error) => console.log(error);
-
-  const complete = () => {
-    // 完了後の処理
-    // 画像表示のため、アップロードした画像のURLを取得
-    storage
-      .ref("images")
-      .child(image.name)
-      .getDownloadURL()
-      .then((fireBaseUrl) => {
-        setImageUrl(fireBaseUrl);
-      });
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
     if (image === "") {
@@ -88,6 +65,29 @@ const TweetForm = ({
     );
   };
 
+  const next = (snapshot) => {
+    // 進行中のsnapshotを得る
+    // アップロードの進行度を表示
+    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(percent + "% done");
+    console.log(snapshot);
+  };
+
+  // エラーハンドリング
+  const error = (err) => console.log(err);
+
+  const complete = () => {
+    // 完了後の処理
+    // 画像表示のため、アップロードした画像のURLを取得
+    storage
+      .ref("images")
+      .child(image.name)
+      .getDownloadURL()
+      .then((fireBaseUrl) => {
+        setImageUrl(fireBaseUrl);
+      });
+  };
+
   const uploadClick = () => {
     setUpload(true);
     setOpen(false);
@@ -96,70 +96,72 @@ const TweetForm = ({
 
   const preview = () => {
     return (
-      <div>
-        <img
-          src={imageUrl}
-          alt="uploaded"
-          style={{ height: 250, width: 500 }}
-        />
-      </div>
+      <img src={imageUrl} alt="uploaded" style={{ height: 250, width: 500 }} />
     );
   };
 
   return (
-    <Segment className="tweet__form">
-      {/* <Avatar alt="Cindy Baker" style={{ marginRight: 30, marginLeft: 30 }} /> */}
-      <Input
-        placeholder="140文字以内でメッセージを入力してください"
-        // style={{ minHeight: 100, width: 400 }}
-        fluid
-        transparent
-        focus
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      {upload ? preview() : false}
-      <br />
-      <Button
-        basic
-        circular
-        icon="camera"
-        iconPosition="right"
-        size="medium"
-        onClick={handleOpen}
-      />
-      <Modal basic open={open} onClose={handleClose}>
+    <>
+      <Segment className="tweet__form">
+        <Image avatar src="/" />
+        <Form>
+          <Input
+            placeholder="140文字以内でメッセージを入力してください"
+            fluid
+            transparent
+            focus
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          {upload ? preview() : false}
+          <br />
+          <Button
+            basic
+            circular
+            icon="camera"
+            iconPosition="right"
+            size="medium"
+            onClick={handleOpen}
+          />
+
+          <Button
+            basic
+            circular
+            icon="smile outline"
+            iconPosition="right"
+            size="medium"
+            onClick={onClickEmoji}
+          />
+          <Button
+            basic
+            circular
+            icon="paper plane outline"
+            iconPosition="right"
+            size="medium"
+            onClick={onClickTweet}
+          >
+            つぶやく
+          </Button>
+        </Form>
+      </Segment>
+
+      <Modal open={open} onClose={handleClose}>
         <Modal.Header>写真をアップロード</Modal.Header>
         <Modal.Content>
           ファイルを選択から画像を選択して決定を押してください
           <form onSubmit={onSubmit}>
             <Input type="file" onChange={handleImage} />
-            <button onClick={uploadClick}>決定</button>
+            <Button basic color="green" onClick={uploadClick}>
+              決定
+            </Button>
+            <Button basic color="red" onClick={handleClose}>
+              戻る
+            </Button>
           </form>
         </Modal.Content>
-        <Button onClick={handleClose}>戻る</Button>
       </Modal>
-
-      <Button
-        basic
-        circular
-        icon="smile outline"
-        iconPosition="right"
-        size="medium"
-        onClick={onClickEmoji}
-      />
-      <Button
-        basic
-        circular
-        icon="paper plane outline"
-        iconPosition="right"
-        size="medium"
-        onClick={onClickTweet}
-      >
-        つぶやく
-      </Button>
-    </Segment>
+    </>
   );
 };
 
