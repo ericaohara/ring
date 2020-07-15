@@ -4,6 +4,7 @@ body,
   height: 100vh;
   /* background: #fff5ee; */
   padding: 1em;
+  font-size: 18px;
 }
 
 .signUp__color {

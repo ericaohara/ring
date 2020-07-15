@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Checkbox } from "semantic-ui-react";
 
 const Item = ({ value, todos, setTodos, isDone, id }) => {
@@ -11,7 +12,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
     // 選択された値が変わったtodosが変数に入る
     const checkedTodos = todos.map((todo) => {
       // もしname属性に入れたidとtodosに入っているidが同じだったら
-      if (e.target.name === todo.id) {
+      if (e.target.id === todo.id) {
         // スプレッド構文でisDoneプロパティの値を上書き
         // isDoneはデフォルトでfalseに設定してるからnotIsDoneでtrueにする
         // 切り替えるために!todo.isDoneにしている(falseではなくて)
@@ -21,7 +22,6 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
         return todo;
       }
     });
-
     // todosの状態を更新
     // (checkedTodosの返り値はtodoだから更新しないと反映されない)
     setTodos(checkedTodos);
@@ -34,7 +34,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
           color="blue"
           // valueにstate入れるのと同じ考え方
           checked={isDone}
-          name={id}
+          id={id}
           onClick={onClickSelect}
         />
         <span style={{ textDecoration: isDone ? "line-through" : "none" }}>

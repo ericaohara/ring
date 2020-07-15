@@ -1,11 +1,11 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import firebase from "../config/firebase";
 import moment from "moment";
 import { AuthContext } from "../AuthService";
 
 import { Button, List, Segment, Grid } from "semantic-ui-react";
 
-const TweetItem = ({ imageUrl, id, content, setTweets }) => {
+const TweetItem = ({ imageUrl, id, content, time }) => {
   const user = useContext(AuthContext);
   const db = firebase.firestore();
 
@@ -40,9 +40,10 @@ const TweetItem = ({ imageUrl, id, content, setTweets }) => {
               <List.Header as="a">{user.displayName}</List.Header>
               <List.Content>{content}</List.Content>
               <List.Description style={{ color: "grey" }}>
-                <div>{timeFromNow(content.timestamp)}</div>
+                <div>{timeFromNow(time)}</div>
               </List.Description>
               <div>{imageUrl ? image() : null}</div>
+              <button onClick={() => console.log(time)}>content</button>
               <Button
                 circular
                 basic

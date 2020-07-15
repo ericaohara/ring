@@ -14,7 +14,7 @@ const ConfigModal = ({ modal, closeModal }) => {
           <Card>
             <Image src="/" wrapped ui={false} />
             <Card.Content>
-              <Card.Header>{user.displayName}</Card.Header>
+              <Card.Header>制作者へメッセージを送信</Card.Header>
               <Card.Meta>
                 <span className="date">Joined in 2015</span>
               </Card.Meta>

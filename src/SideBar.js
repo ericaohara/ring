@@ -96,11 +96,11 @@ const SideBar = () => {
                   // 設定
                   circular
                   size="huge"
-                  icon="cog"
+                  icon="paper plane outline"
                   onClick={openConfigModal}
                 />
               }
-              content="設定"
+              content="報告"
               basic
             />
           </Grid.Column>
