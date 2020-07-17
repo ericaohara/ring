@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import firebase from "../config/firebase";
+import icon from "../images/byebye_girl.png";
 
 import {
   Grid,
@@ -10,6 +11,7 @@ import {
   Header,
   Icon,
   Message,
+  RatingIcon,
 } from "semantic-ui-react";
 
 const SignUp = ({ history }) => {
@@ -38,6 +40,7 @@ const SignUp = ({ history }) => {
             displayName: userName,
             email: email,
             password: password,
+            photoURL: icon,
           })
           .then(function () {
             history.push("/");

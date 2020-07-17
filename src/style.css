@@ -4,7 +4,7 @@ body,
   height: 100vh;
   /* background: #fff5ee; */
   padding: 1em;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .signUp__color {
@@ -27,4 +27,94 @@ body,
   left: 0;
   right: 1rem;   */
   z-index: 10;
+  position: relative;
 }
+
+.tweet__list {
+  position: relative;
+  padding: 0;
+}
+
+.tweet__item {
+  margin: 20px 0;
+}
+
+.tweet__delete {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+
+  /* top: -70px;
+  right: -300px; */
+}
+
+.form__btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  /* margin-left: 200px; */
+}
+
+.vertical {
+  /* height: 100vh; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+}
+
+.chat__style {
+  font-size: 18px;
+}
+/* body {
+  margin: 0;
+  font-family: Segoe UI, Tahoma, sans-serif;
+}
+
+.Sample {
+  input,
+  button {
+    appearance: none;
+    border: 0;
+    border-radius: 5px;
+    background: #4676d7;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  header {
+    background-color: rgb(50, 54, 57);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    color: white;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin: 10px 0;
+    padding: 10px;
+
+    & > * {
+      & > * {
+        margin: 10px;
+      }
+    }
+
+    &__content {
+      display: flex;
+      max-width: 100%;
+      flex-basis: 420px;
+      flex-direction: column;
+      flex-grow: 100;
+      align-items: stretch;
+      padding-top: 1em;
+
+      .react-calendar {
+        margin: 0 auto;
+      }
+    }
+  }
+} */

@@ -1,4 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import firebase from "../config/firebase";
+import { AuthContext } from "../AuthService";
 import TweetForm from "./TweetForm";
 import TweetList from "./TweetList";
 import { Segment } from "semantic-ui-react";
@@ -8,6 +10,7 @@ import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 
 const ChatApp = () => {
+  const user = useContext(AuthContext);
   // ツイート管理
   const [text, setText] = useState("");
   const [tweets, setTweets] = useState([]);
@@ -22,7 +25,7 @@ const ChatApp = () => {
   };
 
   // 画像
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [upload, setUpload] = useState(false);
 
@@ -36,6 +39,38 @@ const ChatApp = () => {
     setText(text + emoji.native);
   };
 
+  // ユーザーをコレクションで管理しようとした
+  // const db = firebase.firestore();
+
+  // useEffect(() => {
+  //   db.collection("users")
+  //     .doc()
+  //     .set({
+  //       content: text,
+  //       user: {
+  //         id: user.uid,
+  //         name: user.displayName,
+  //         avatar: user.photoURL,
+  //       },
+  //     })
+  //     .then(() => {
+  //       console.log("ユーザー情報追加成功");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // });
+
+  // admin
+  //   .auth()
+  //   .getUser(uid)
+  //   .then(() => {
+  //     console.log("ユーザー情報取得");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
   return (
     <>
       <TweetForm
@@ -46,8 +81,8 @@ const ChatApp = () => {
         addTweet={addTweet}
         setEmojiType={setEmojiType}
         emojiType={emojiType}
-        image={image}
-        setImage={setImage}
+        images={images}
+        setImages={setImages}
         imageUrl={imageUrl}
         setImageUrl={setImageUrl}
         upload={upload}
@@ -81,7 +116,7 @@ const ChatApp = () => {
       )}
       <Segment>
         {/* <Comment.Group className="main__tweet" /> */}
-        <TweetList tweets={tweets} setTweets={setTweets} />
+        <TweetList tweets={tweets} setTweets={setTweets} imageUrl={imageUrl} />
       </Segment>
     </>
   );

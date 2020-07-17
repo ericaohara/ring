@@ -1,28 +1,49 @@
 import React, { useState } from "react";
-import moment from "moment";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
-import { SingleDatePicker } from "react-dates";
+// import FullCalendar from "@fullcalendar/react";
+// import dayGridPlugin from "@fullcalendar/daygrid";
 
-const CalendarApp = () => {
-  // momentは今日の日付
-  const [date, setDate] = useState(moment());
-  const [focused, setFocused] = useState(false);
+// export const CalendarApp = () => {
+//   return <FullCalendar
+//   plugins={[dayGridPlugin]}
+//   initialView="dayGridMonth"
+//   />;
+// };
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { Button, Modal, Icon, Form } from "semantic-ui-react";
+
+export const CalendarApp = () => {
+  const [value, onChange] = useState(new Date());
+  const [dayModal, setDayModal] = useState(false);
+
+  const openModal = () => setDayModal(true);
+  const closeModal = () => setDayModal(false);
 
   return (
-    <div>
-      <SingleDatePicker
-        date={date}
-        // 選択された日付範囲が変更されるときに呼び出される
-        onDateChange={(date) => setDate(date)}
-        focused={focused}
-        onFocusChange={(focused) => setFocused(focused)}
-        id="date"
-        displayFormat="YYYY-MM-DD"
-        onClose={(focused) => setFocused(false)}
-      />
+    <div className="Sample">
+      <div className="Sample__container">
+        <main className="Sample__container__content">
+          <Calendar onClickDay={openModal} onChange={onChange} value={value} />
+        </main>
+        <Modal size="small" open={dayModal} onClose={closeModal}>
+          <Modal.Header>予定管理</Modal.Header>
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <label>予定</label>
+              </Form.Field>
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Icon name="checkmark" />
+            　追加
+            <Button color="red" inverted onClick={closeModal}>
+              <Icon name="remove" />
+              　キャンセル
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      </div>
     </div>
   );
 };
-
-export default CalendarApp;

@@ -2,7 +2,8 @@ import React from "react";
 import TweetItem from "./TweetItem";
 
 const TweetList = ({ tweets, setTweets }) => {
-  console.log(tweets);
+  // console.log(tweets);
+
   return (
     <>
       {tweets.map((tweet) => {

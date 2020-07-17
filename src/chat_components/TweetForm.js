@@ -10,8 +10,8 @@ const TweetForm = ({
   setTweets,
   setEmojiType,
   emojiType,
-  image,
-  setImage,
+  images,
+  setImages,
   imageUrl,
   setImageUrl,
   upload,
@@ -48,6 +48,7 @@ const TweetForm = ({
         // タイムスタンプ
         createdAt: new Date(),
         content: text,
+        image: imageUrl,
         user: {
           id: user.uid,
           name: user.displayName,
@@ -62,16 +63,13 @@ const TweetForm = ({
       });
   };
 
-  // db.collection("chat");
-
   // ツイート追加
   const onClickTweet = (e) => {
     e.preventDefault();
-    // addTweet(text);
     setText("");
     setUpload(false);
-    // addData();
     data();
+    setImageUrl("");
   };
 
   // ダイアログ
@@ -93,18 +91,20 @@ const TweetForm = ({
   // 画像
   const handleImage = (e) => {
     const image = e.target.files[0];
-    setImage(image);
+    setImages(image);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (image === "") {
+    setUpload(true);
+    setOpen(false);
+    if (images === "") {
       console.log("ファイルが選択されていません");
       return;
     }
     console.log(imageUrl);
     // アップロード処理
-    const uploadTask = storage.ref(`/images/${image.name}`).put(image);
+    const uploadTask = storage.ref(`/images/${images.name}`).put(images);
     uploadTask.on(
       firebase.storage.TaskEvent.STATE_CHANGED,
       next,
@@ -129,22 +129,16 @@ const TweetForm = ({
     // 画像表示のため、アップロードした画像のURLを取得
     storage
       .ref("images")
-      .child(image.name)
+      .child(images.name)
       .getDownloadURL()
       .then((fireBaseUrl) => {
         setImageUrl(fireBaseUrl);
       });
   };
 
-  const uploadClick = () => {
-    setUpload(true);
-    setOpen(false);
-    console.log(imageUrl);
-  };
-
   const preview = () => {
     return (
-      <img src={imageUrl} alt="uploaded" style={{ height: 250, width: 500 }} />
+      <img src={imageUrl} alt="uploaded" style={{ height: 100, width: 200 }} />
     );
   };
 
@@ -163,33 +157,35 @@ const TweetForm = ({
         />
         {upload ? preview() : false}
         <br />
-        <Button
-          basic
-          circular
-          icon="camera"
-          iconPosition="right"
-          size="medium"
-          onClick={handleOpen}
-        />
+        <div className="form__btn">
+          <Button
+            basic
+            circular
+            icon="camera"
+            iconPosition="right"
+            size="medium"
+            onClick={handleOpen}
+          />
 
-        <Button
-          basic
-          circular
-          icon="smile outline"
-          iconPosition="right"
-          size="medium"
-          onClick={onClickEmoji}
-        />
-        <Button
-          basic
-          circular
-          icon="paper plane outline"
-          iconPosition="right"
-          size="medium"
-          onClick={onClickTweet}
-        >
-          つぶやく
-        </Button>
+          <Button
+            basic
+            circular
+            icon="smile outline"
+            iconPosition="right"
+            size="medium"
+            onClick={onClickEmoji}
+          />
+          <Button
+            basic
+            circular
+            icon="paper plane outline"
+            iconPosition="right"
+            size="medium"
+            onClick={onClickTweet}
+          >
+            つぶやく
+          </Button>
+        </div>
       </Segment>
 
       <Modal open={open} onClose={handleClose}>
@@ -198,11 +194,11 @@ const TweetForm = ({
           ファイルを選択から画像を選択して決定を押してください
           <Form onSubmit={onSubmit}>
             <Input type="file" onChange={handleImage} />
-            <Button basic color="green" onClick={uploadClick}>
-              決定
-            </Button>
             <Button basic color="red" onClick={handleClose}>
               戻る
+            </Button>
+            <Button basic color="green" onClick={onSubmit}>
+              決定
             </Button>
           </Form>
         </Modal.Content>
