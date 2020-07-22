@@ -2,7 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
 import { AuthContext } from "../AuthService";
 
-import { Modal, Segment, Input, Button, Form, Image } from "semantic-ui-react";
+import {
+  Modal,
+  Segment,
+  Input,
+  Button,
+  Form,
+  Image,
+  Grid,
+  Header,
+} from "semantic-ui-react";
 
 const TweetForm = ({
   text,
@@ -33,7 +42,11 @@ const TweetForm = ({
       .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
         const message = snapshot.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id };
+          return {
+            ...doc.data(),
+            id: doc.id,
+            createdAt: doc.data().createdAt.toDate().toString(),
+          };
         });
         // firebaseから複製した配列でstateを更新
         setTweets(message);
@@ -99,10 +112,9 @@ const TweetForm = ({
     setUpload(true);
     setOpen(false);
     if (images === "") {
-      console.log("ファイルが選択されていません");
+      alert("ファイルが選択されていません");
       return;
     }
-    console.log(imageUrl);
     // アップロード処理
     const uploadTask = storage.ref(`/images/${images.name}`).put(images);
     uploadTask.on(
@@ -138,13 +150,38 @@ const TweetForm = ({
 
   const preview = () => {
     return (
-      <img src={imageUrl} alt="uploaded" style={{ height: 100, width: 200 }} />
+      <>
+        <Button
+          circular
+          basic
+          icon="times"
+          size="mini"
+          color="gray"
+          onClick={prevDelete}
+        />
+
+        <Image size="small" src={imageUrl} alt="uploaded" />
+      </>
     );
+  };
+
+  const prevDelete = () => {
+    setUpload(false);
+    // firebase画像消し方
+    const desertRef = storage.ref(`/images/${images.name}`);
+    desertRef
+      .delete()
+      .then(() => {
+        console.log("画像削除成功");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <>
-      <Segment className="tweet__form">
+      <Segment>
         <Image avatar src="/" />
         <Input
           placeholder="140文字以内でメッセージを入力してください"
@@ -155,7 +192,8 @@ const TweetForm = ({
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        {upload ? preview() : false}
+        {upload ? preview() : null}
+
         <br />
         <div className="form__btn">
           <Button

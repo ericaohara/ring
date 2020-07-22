@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import firebase from "../config/firebase";
+import firebase, { storage } from "../config/firebase";
 import moment from "moment";
 import { AuthContext } from "../AuthService";
 
@@ -10,7 +10,11 @@ const TweetItem = ({ imageUrl, id, content, time }) => {
   const db = firebase.firestore();
 
   const image = () => {
-    return <Image centered src={imageUrl} alt="uploadImage" size="medium" />;
+    return (
+      <>
+        <Image centered src={imageUrl} alt="uploadImage" size="medium" />
+      </>
+    );
   };
 
   const deleteData = (id) => {
@@ -19,9 +23,20 @@ const TweetItem = ({ imageUrl, id, content, time }) => {
       .delete()
       .then(() => console.log("削除成功"))
       .catch((err) => console.log(err));
+
+    // const desertRef = storage.ref(`/images/${images.name}`);
+    // desertRef
+    //   .delete()
+    //   .then(() => {
+    //     console.log("画像削除成功");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   // メッセージが作成されてからの経過時間がわかる→momentのfromNowメソッド
+  // moment使わない方がいいかも？
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   return (
@@ -40,7 +55,7 @@ const TweetItem = ({ imageUrl, id, content, time }) => {
                 <List.Description style={{ color: "grey" }}>
                   <div>{timeFromNow(time)}</div>
                 </List.Description>
-                {/* <button onClick={() => console.log(user)}>content</button> */}
+                {/* <button onClick={() => console.log(time)}>content</button> */}
                 <Button
                   circular
                   basic

@@ -4,9 +4,7 @@ import shortid from "shortid";
 
 import { Button, Input, Grid } from "semantic-ui-react";
 
-const Form = ({ value, setValue, allCheckBox, todos, setTodos, id }) => {
-  // 追加
-
+const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
   // 追加
   const onButtonClick = (e) => {
     e.preventDefault();
@@ -79,8 +77,8 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos, id }) => {
       // idを探して削除
       .forEach(({ id }) => {
         db.collection("todos")
-          //   // ドキュメントが欲しいのはfirebaseのidであって
-          //   // こっちで指定したidではない
+          // ドキュメントが欲しいのはfirebaseのidであって
+          // こっちで指定したidではない
           .doc(id)
           .delete()
           .then(() => console.log("todo削除"))

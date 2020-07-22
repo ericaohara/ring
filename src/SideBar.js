@@ -57,7 +57,7 @@ const SideBar = () => {
       >
         <Divider style={{ marginBottom: 50 }} />
         <span style={{ fontSize: "80px", fontFamily: "Pacifico,cursive" }}>
-          rinG
+          rin<span style={{ color: "red" }}>G</span>
         </span>
         <Grid.Row>
           <Grid.Column style={{ marginTop: 80 }}>
@@ -91,10 +91,10 @@ const SideBar = () => {
                   inverted
                 >
                   <Icon name="sync alternate" />
-                  グループ設定/切替
+                  グループ設定
                 </Button>
               }
-              content="グループ設定/切替"
+              content="グループ設定"
               basic
             />
           </Grid.Column>

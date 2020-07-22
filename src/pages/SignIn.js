@@ -12,11 +12,15 @@ import {
   Header,
   Message,
   Icon,
+  Modal,
+  Input,
 } from "semantic-ui-react";
 
 const SignIn = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [modal, setModal] = useState(false);
+  const [emailSubmit, setEmailSubmit] = useState(false);
   const user = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
@@ -35,6 +39,22 @@ const SignIn = ({ history }) => {
   if (user) {
     return <Redirect to="/" />;
   }
+
+  const openModal = () => setModal(true);
+  const closeModal = () => setModal(false);
+
+  const resetPassword = (value) => {
+    const auth = firebase.auth();
+    const emailAddress = value;
+
+    auth
+      .sendPasswordResetEmail(emailAddress)
+      .then(() => {
+        console.log("パスワードリセット");
+        closeModal();
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -87,10 +107,39 @@ const SignIn = ({ history }) => {
           </Message>
           <Message>
             パスワードをお忘れの方は
-            <Link>こちら</Link>
+            <Button basic onClick={openModal}>
+              こちら
+            </Button>
           </Message>
         </Grid.Column>
       </Grid>
+      <Modal open={modal} onClose={closeModal}>
+        <Modal.Header>パスワード再設定</Modal.Header>
+        <Modal.Content>
+          <Form
+            onSubmit={() => {
+              resetPassword(emailSubmit);
+            }}
+          >
+            <label>アドレスを入力</label>
+            <Input
+              type="email"
+              value={emailSubmit}
+              onChange={(e) => {
+                setEmailSubmit(e.target.value);
+              }}
+            />
+            <Button
+              onClick={() => {
+                resetPassword(emailSubmit);
+              }}
+            >
+              送信
+            </Button>
+            <Button onClick={closeModal}>キャンセル</Button>
+          </Form>
+        </Modal.Content>
+      </Modal>
     </>
   );
 };

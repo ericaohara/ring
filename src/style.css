@@ -65,6 +65,14 @@ body,
 .chat__style {
   font-size: 18px;
 }
+
+.react-calendar__month-view__days__day--weekend {
+  color: blue;
+}
+
+.image__prev {
+}
+
 /* body {
   margin: 0;
   font-family: Segoe UI, Tahoma, sans-serif;

@@ -67,7 +67,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         <Modal.Content>
           <Grid columns={1}>
             <Grid.Row>
-              <Button fluid basic onClick={openAddGroupModal}>
+              <Button fluid basic color="blue" onClick={openAddGroupModal}>
                 グループを作成
               </Button>
             </Grid.Row>

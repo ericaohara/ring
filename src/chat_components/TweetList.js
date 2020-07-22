@@ -2,7 +2,7 @@ import React from "react";
 import TweetItem from "./TweetItem";
 
 const TweetList = ({ tweets, setTweets }) => {
-  // console.log(tweets);
+  console.log(tweets);
 
   return (
     <>
@@ -13,7 +13,7 @@ const TweetList = ({ tweets, setTweets }) => {
             imageUrl={tweet.image}
             id={tweet.id}
             setTweets={setTweets}
-            time={tweet.createdAt.seconds}
+            time={tweet.createdAt}
           />
         );
       })}

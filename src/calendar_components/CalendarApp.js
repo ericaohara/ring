@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// フルカレンダー
 // import FullCalendar from "@fullcalendar/react";
 // import dayGridPlugin from "@fullcalendar/daygrid";
 
@@ -8,6 +10,39 @@ import React, { useState } from "react";
 //   initialView="dayGridMonth"
 //   />;
 // };
+
+// googleAPI
+// import CalendarApi from './CalendarApi'
+
+// export const CalendarApp = ()=>{
+//   const [calendar, setCalendar] = useState('')
+
+//   const getCalendar = async ()=>{
+//     const response = await CalendarApi.get("/calendars",{
+//       params:{
+//         "kind": "calendar#calendar",
+//         "etag": etag,
+//         "id": string,
+//         "summary": string,
+//         "description": string,
+//         "location": string,
+//         "timeZone": string,
+//         "conferenceProperties": {
+//           "allowedConferenceSolutionTypes": [
+//             string
+//           ]
+//         }
+//       }
+//     })
+//     setCalendar(response.data.ja.japanese#holiday@group.v.calendar.google.com)
+
+//   }
+
+//   return <div>{getCalendar}</div>
+
+// }
+
+// reactカレンダー;
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button, Modal, Icon, Form } from "semantic-ui-react";

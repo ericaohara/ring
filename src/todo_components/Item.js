@@ -29,7 +29,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
 
   return (
     <>
-      <li>
+      <li style={{ fontSize: "30px" }}>
         <Checkbox
           color="blue"
           // valueにstate入れるのと同じ考え方
@@ -37,7 +37,11 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
           id={id}
           onClick={onClickSelect}
         />
-        <span style={{ textDecoration: isDone ? "line-through" : "none" }}>
+        <span
+          style={{
+            textDecoration: isDone ? "line-through" : "none",
+          }}
+        >
           {value}
         </span>
       </li>

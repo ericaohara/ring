@@ -11,7 +11,6 @@ import {
   Header,
   Icon,
   Message,
-  RatingIcon,
 } from "semantic-ui-react";
 
 const SignUp = ({ history }) => {

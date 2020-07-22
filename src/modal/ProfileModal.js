@@ -15,6 +15,7 @@ import {
 const ProfileModal = ({ modal, closeModal }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [avatarImage, setAvatarImage] = useState("");
+  const [email, setEmail] = useState("");
 
   const user = useContext(AuthContext);
 
@@ -52,6 +53,20 @@ const ProfileModal = ({ modal, closeModal }) => {
   //       setImageUrl(fireBaseUrl);
   //     });
   // };
+
+  // アドレス変更
+  const onChangeEmail = (value) => {
+    const userEmail = firebase.auth().currentUser;
+
+    userEmail
+      .updateEmail({ email: value })
+      .then(() => {
+        console.log("アドレス変更完了");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const onBtnClick = () => {
     const metadata = {
@@ -129,14 +144,31 @@ const ProfileModal = ({ modal, closeModal }) => {
               />
             </Form.Field>
             <Form.Field>
+              <label>名前の変更</label>
               <Input type="text" placeholder={user.displayName} />
             </Form.Field>
             <Form.Field>
+              <label>メールアドレスの変更</label>
+              <Input
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
+                type="mail"
+                placeholder={user.email}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>誕生日の設定</label>
               <Input type="date" placeholder="生年月日" />
             </Form.Field>
           </Form>
         </Modal.Content>
         <Modal.Actions>
+          <Button color="green" onClick={onBtnClick} inverted>
+            <Icon name="checkmark" />
+            　パスワード変更
+          </Button>
           <Button color="green" onClick={onBtnClick} inverted>
             <Icon name="checkmark" />
             　保存
