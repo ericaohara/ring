@@ -9,8 +9,8 @@ import {
   Button,
   Form,
   Image,
-  Grid,
-  Header,
+  TextArea,
+  List,
 } from "semantic-ui-react";
 
 const TweetForm = ({
@@ -26,7 +26,7 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   // firebase
   const db = firebase.firestore();
@@ -39,6 +39,7 @@ const TweetForm = ({
       // chatの変更を監視
       // 変更があったらコールバック関数を発火
       // 引数は変更後の値
+      // 昇順
       .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
         const message = snapshot.docs.map((doc) => {
@@ -79,9 +80,15 @@ const TweetForm = ({
   // ツイート追加
   const onClickTweet = (e) => {
     e.preventDefault();
+    if (text.trim() === "" && upload === false) {
+      alert("メッセージを入力してください");
+    } else if (text.length > 140) {
+      alert("メッセージは140文字以内で入力してください");
+    } else {
+      data();
+    }
     setText("");
     setUpload(false);
-    data();
     setImageUrl("");
   };
 
@@ -109,12 +116,13 @@ const TweetForm = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setUpload(true);
-    setOpen(false);
     if (images === "") {
       alert("ファイルが選択されていません");
       return;
     }
+
+    setUpload(true);
+    setOpen(false);
     // アップロード処理
     const uploadTask = storage.ref(`/images/${images.name}`).put(images);
     uploadTask.on(
@@ -159,7 +167,6 @@ const TweetForm = ({
           color="gray"
           onClick={prevDelete}
         />
-
         <Image size="small" src={imageUrl} alt="uploaded" />
       </>
     );
@@ -182,17 +189,27 @@ const TweetForm = ({
   return (
     <>
       <Segment>
-        <Image avatar src="/" />
-        <Input
-          placeholder="140文字以内でメッセージを入力してください"
-          fluid
-          transparent
-          focus
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        {upload ? preview() : null}
+        <List>
+          <List.Item>
+            <Image avatar src={user ? user.photoURL : null} size="tiny" />
+            <List.Content>
+              <Form>
+                <TextArea
+                  placeholder="140文字以内でメッセージを入力してください"
+                  maxLength="140"
+                  style={{ resize: "none", border: "none" }}
+                  fluid
+                  transparent
+                  focus
+                  type="text"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                />
+                {upload ? preview() : null}
+              </Form>
+            </List.Content>
+          </List.Item>
+        </List>
 
         <br />
         <div className="form__btn">
@@ -231,7 +248,7 @@ const TweetForm = ({
         <Modal.Content>
           ファイルを選択から画像を選択して決定を押してください
           <Form onSubmit={onSubmit}>
-            <Input type="file" onChange={handleImage} />
+            <Input type="file" onChange={handleImage} className="input__file" />
             <Button basic color="red" onClick={handleClose}>
               戻る
             </Button>

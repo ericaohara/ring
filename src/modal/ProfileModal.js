@@ -1,6 +1,6 @@
-import React, { useState, useContext, useReducer } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthService";
-import firebase, { storage } from "firebase";
+import firebase, { storage } from "../config/firebase";
 
 import {
   Button,
@@ -13,106 +13,185 @@ import {
 } from "semantic-ui-react";
 
 const ProfileModal = ({ modal, closeModal }) => {
-  const [previewImage, setPreviewImage] = useState("");
   const [avatarImage, setAvatarImage] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [birth, setBirth] = useState("");
+  const [reset, setReset] = useState("");
+  const [passwordModal, setPasswordModal] = useState(false);
+  const [upload, setUpload] = useState(false);
 
-  const user = useContext(AuthContext);
+  const { user, users } = useContext(AuthContext);
+  const db = firebase.firestore();
+
+  const openPasswordModal = () => setPasswordModal(true);
+  const closePasswordModal = () => setPasswordModal(false);
+
+  // firebaseへ情報を追加
+  const userDetails = () => {
+    db.collection("users")
+      .doc()
+      .set({
+        user: {
+          id: user.uid,
+          name,
+          avatar: avatarUrl,
+          birth: birth,
+        },
+      });
+  };
 
   const handlePreview = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
+    setAvatarImage(file);
+  };
 
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.addEventListener("load", () => {
-        setPreviewImage(reader.result);
+  const onBtnClick = (name, birth) => {
+    // プロフィール
+    const information = firebase.auth().currentUser;
+
+    userDetails();
+
+    if (!name || !avatarImage || !birth) {
+      closeModal();
+    }
+
+    if (name) {
+      db.collection("users").doc().update({
+        name,
+      });
+
+      information
+        .updateProfile({
+          // 名前変更
+          displayName: name,
+        })
+        .then(() => {
+          console.log("プロフィール更新成功");
+          setName("");
+          closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    if (avatarImage) {
+      db.collection("users").doc().update({
+        avatar: avatarUrl,
+      });
+
+      information
+        .updateProfile({
+          // 画像変更
+          photoURL: avatarUrl,
+        })
+        .then(() => {
+          console.log("プロフィール更新成功");
+          closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    //"https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733",
+
+    if (birth) {
+      db.collection("users").doc().update({
+        birth,
       });
     }
   };
 
-  // const next = (snapshot) => {
-  //   // 進行中のsnapshotを得る
-  //   // アップロードの進行度を表示
-  //   const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //   console.log(percent + "% done");
-  //   console.log(snapshot);
-  // };
+  // パスワードリセット
+  const onPasswordClick = (value) => {
+    if (!value) {
+      alert("パスワード変更の方 : メールアドレスが入力されていません");
+    }
+    const auth = firebase.auth();
+    const emailAddress = value;
 
-  // // エラーハンドリング
-  // const error = (err) => console.log(err);
-
-  // const complete = () => {
-  //   // 完了後の処理
-  //   // 画像表示のため、アップロードした画像のURLを取得
-  //   storage
-  //     .ref("images")
-  //     .child(image.name)
-  //     .getDownloadURL()
-  //     .then((fireBaseUrl) => {
-  //       setImageUrl(fireBaseUrl);
-  //     });
-  // };
+    auth
+      .sendPasswordResetEmail(emailAddress)
+      .then(() => {
+        console.log("パスワードリセット");
+        closePasswordModal();
+        setReset("");
+      })
+      .catch((err) => console.log(err));
+    closePasswordModal();
+  };
 
   // アドレス変更
-  const onChangeEmail = (value) => {
-    const userEmail = firebase.auth().currentUser;
+  const ChangeAddress = (email, password) => {
+    const information = firebase.auth().currentUser;
 
-    userEmail
-      .updateEmail({ email: value })
-      .then(() => {
-        console.log("アドレス変更完了");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (!email) {
+      alert("メールアドレスを入力してください");
+    } else if (!password) {
+      alert("パスワードを入力してください");
+      console.log(password, "pass");
+    } else {
+      const credential = firebase
+        .auth()
+        // 既存のユーザーをログインさせる
+        .signInWithEmailAndPassword(email, password);
+
+      information
+        .updateEmail(email)
+        .then(() => {
+          console.log("アドレス変更完了");
+          setEmail("");
+          setPassword("");
+          closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
-  const onBtnClick = () => {
-    const metadata = {
-      contentType: "image/jpeg",
-    };
-    const uploadTask = storage.ref(`/avatars/${user.uid}`).put(avatarImage);
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, {
-      next: function (snapshot) {
-        const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(percent);
-      },
-      error: function (err) {
-        console.log(err);
-      },
-      complete: function () {
-        storage
-          .ref("avatars")
-          .child(user.uid)
-          .getDownloadUrl()
-          .then((firebaseUrl) => {
-            setAvatarImage(firebaseUrl);
-            changeAvatar();
-          });
-      },
-    });
+  // 画像アップロード
+  const prevAvatar = () => {
+    if (avatarImage === "") {
+      alert("ファイルを選択されていません");
+      return;
+    }
+    setUpload(true);
+    // アバターアップロード
+    const uploadTask = storage
+      .ref(`/icons/${avatarImage.name}`)
+      .put(avatarImage);
+    uploadTask.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      next,
+      error,
+      complete
+    );
   };
 
-  const changeAvatar = () => {
-    user
-      .updateProfile({
-        photoURL: avatarImage,
-        // closeModal()
-      })
-      .then(() => {
-        console.log("PhotoURL");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const next = (snapshot) => {
+    // 進行中のsnapshotを得る
+    // アップロードの進行度を表示
+    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(percent + "% done");
+  };
 
+  // エラーハンドリング
+  const error = (err) => console.log(err);
+
+  // useEffect?
+  const complete = () => {
+    // 完了後の処理
+    // 画像表示のため、アップロードした画像のURLを取得
     storage
-      .ref(user)
-      .child(user.uid)
-      .update(setAvatarImage())
-      .then(() => {
-        console.log("アバターアップデート");
+      .ref("icons")
+      .child(avatarImage.name)
+      .getDownloadURL()
+      .then((fireBaseUrl) => {
+        setAvatarUrl(fireBaseUrl);
       })
       .catch((err) => {
         console.log(err);
@@ -123,61 +202,152 @@ const ProfileModal = ({ modal, closeModal }) => {
     <>
       <Modal open={modal} onClose={closeModal}>
         <Modal.Header>プロフィール</Modal.Header>
-        <Modal.Content>
-          <Grid.Column>
-            {previewImage && (
-              <Image
-                src={previewImage}
-                height={120}
-                width={120}
-                size="small"
-                circular
-              />
-            )}
+        <Modal.Content style={{ width: "100%" }}>
+          <Grid.Column container>
+            <Grid.Row>
+              {upload ? (
+                <Image
+                  src={avatarUrl}
+                  height={120}
+                  width={120}
+                  size="small"
+                  circular
+                  style={{ margin: "0 auto" }}
+                />
+              ) : (
+                <Image
+                  src={user ? user.photoURL : null}
+                  height={120}
+                  width={120}
+                  size="small"
+                  circular
+                  style={{ margin: "0 auto" }}
+                />
+              )}
+              <Button color="green" onClick={prevAvatar} inverted>
+                <Icon name="checkmark" />
+                　アバタープレビュー
+              </Button>
+            </Grid.Row>
           </Grid.Column>
           <Form>
             <Form.Field>
-              <Input
-                onChange={handlePreview}
-                type="file"
-                placeholder="アバターの変更"
-              />
+              <label>アバターの変更</label>
+              <Input type="file" onChange={handlePreview} />
             </Form.Field>
             <Form.Field>
               <label>名前の変更</label>
-              <Input type="text" placeholder={user.displayName} />
-            </Form.Field>
-            <Form.Field>
-              <label>メールアドレスの変更</label>
               <Input
+                type="text"
+                value={name}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setName(e.target.value);
                 }}
-                value={email}
-                type="mail"
-                placeholder={user.email}
+                placeholder={user ? user.displayName : ""}
               />
             </Form.Field>
             <Form.Field>
               <label>誕生日の設定</label>
-              <Input type="date" placeholder="生年月日" />
+              <Input
+                type="date"
+                placeholder="生年月日"
+                value={birth}
+                onChange={(e) => setBirth(e.target.value)}
+              />
             </Form.Field>
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button color="green" onClick={onBtnClick} inverted>
+          <Button color="green" onClick={openPasswordModal} inverted>
             <Icon name="checkmark" />
             　パスワード変更
-          </Button>
-          <Button color="green" onClick={onBtnClick} inverted>
-            <Icon name="checkmark" />
-            　保存
           </Button>
           <Button color="red" inverted onClick={closeModal}>
             <Icon name="remove" />
             　キャンセル
           </Button>
+          <Button
+            color="green"
+            onClick={() => {
+              onBtnClick(name, email, password, birth);
+            }}
+            inverted
+          >
+            <Icon name="checkmark" />
+            　保存
+          </Button>
         </Modal.Actions>
+      </Modal>
+
+      <Modal open={passwordModal} onClose={closePasswordModal}>
+        <Modal.Header style={{ width: "100%", display: "flex" }}>
+          <span>メールアドレスorパスワード再設定</span>
+          <Button
+            onClick={closePasswordModal}
+            style={{ justifyContent: "spaceBetween" }}
+          >
+            キャンセル
+          </Button>
+        </Modal.Header>
+        <Modal.Content>
+          <Form>
+            <Form.Field>
+              <label>メールアドレスの変更</label>
+              <Input
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                type="mail"
+                placeholder={user ? user.email : ""}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>
+                ※メールアドレスを変更する場合はパスワードを入力してください
+              </label>
+              <Input
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                type="password"
+              />
+            </Form.Field>
+            <Button
+              onClick={() => {
+                ChangeAddress(email, password);
+              }}
+            >
+              送信
+            </Button>
+          </Form>
+        </Modal.Content>
+        <Modal.Content>
+          <Form
+            onSubmit={() => {
+              onPasswordClick(reset);
+            }}
+          >
+            <Form.Field>
+              <label>パスワード変更の方はアドレスを入力してください</label>
+              <Input
+                type="email"
+                value={reset}
+                onChange={(e) => {
+                  setReset(e.target.value);
+                }}
+              />
+            </Form.Field>
+            <Button
+              onClick={() => {
+                onPasswordClick(reset);
+              }}
+            >
+              送信
+            </Button>
+          </Form>
+        </Modal.Content>
       </Modal>
     </>
   );

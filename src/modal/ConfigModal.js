@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../AuthService";
+import React from "react";
 
 import { Button, Modal, Icon, Card, Image } from "semantic-ui-react";
 
 const ConfigModal = ({ modal, closeModal }) => {
-  const user = useContext(AuthContext);
-
   return (
     <>
       <Modal size="small" open={modal} onClose={closeModal}>

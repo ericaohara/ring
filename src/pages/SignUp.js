@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import firebase from "../config/firebase";
-import icon from "../images/byebye_girl.png";
+import firebase, { storage } from "../config/firebase";
 
 import {
   Grid,
@@ -18,6 +17,8 @@ const SignUp = ({ history }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [userName, setUserName] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   const onClickSubmit = (e) => {
     e.preventDefault();
@@ -37,9 +38,8 @@ const SignUp = ({ history }) => {
         user
           .updateProfile({
             displayName: userName,
-            email: email,
-            password: password,
-            photoURL: icon,
+            photoURL:
+              "https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733",
           })
           .then(function () {
             history.push("/");
@@ -53,12 +53,56 @@ const SignUp = ({ history }) => {
       });
   };
 
-  // FavoriteBorderRoundedIcon
+  // const choiceAvatar = (e) => {
+  //   const file = e.target.files[0];
+  //   setAvatar(file);
+  // };
+
+  // const prevAvatar = () => {
+  //   // アバターアップロード
+  //   const uploadTask = storage.ref(`/avatar/${avatar.name}`).put(avatar);
+  //   uploadTask.on(
+  //     firebase.storage.TaskEvent.STATE_CHANGED,
+  //     next,
+  //     error,
+  //     complete
+  //   );
+  // };
+
+  // const next = (snapshot) => {
+  //   // 進行中のsnapshotを得る
+  //   // アップロードの進行度を表示
+  //   const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //   console.log(percent + "% done");
+  // };
+
+  // // エラーハンドリング
+  // const error = (err) => console.log(err);
+
+  // // useEffect?
+  // const complete = () => {
+  //   // 完了後の処理
+  //   // 画像表示のため、アップロードした画像のURLを取得
+  //   storage
+  //     .ref("avatar")
+  //     .child(avatar.name)
+  //     .getDownloadURL()
+  //     .then((fireBaseUrl) => {
+  //       setAvatarUrl(fireBaseUrl);
+  //       console.log(fireBaseUrl);
+  //       // 'https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733"
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   return (
     <>
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
+          {/* <input type="file" onChange={choiceAvatar} />
+          <button onClick={prevAvatar}>画像</button> */}
           <Header as="h2" icon color="grey" textAlign="center">
             <Icon name="chess queen" className="signUp__color" size="mini" />
             新規登録
@@ -128,27 +172,3 @@ const SignUp = ({ history }) => {
 };
 
 export default SignUp;
-
-// firebase
-//   .auth()
-//   .createUserWithEmailAndPassword(email, password)
-//   .then((result) => {
-//     const user = result.user;
-
-//     if (user) {
-//       const uid = user.uid;
-
-//       const userInitialData = {
-//         uid: user.uid,
-//         email: user.email,
-//         username: username,
-//       };
-
-//       db.collection("users")
-//         .doc(uid)
-//         .set(userInitialData)
-//         .then(() => {
-//           history.push("/");
-//         });
-//     }
-//   });

@@ -70,8 +70,35 @@ body,
   color: blue;
 }
 
+/* .react-calendar__tile--active {
+  background: red;
+  color: white;
+} */
+
+/* .react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: red;
+} */
+
 .image__prev {
 }
+
+.scroll__top {
+  position: fixed;
+  display: block;
+  right: 50px;
+  bottom: 50px;
+  background: #313131;
+  color: #fff;
+  padding: 20px;
+}
+
+/* ファイルボタン変えたい
+.input__file {
+  border: 0;
+  border-radius: 0;
+  background: #ccc;
+} */
 
 /* body {
   margin: 0;

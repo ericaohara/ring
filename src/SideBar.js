@@ -16,11 +16,10 @@ import {
 } from "semantic-ui-react";
 
 const SideBar = () => {
+  const { user } = useContext(AuthContext);
   const [modalProfile, setModalProfile] = useState(false);
   const [modalConfig, setModalConfig] = useState(false);
   const [modalChangeGroup, setModalChangeGroup] = useState(false);
-
-  const user = useContext(AuthContext);
 
   // モーダル
   const openProfileModal = () => setModalProfile(true);
@@ -31,19 +30,6 @@ const SideBar = () => {
 
   const openChangeGroupModal = () => setModalChangeGroup(true);
   const closeChangeGroupModal = () => setModalChangeGroup(false);
-
-  // // パスワードの再設定メールを送信する
-  // const auth = firebase.auth();
-  // const emailAddress = user.email;
-
-  // auth
-  //   .sendPasswordResetEmail(emailAddress)
-  //   .then(function () {
-  //     // Email sent.
-  //   })
-  //   .catch(function (error) {
-  //     // An error happened.
-  //   });
 
   return (
     <>
@@ -136,7 +122,16 @@ const SideBar = () => {
                   circular
                   color="red"
                   inverted
-                  onClick={() => firebase.auth().signOut()}
+                  onClick={() => {
+                    firebase.auth().onAuthStateChanged((firebaseUser) => {
+                      firebase
+                        .auth()
+                        .signOut()
+                        .then(() => {
+                          console.log("ログアウト");
+                        });
+                    });
+                  }}
                 />
               }
               content="ログアウト"
@@ -150,3 +145,12 @@ const SideBar = () => {
 };
 
 export default SideBar;
+// firebase
+//   .auth()
+//   .signOut()
+//   .then((obj) => {
+//     console.log(obj, "signOutObj");
+//   })
+//   .catch((err) => {
+//     console.log(err, "signOutErr");
+//   });

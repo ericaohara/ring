@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import TodoApp from "./todo_components/TodoApp";
 import { CalendarApp } from "./calendar_components/CalendarApp";
 import ChatApp from "./chat_components/ChatApp";
 import SideBar from "./SideBar";
+import { AuthContext } from "./AuthService";
 
-import { Grid } from "semantic-ui-react";
+import { Grid, Image } from "semantic-ui-react";
 
 const TopPage = () => {
+  const { groups, users } = useContext(AuthContext);
   return (
     <>
       <Grid columns="equal">
         <SideBar />
         <Grid.Column style={{ marginLeft: 350 }}>
+          {groups ? <div>{groups.name}</div> : null}
+          グループ名
+          {users ? <Image src="/" avatar /> : ""}
           <ChatApp />
         </Grid.Column>
         <div className="vertical">

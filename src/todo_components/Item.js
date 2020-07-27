@@ -36,6 +36,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
           checked={isDone}
           id={id}
           onClick={onClickSelect}
+          style={{ marginRight: "10px" }}
         />
         <span
           style={{

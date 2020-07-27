@@ -20,8 +20,8 @@ const SignIn = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
-  const [emailSubmit, setEmailSubmit] = useState(false);
-  const user = useContext(AuthContext);
+  const [reset, setReset] = useState("");
+  const { user } = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +30,7 @@ const SignIn = ({ history }) => {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         history.push("/");
+        console.log("ログイン成功");
       })
       .catch((err) => {
         console.log(err);
@@ -107,9 +108,9 @@ const SignIn = ({ history }) => {
           </Message>
           <Message>
             パスワードをお忘れの方は
-            <Button basic onClick={openModal}>
+            <div onClick={openModal} style={{ color: "blue" }}>
               こちら
-            </Button>
+            </div>
           </Message>
         </Grid.Column>
       </Grid>
@@ -118,20 +119,20 @@ const SignIn = ({ history }) => {
         <Modal.Content>
           <Form
             onSubmit={() => {
-              resetPassword(emailSubmit);
+              resetPassword(reset);
             }}
           >
             <label>アドレスを入力</label>
             <Input
               type="email"
-              value={emailSubmit}
+              value={reset}
               onChange={(e) => {
-                setEmailSubmit(e.target.value);
+                setReset(e.target.value);
               }}
             />
             <Button
               onClick={() => {
-                resetPassword(emailSubmit);
+                resetPassword(reset);
               }}
             >
               送信
