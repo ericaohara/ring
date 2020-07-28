@@ -29,7 +29,7 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
 
   return (
     <>
-      <li style={{ fontSize: "30px" }}>
+      <li style={{ fontSize: "30px", marginTop: "20px" }}>
         <Checkbox
           color="blue"
           // valueにstate入れるのと同じ考え方

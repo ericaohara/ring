@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import firebase, { storage } from "../config/firebase";
+import firebase from "../config/firebase";
 
 import {
   Grid,
@@ -17,8 +17,8 @@ const SignUp = ({ history }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [userName, setUserName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+
+  const db = firebase.firestore();
 
   const onClickSubmit = (e) => {
     e.preventDefault();
@@ -30,9 +30,11 @@ const SignUp = ({ history }) => {
 
     firebase
       .auth()
+      // emailとpasswordを元にユーザーを作る
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         // ユーザーのプロフィールを更新
+        // createUserWithEmailAndPasswordの返り値
         const user = firebase.auth().currentUser;
 
         user
@@ -41,62 +43,21 @@ const SignUp = ({ history }) => {
             photoURL:
               "https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733",
           })
-          .then(function () {
+          .then(() => {
+            // firestoreにuser情報を追加
+            db.collection("users").doc(user.uid).set({
+              name: user.displayName,
+              avatar: user.photoURL,
+              birth: "",
+              groups: [],
+            });
             history.push("/");
           })
-          .catch(function (err) {
-            alert(err);
+          .catch((err) => {
+            console.log(err);
           });
-      })
-      .catch((err) => {
-        console.log(err);
       });
   };
-
-  // const choiceAvatar = (e) => {
-  //   const file = e.target.files[0];
-  //   setAvatar(file);
-  // };
-
-  // const prevAvatar = () => {
-  //   // アバターアップロード
-  //   const uploadTask = storage.ref(`/avatar/${avatar.name}`).put(avatar);
-  //   uploadTask.on(
-  //     firebase.storage.TaskEvent.STATE_CHANGED,
-  //     next,
-  //     error,
-  //     complete
-  //   );
-  // };
-
-  // const next = (snapshot) => {
-  //   // 進行中のsnapshotを得る
-  //   // アップロードの進行度を表示
-  //   const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //   console.log(percent + "% done");
-  // };
-
-  // // エラーハンドリング
-  // const error = (err) => console.log(err);
-
-  // // useEffect?
-  // const complete = () => {
-  //   // 完了後の処理
-  //   // 画像表示のため、アップロードした画像のURLを取得
-  //   storage
-  //     .ref("avatar")
-  //     .child(avatar.name)
-  //     .getDownloadURL()
-  //     .then((fireBaseUrl) => {
-  //       setAvatarUrl(fireBaseUrl);
-  //       console.log(fireBaseUrl);
-  //       // 'https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733"
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   return (
     <>
       <Grid textAlign="center" verticalAlign="middle" className="app">

@@ -37,17 +37,18 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
 
   // firebaseへグループの追加
   const addGroup = () => {
-    db.collection("groups")
-      .doc()
-      .set({
-        name: groupName,
-        id: groupName,
-        // users: users,
-        // self: user,
+    db.collection("users")
+      .doc(user.uid)
+      .update({
+        groups: firebase.firestore.FieldValue.arrayUnion({
+          groupName: groupName,
+          groupId: groupName,
+          // createdUser: user,
+        }),
       })
       .then(() => {
         console.log("グループ追加成功！");
-        console.log(groups);
+        console.log(users);
       })
       .catch((err) => {
         console.log(err);
@@ -55,24 +56,42 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   };
 
   const add = () => {
-    if (groups === "") {
-      return;
-    } else {
-      return groups.map((group) => {
-        return (
-          <Button
-            id={group.id}
-            onClick={changeGroup}
-            type="button"
-            basic
-            color="blue"
-            active={group.id === activeGroup}
-          >
-            {group.name}
-          </Button>
-        );
-      });
-    }
+    const dbUser = users.find((_user) => _user.id === user.uid);
+    return dbUser.groups.map((group) => {
+      return (
+        <Button
+          id={group.id}
+          onClick={changeGroup}
+          type="button"
+          basic
+          color="blue"
+          active={group.id === activeGroup}
+        >
+          {group.groupName}
+        </Button>
+      );
+    });
+
+    // let groupButtons;
+    // users.forEach((dbUser) => {
+    //   if (dbUser.id === user.uid) {
+    //     groupButtons = dbUser.groups.map((group) => {
+    //       return (
+    //         <Button
+    //           id={group.id}
+    //           onClick={changeGroup}
+    //           type="button"
+    //           basic
+    //           color="blue"
+    //           active={group.id === activeGroup}
+    //         >
+    //           {group.groupName}
+    //         </Button>
+    //       );
+    //     });
+    //   }
+    // });
+    // return groupButtons;
   };
 
   const changeGroup = (e) => {
@@ -127,7 +146,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
               <Button type="button" basic color="blue" onClick={home}>
                 デフォ
               </Button>
-              {button ? add() : ""}
+              {users ? add() : ""}
             </Form.Field>
           </Form>
         </Modal.Content>
@@ -155,7 +174,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       <GroupConfigModal
         modal={configModal}
         closeModal={closeGroupConfigModal}
-        addGroup={addGroup}
+        // addGroup={addGroup}
       />
     </>
   );

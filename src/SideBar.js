@@ -123,14 +123,25 @@ const SideBar = () => {
                   color="red"
                   inverted
                   onClick={() => {
-                    firebase.auth().onAuthStateChanged((firebaseUser) => {
-                      firebase
-                        .auth()
-                        .signOut()
-                        .then(() => {
-                          console.log("ログアウト");
-                        });
-                    });
+                    firebase
+                      .auth()
+                      .signOut()
+                      .then((obj) => {
+                        console.log(obj, "signOutObj");
+                      })
+                      .catch((err) => {
+                        console.log(err, "signOutErr");
+                      });
+                    // ログイン状態の監視
+                    // ログイン状態が変わったらコールバックが発火してログアウトしてしまう
+                    // firebase.auth().onAuthStateChanged((firebaseUser) => {
+                    //   firebase
+                    //     .auth()
+                    //     .signOut()
+                    //     .then(() => {
+                    //       console.log("ログアウト");
+                    //     });
+                    // });
                   }}
                 />
               }

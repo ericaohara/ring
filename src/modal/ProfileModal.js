@@ -23,25 +23,40 @@ const ProfileModal = ({ modal, closeModal }) => {
   const [passwordModal, setPasswordModal] = useState(false);
   const [upload, setUpload] = useState(false);
 
-  const { user, users } = useContext(AuthContext);
+  const { users, user } = useContext(AuthContext);
   const db = firebase.firestore();
 
   const openPasswordModal = () => setPasswordModal(true);
   const closePasswordModal = () => setPasswordModal(false);
 
   // firebaseへ情報を追加
-  const userDetails = () => {
-    db.collection("users")
-      .doc()
-      .set({
-        user: {
-          id: user.uid,
-          name,
-          avatar: avatarUrl,
-          birth: birth,
-        },
-      });
-  };
+  // const userDetails = async () => {
+  // docにuser.uidを指定するパターン
+  // db.collection("users")
+  //   .doc(user.uid)
+  //   .set({
+  //     user: {
+  //       id: user.uid,
+  //       name,
+  //       avatar: avatarUrl,
+  //       birth: birth,
+  //     },
+  //   });
+
+  // whereで指定するパターン
+  // const dbUser = await db
+  //   .collection("users")
+  //   .where("id", "==", user.uid)
+  //   .get();
+  // dbUser.docs[0].ref.set({
+  //   user: {
+  //     id: user.uid,
+  //     name,
+  //     avatar: avatarUrl,
+  //     birth: birth,
+  //   },
+  // });
+  // };
 
   const handlePreview = (e) => {
     const file = e.target.files[0];
@@ -49,27 +64,40 @@ const ProfileModal = ({ modal, closeModal }) => {
   };
 
   const onBtnClick = (name, birth) => {
-    // プロフィール
+    // 現在ログインしているユーザーを取得
     const information = firebase.auth().currentUser;
 
-    userDetails();
-
+    // プロフィール
+    // 何も変更なければ閉じる
     if (!name || !avatarImage || !birth) {
       closeModal();
     }
 
+    // firestoreの更新
     if (name) {
-      db.collection("users").doc().update({
-        name,
-      });
+      db.collection("users")
+        // .where("id", "==", user.uid)
+        // .get()
+        .doc(user.uid)
+        .update({
+          name,
+        })
+        .then(() => {
+          // conf.docs[0].ref.update({
+          //   name,
+          // });
+          console.log("store,name,update");
+        })
+        .catch((err) => console.log(err));
 
+      // authの更新
       information
         .updateProfile({
           // 名前変更
           displayName: name,
         })
         .then(() => {
-          console.log("プロフィール更新成功");
+          console.log("auth,name,update");
           setName("");
           closeModal();
         })
@@ -79,27 +107,40 @@ const ProfileModal = ({ modal, closeModal }) => {
     }
 
     if (avatarImage) {
-      db.collection("users").doc().update({
-        avatar: avatarUrl,
-      });
+      // firestoreの更新
+      db.collection("users")
+        // .where("id", "==", user.uid)
+        // .get()
+        .doc(user.uid)
+        .update({
+          avatar: avatarUrl,
+        })
+        .then(() => {
+          // conf.docs[0].ref.update({
+          //   avatar: avatarUrl,
+          // });
+          console.log("store,avatar,update");
+        })
+        .catch((err) => console.log(err));
 
+      // authの更新
       information
         .updateProfile({
           // 画像変更
           photoURL: avatarUrl,
         })
         .then(() => {
-          console.log("プロフィール更新成功");
+          console.log("auth,avatar更新成功");
           closeModal();
         })
         .catch((err) => {
           console.log(err);
         });
     }
-    //"https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733",
 
+    // 誕生日
     if (birth) {
-      db.collection("users").doc().update({
+      db.collection("users").doc(user.uid).update({
         birth,
       });
     }

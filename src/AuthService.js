@@ -21,24 +21,24 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("groups")
-      .onSnapshot((snap) => {
-        const getGroup = snap.docs.map((doc) => {
-          return {
-            name: doc.data().name,
-            groupId: doc.data().id,
-            id: doc.id,
-            user: doc.data().user,
-          };
-        });
-        setGroups(getGroup);
-      });
-  }, []);
+  // useEffect(() => {
+  //   firebase
+  //     .firestore()
+  //     .collection("groups")
+  //     .onSnapshot((snap) => {
+  //       const getGroup = snap.docs.map((doc) => {
+  //         return {
+  //           name: doc.data().name,
+  //           groupId: doc.data().id,
+  //           id: doc.id,
+  //           user: doc.data().user,
+  //         };
+  //       });
+  //       setGroups(getGroup);
+  //     });
+  // }, []);
 
-  //  firebaseから情報を取得
+  // firebaseから情報を取得;
   useEffect(() => {
     firebase
       .firestore()

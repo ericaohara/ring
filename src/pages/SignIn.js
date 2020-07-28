@@ -33,7 +33,7 @@ const SignIn = ({ history }) => {
         console.log("ログイン成功");
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, "signin");
       });
   };
 
@@ -51,6 +51,7 @@ const SignIn = ({ history }) => {
     auth
       .sendPasswordResetEmail(emailAddress)
       .then(() => {
+        alert("メールを送信しました！そちらから変更してください！");
         console.log("パスワードリセット");
         closeModal();
       })

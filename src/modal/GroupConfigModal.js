@@ -23,27 +23,27 @@ const GroupConfigModal = ({ modal, closeModal, addGroup }) => {
   // チェックボックスを1つクリックしたら他のボックスをdisabled
   // チェックしたグループ名の内容を変更(名前の変更とメール)できるようにリンクしたい
   const map = () => {
-    return groups.map((group) => {
-      return (
-        <>
-          <Checkbox
-            checked={isDone}
-            onClick={checkIsDone}
-            id={groups.id}
-            // disabled
-          />
-          {group.name}
-        </>
-      );
-    });
+    // return groups.map((group) => {
+    //   return (
+    //     <>
+    //       <Checkbox
+    //         checked={isDone}
+    //         onClick={checkIsDone}
+    //         id={groups.id}
+    //         // disabled
+    //       />
+    //       {group.name}
+    //     </>
+    //   );
+    // });
   };
 
   const checkIsDone = (e) => {
-    if (e.target.id === groups.id) {
-      return { ...groups, isDone: !isDone };
-    } else {
-      return groupArr;
-    }
+    // if (e.target.id === groups.id) {
+    //   return { ...groups, isDone: !isDone };
+    // } else {
+    //   return groupArr;
+    // }
   };
 
   return (
