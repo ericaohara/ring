@@ -34,7 +34,3 @@ const TodoApp = () => {
 };
 
 export default TodoApp;
-
-/*<button onClick={() => {
-  console.log(todos);
-}}>ボタン</button>*/

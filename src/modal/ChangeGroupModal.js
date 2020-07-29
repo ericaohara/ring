@@ -4,13 +4,20 @@ import { AuthContext } from "../AuthService";
 import GroupConfigModal from "./GroupConfigModal.js";
 import { Redirect } from "react-router-dom";
 
-import { Button, Modal, Icon, Grid, Form, Input } from "semantic-ui-react";
+import {
+  Button,
+  Modal,
+  Icon,
+  Grid,
+  Form,
+  Input,
+  TransitionGroup,
+} from "semantic-ui-react";
 
 const ChangeGroupModal = ({ modal, closeModal }) => {
   const { groups, users, user } = useContext(AuthContext);
 
   const [groupName, setGroupName] = useState("");
-  const [button, setButton] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
   const [configModal, setConfigModal] = useState(false);
   // 今どのグループか分かるように設定
@@ -35,29 +42,55 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     }
   };
 
-  // firebaseへグループの追加
+  // const addId =()=>{
+  //   const groupDateIds = users.find((user)=>{user.id === user.uid})
+  //   const groupGetId = groupDateIds.map((groupDateId) => {
+  //     return groupDateId.
+  //   });
+  // }
+
+  // const addId = () => {
+  //   if (!users) {
+  //     return;
+  //   }
+  //   return users.map((user) => user.id);
+  // };
+
+  /**user.uidを取得する為の関数 */
+  const getId = () => {
+    if (!user) {
+      return;
+    }
+    return user.uid;
+  };
+
+  /**firebaseへグループの追加*/
   const addGroup = () => {
     db.collection("users")
       .doc(user.uid)
-      .update({
-        groups: firebase.firestore.FieldValue.arrayUnion({
-          groupName: groupName,
-          groupId: groupName,
-          // createdUser: user,
-        }),
+      .collection("groups")
+      .doc()
+      .set({
+        groupName: groupName,
+        groupId: groupName,
+        // createdUserId: getId(),
       })
       .then(() => {
         console.log("グループ追加成功！");
-        console.log(users);
+        console.log(groups);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  console.log(groups);
+
   const add = () => {
-    const dbUser = users.find((_user) => _user.id === user.uid);
-    return dbUser.groups.map((group) => {
+    if (!groups) {
+      return;
+    }
+    return groups.map((group) => {
       return (
         <Button
           id={group.id}
@@ -72,6 +105,24 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       );
     });
 
+    // 配列の中の配列から値を取り出すパターン１
+    // const dbUser = users.find((_user) => _user.id === user.uid);
+    // return dbUser.groups.map((group) => {
+    //   return (
+    //     <Button
+    //       id={group.id}
+    //       onClick={changeGroup}
+    //       type="button"
+    //       basic
+    //       color="blue"
+    //       active={group.id === activeGroup}
+    //     >
+    //       {group.groupName}
+    //     </Button>
+    //   );
+    // });
+
+    // 配列の中の配列から値を取り出すパターン２
     // let groupButtons;
     // users.forEach((dbUser) => {
     //   if (dbUser.id === user.uid) {

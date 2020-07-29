@@ -6,7 +6,7 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState(null);
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,24 +21,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   firebase
-  //     .firestore()
-  //     .collection("groups")
-  //     .onSnapshot((snap) => {
-  //       const getGroup = snap.docs.map((doc) => {
-  //         return {
-  //           name: doc.data().name,
-  //           groupId: doc.data().id,
-  //           id: doc.id,
-  //           user: doc.data().user,
-  //         };
-  //       });
-  //       setGroups(getGroup);
-  //     });
-  // }, []);
-
-  // firebaseから情報を取得;
+  /** userの情報を取得する関数 */
   useEffect(() => {
     firebase
       .firestore()
@@ -54,8 +37,26 @@ export const AuthProvider = ({ children }) => {
       });
   }, []);
 
+  /**　サブコレクションのgroupを取得する関数 */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    firebase
+      .firestore()
+      .collection(`users/${user.uid}/groups`)
+      .onSnapshot((snapshot) => {
+        const groupContent = snapshot.docs.map((doc) => {
+          return {
+            ...doc.data(),
+          };
+        });
+        setGroups(groupContent);
+      });
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ user, groups, setGroups, users }}>
+    <AuthContext.Provider value={{ user, groups, users }}>
       {children}
     </AuthContext.Provider>
   );

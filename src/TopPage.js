@@ -8,15 +8,21 @@ import { AuthContext } from "./AuthService";
 import { Grid, Image } from "semantic-ui-react";
 
 const TopPage = () => {
-  const { groups, users } = useContext(AuthContext);
+  const { groups, user } = useContext(AuthContext);
+
+  const getGroupName = () => {
+    return groups.map((group) => {
+      return <>{group.groupName}</>;
+    });
+  };
+
   return (
     <>
       <Grid columns="equal">
         <SideBar />
         <Grid.Column style={{ marginLeft: 350 }}>
-          {groups ? <div>{groups.name}</div> : null}
-          グループ名
-          {users ? <Image src="/" avatar /> : ""}
+          {groups ? <div>{getGroupName()}</div> : null}
+          {user ? <Image src={user.photoURL} avatar /> : ""}
           <ChatApp />
         </Grid.Column>
         <div className="vertical">

@@ -26,7 +26,7 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
-  const { user } = useContext(AuthContext);
+  const { user, users, groups } = useContext(AuthContext);
 
   // firebase
   const db = firebase.firestore();
@@ -185,6 +185,7 @@ const TweetForm = ({
         console.log(err);
       });
   };
+  console.log(user);
 
   return (
     <>

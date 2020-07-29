@@ -49,7 +49,7 @@ const SignUp = ({ history }) => {
               name: user.displayName,
               avatar: user.photoURL,
               birth: "",
-              groups: [],
+              // groups: [],
             });
             history.push("/");
           })
