@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../AuthService";
 
-import { Checkbox } from "semantic-ui-react";
+import { Checkbox, List } from "semantic-ui-react";
 
-const Item = ({ value, todos, setTodos, isDone, id }) => {
+const Item = ({ value, todos, setTodos, isDone, id, groupId }) => {
+  const { currentGroup } = useContext(AuthContext);
+
   // 一個のチェックボックスだけにチェック出来る処理
   const onClickSelect = (e) => {
     // isDoneとリンクさせるためにClickBoxのname属性にtodoのidを入れる
@@ -29,23 +32,25 @@ const Item = ({ value, todos, setTodos, isDone, id }) => {
 
   return (
     <>
-      <li style={{ fontSize: "30px", marginTop: "20px" }}>
-        <Checkbox
-          color="blue"
-          // valueにstate入れるのと同じ考え方
-          checked={isDone}
-          id={id}
-          onClick={onClickSelect}
-          style={{ marginRight: "10px" }}
-        />
-        <span
-          style={{
-            textDecoration: isDone ? "line-through" : "none",
-          }}
-        >
-          {value}
-        </span>
-      </li>
+      {currentGroup === groupId ? (
+        <List.Item style={{ fontSize: "18px", marginTop: "20px" }}>
+          <Checkbox
+            color="blue"
+            // valueにstate入れるのと同じ考え方
+            checked={isDone}
+            id={id}
+            onClick={onClickSelect}
+            style={{ marginRight: "10px" }}
+          />
+          <span
+            style={{
+              textDecoration: isDone ? "line-through" : "none",
+            }}
+          >
+            {value}
+          </span>
+        </List.Item>
+      ) : null}
     </>
   );
 };

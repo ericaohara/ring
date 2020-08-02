@@ -3,15 +3,7 @@ import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import GroupConfigModal from "./GroupConfigModal.js";
 
-import {
-  Button,
-  Modal,
-  Icon,
-  Grid,
-  Form,
-  Input,
-  TransitionGroup,
-} from "semantic-ui-react";
+import { Button, Modal, Icon, Form, Input } from "semantic-ui-react";
 
 const ChangeGroupModal = ({ modal, closeModal }) => {
   const { groups, users, user, currentGroup, setCurrentGroup } = useContext(
@@ -21,19 +13,13 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   const [groupName, setGroupName] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
   const [configModal, setConfigModal] = useState(false);
-  // 今どのグループか分かるように設定
-  // グループ名つけるから多分いらない
-  const [activeGroup, setActiveGroup] = useState("");
 
   const openGroupConfigModal = () => setConfigModal(true);
   const closeGroupConfigModal = () => setConfigModal(false);
 
-  // useEffect(() => {
-  //   allGroup();
-  // }, []);
-
   const db = firebase.firestore();
 
+  /** グループ追加 */
   const onFormSubmit = (groupName) => {
     if (groupName === "") {
       alert("グループ名を入力して下さい！");
@@ -43,10 +29,9 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     }
   };
 
+  /** グループ切り替える */
   const changeGroup = (groupId) => {
-    // クリックしたら現在のチャンネルを更新する（切替)
     setCurrentGroup(groupId);
-    ActiveGroup(groupId);
     closeModal();
   };
 
@@ -72,7 +57,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       })
       .then(() => {
         console.log("グループ追加成功！");
-        console.log(groups);
       })
       .catch((err) => {
         console.log(err);
@@ -84,22 +68,25 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     if (!groups) {
       return;
     }
-    return groups.map((group) => {
-      return (
-        <Button
-          id={group.groupId}
-          onClick={() => {
-            changeGroup(group.groupId);
-          }}
-          type="button"
-          basic
-          color="blue"
-          active={group.id === activeGroup}
-        >
-          {group.groupName}
-        </Button>
-      );
-    });
+    const checkId = groups.map((group) => currentGroup === group.groupId);
+
+    if (checkId) {
+      return groups.map((group) => {
+        return (
+          <Button
+            id={group.groupId}
+            onClick={() => {
+              changeGroup(group.groupId);
+            }}
+            type="button"
+            basic
+            color="blue"
+          >
+            {group.groupName}
+          </Button>
+        );
+      });
+    }
 
     // 配列の中の配列から値を取り出すパターン１
     // const dbUser = users.find((_user) => _user.id === user.uid);
@@ -141,10 +128,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     // return groupButtons;
   };
 
-  // const allGroup = () => {
-  //   handleFirstGroup();
-  // };
-
   // const handleFirstGroup = () => {
   //   const firstGroup = groups[0];
   //   if (firstLoad && groups.length > 0) {
@@ -166,15 +149,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   //     return;
   //   }
   //   return users.map((user) => user.id);
-  // };
-
-  const ActiveGroup = () => {
-    setActiveGroup(groups.id);
-  };
-
-  // const home = () => {
-  //   setCurrentGroup(currentGroup);
-  //   closeModal();
   // };
 
   return (
@@ -226,7 +200,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       <GroupConfigModal
         modal={configModal}
         closeModal={closeGroupConfigModal}
-        // addGroup={addGroup}
       />
     </>
   );

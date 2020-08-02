@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  /** userの情報を取得する関数 */
+  /** dbのuser情報を取得する関数 */
   useEffect(() => {
     firebase
       .firestore()

@@ -4,43 +4,55 @@ import firebase from "firebase";
 
 import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
 
-const GroupConfigModal = ({ modal, closeModal, addGroup }) => {
+const GroupConfigModal = ({ modal, closeModal }) => {
   const { groups, setGroups, user } = useContext(AuthContext);
   const [name, setName] = useState("");
+  const [isDone, setIsDone] = useState(false);
 
   const db = firebase.firestore();
 
   const onBtnClick = () => {
     setName("");
+    db.collection("users")
+      .doc("user.uid")
+      .collection("groups")
+      .doc()
+      .update({
+        groupName: name,
+      })
+      .then(() => console.log("nameUpdate"))
+      .catch((err) => console.log(err));
     closeModal();
   };
 
-  const isChecked = (e) => {
-    groups.map((group) => {
-      if (e.target.id === group.id) {
-        return db
-          .collection("users")
-          .doc(user.uid)
-          .collection("groups")
-          .doc()
-          .update({
-            checked: !false,
-          });
-      } else {
-        return group;
-      }
-    });
-    // setGroups(checkedGroup);
+  // const isChecked = (e) => {
+  //   groups.map((group) => {
+  //     if (e.target.id === group.id) {
+  //       return db
+  //         .collection("users")
+  //         .doc(user.uid)
+  //         .collection("groups")
+  //         .doc()
+  //         .update({
+  //           checked: false,
+  //         });
+  //     } else {
+  //       return group;
+  //     }
+  //   });
+  // setGroups(checkedGroup);
+  // };
+
+  const checkBox = (id) => {
+    const idCheck = groups.map((group) => group.groupId === id);
+    if (idCheck) {
+      return setIsDone(!isDone);
+    } else {
+      return setIsDone(isDone);
+    }
   };
 
-  const checkBox = () => {
-    return groups.map((group) => {
-      return <>{group.checked}</>;
-    });
-  };
-
-  // チェックボックスを1つクリックしたら他のボックスをdisabled
-  // チェックしたグループ名の内容を変更(名前の変更とメール)できるようにリンクしたい
+  /** チェックボックス付きのグループ名表示 */
   const chooseGroup = () => {
     if (!groups) {
       return;
@@ -49,10 +61,12 @@ const GroupConfigModal = ({ modal, closeModal, addGroup }) => {
       return (
         <div>
           <Checkbox
-            onClick={isChecked}
-            checked={checkBox}
-            id={groups.id}
-            // disabled
+            checked={isDone}
+            onClick={(e) => {
+              checkBox(e.target.id);
+            }}
+            id={groups.groupId}
+            style={{ marginRight: "10px" }}
           />
           {group.groupName}
         </div>
@@ -72,13 +86,16 @@ const GroupConfigModal = ({ modal, closeModal, addGroup }) => {
             </Form.Field>
             <Form.Field>
               <label>グループ名変更</label>
-              <Input
-                placeholder={groups.name}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
+              {isDone ? (
+                <Input
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                />
+              ) : (
+                <Input disabled />
+              )}
             </Form.Field>
           </Form>
         </Modal.Content>

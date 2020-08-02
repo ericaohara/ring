@@ -119,7 +119,7 @@ const TweetForm = ({
     }
   };
 
-  // 画像
+  /** 画像アップロード */
   const handleImage = (e) => {
     const image = e.target.files[0];
     setImages(image);

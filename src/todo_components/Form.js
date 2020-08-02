@@ -33,7 +33,7 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
   // firebase
   const db = firebase.firestore();
 
-  // firestoreにデータを追記
+  /**firestoreにtodoデータを追加*/
   const todoData = () => {
     const id = shortid.generate();
 

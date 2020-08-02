@@ -1,6 +1,8 @@
 import React from "react";
 import Item from "./Item";
 
+// import { List } from "semantic-ui-react";
+
 const List = ({ todos, setTodos }) => {
   return (
     <ul style={{ listStyle: "none" }}>
@@ -15,6 +17,7 @@ const List = ({ todos, setTodos }) => {
               todos={todos}
               setTodos={setTodos}
               isDone={todo.isDone}
+              groupId={todo.groupId}
             />
           </>
         );

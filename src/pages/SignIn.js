@@ -25,6 +25,12 @@ const SignIn = ({ history }) => {
 
   const onClickSubmit = (e) => {
     e.preventDefault();
+    if (!email) {
+      alert("メールアドレスを入力してください");
+    }
+    if (!password) {
+      alert("パスワードを入力してください");
+    }
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
