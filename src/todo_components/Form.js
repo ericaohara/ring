@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import { AuthContext } from "../AuthService";
 import firebase from "../config/firebase";
 import shortid from "shortid";
 
 import { Button, Input, Grid } from "semantic-ui-react";
 
 const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
+  const { currentGroup } = useContext(AuthContext);
   // 追加
   const onButtonClick = (e) => {
     e.preventDefault();
@@ -41,6 +43,7 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
         content: value,
         isDone: false,
         id: id,
+        groupId: currentGroup,
       })
       .then(() => {
         console.log("todo データ追加成功");

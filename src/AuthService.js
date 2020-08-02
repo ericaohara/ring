@@ -7,6 +7,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState(null);
   const [groups, setGroups] = useState("");
+  const [currentGroup, setCurrentGroup] = useState(null);
+
   // const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -51,12 +53,23 @@ export const AuthProvider = ({ children }) => {
             ...doc.data(),
           };
         });
+        console.log(groupContent);
+        setCurrentGroup(groupContent[0].groupId);
         setGroups(groupContent);
       });
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, groups, users }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        groups,
+        setGroups,
+        users,
+        currentGroup,
+        setCurrentGroup,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

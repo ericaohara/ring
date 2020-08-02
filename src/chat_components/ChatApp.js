@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TweetForm from "./TweetForm";
 import TweetList from "./TweetList";
+import { AuthContext } from "../AuthService";
 import { Segment } from "semantic-ui-react";
 
 // 絵文字
@@ -19,6 +20,8 @@ const ChatApp = () => {
 
   // 絵文字
   const [emojiType, setEmojiType] = useState(null);
+
+  const { currentGroup } = useContext(AuthContext);
 
   const onEmojiSelect = (emoji) => {
     // 絵文字一覧の開閉
@@ -70,7 +73,6 @@ const ChatApp = () => {
         />
       )}
       <Segment>
-        {/* <Comment.Group className="main__tweet" /> */}
         <TweetList tweets={tweets} setTweets={setTweets} imageUrl={imageUrl} />
       </Segment>
     </>

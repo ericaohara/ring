@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import GroupConfigModal from "./GroupConfigModal.js";
-import { Redirect } from "react-router-dom";
 
 import {
   Button,
@@ -15,7 +14,9 @@ import {
 } from "semantic-ui-react";
 
 const ChangeGroupModal = ({ modal, closeModal }) => {
-  const { groups, users, user } = useContext(AuthContext);
+  const { groups, users, user, currentGroup, setCurrentGroup } = useContext(
+    AuthContext
+  );
 
   const [groupName, setGroupName] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
@@ -27,9 +28,9 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   const openGroupConfigModal = () => setConfigModal(true);
   const closeGroupConfigModal = () => setConfigModal(false);
 
-  useEffect(() => {
-    allGroup();
-  }, []);
+  // useEffect(() => {
+  //   allGroup();
+  // }, []);
 
   const db = firebase.firestore();
 
@@ -42,26 +43,19 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     }
   };
 
-  // const addId =()=>{
-  //   const groupDateIds = users.find((user)=>{user.id === user.uid})
-  //   const groupGetId = groupDateIds.map((groupDateId) => {
-  //     return groupDateId.
-  //   });
-  // }
-
-  // const addId = () => {
-  //   if (!users) {
-  //     return;
-  //   }
-  //   return users.map((user) => user.id);
-  // };
+  const changeGroup = (groupId) => {
+    // クリックしたら現在のチャンネルを更新する（切替)
+    setCurrentGroup(groupId);
+    ActiveGroup(groupId);
+    closeModal();
+  };
 
   /**user.uidを取得する為の関数 */
-  const getId = () => {
+  const getName = () => {
     if (!user) {
       return;
     }
-    return user.uid;
+    return user.displayName;
   };
 
   /**firebaseへグループの追加*/
@@ -73,7 +67,8 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       .set({
         groupName: groupName,
         groupId: groupName,
-        // createdUserId: getId(),
+        checked: false,
+        createdUserName: getName(),
       })
       .then(() => {
         console.log("グループ追加成功！");
@@ -84,17 +79,18 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       });
   };
 
-  console.log(groups);
-
-  const add = () => {
+  /** グループ毎にボタンを増やす関数*/
+  const addBtn = () => {
     if (!groups) {
       return;
     }
     return groups.map((group) => {
       return (
         <Button
-          id={group.id}
-          onClick={changeGroup}
+          id={group.groupId}
+          onClick={() => {
+            changeGroup(group.groupId);
+          }}
           type="button"
           basic
           color="blue"
@@ -145,36 +141,41 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     // return groupButtons;
   };
 
-  const changeGroup = (e) => {
-    // クリックしたら現在のチャンネルを更新する（切替)
-    // groups.id === e.target.id;
-    console.log(groups);
-    closeModal();
-  };
+  // const allGroup = () => {
+  //   handleFirstGroup();
+  // };
 
-  const allGroup = () => {
-    handleFirstGroup();
-  };
+  // const handleFirstGroup = () => {
+  //   const firstGroup = groups[0];
+  //   if (firstLoad && groups.length > 0) {
+  //     setCurrentGroup(firstGroup);
+  //     setActiveGroup(firstGroup);
+  //   }
+  //   setFirstLoad(false);
+  // };
 
-  const handleFirstGroup = () => {
-    const firstGroup = groups[0];
-    if (firstLoad && groups.length > 0) {
-      // setCurrentChannel(firstGroup)
-      setActiveGroup(firstGroup);
-    }
-    setFirstLoad(false);
-  };
+  // const addId =()=>{
+  //   const groupDateIds = users.find((user)=>{user.id === user.uid})
+  //   const groupGetId = groupDateIds.map((groupDateId) => {
+  //     return groupDateId.
+  //   });
+  // }
 
-  const handleActiveGroup = () => {
+  // const addId = () => {
+  //   if (!users) {
+  //     return;
+  //   }
+  //   return users.map((user) => user.id);
+  // };
+
+  const ActiveGroup = () => {
     setActiveGroup(groups.id);
   };
 
-  const home = () => {
-    // if (user) {
-    //   <Redirect to="/" />;
-    // }
-    // closeModal();
-  };
+  // const home = () => {
+  //   setCurrentGroup(currentGroup);
+  //   closeModal();
+  // };
 
   return (
     <>
@@ -194,10 +195,10 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
             </Form.Field>
             <Form.Field>
               <label>グループ切替</label>
-              <Button type="button" basic color="blue" onClick={home}>
-                デフォ
-              </Button>
-              {users ? add() : ""}
+              {/* <Button type="button" basic color="blue" onClick={home}>
+                ホーム
+              </Button> */}
+              {users ? addBtn() : ""}
             </Form.Field>
           </Form>
         </Modal.Content>

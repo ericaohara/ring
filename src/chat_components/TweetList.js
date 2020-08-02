@@ -15,6 +15,7 @@ const TweetList = ({ tweets, setTweets }) => {
             userId={tweet.user.id}
             setTweets={setTweets}
             time={tweet.createdAt}
+            groupId={tweet.groupId}
           />
         );
       })}

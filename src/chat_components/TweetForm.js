@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
 import { AuthContext } from "../AuthService";
+// import { connect } from "react-redux";
 
 import {
   Modal,
@@ -26,12 +27,12 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
-  const { user, users, groups } = useContext(AuthContext);
+  const { user, users, groups, currentGroup } = useContext(AuthContext);
 
   // firebase
   const db = firebase.firestore();
 
-  // firebaseに追加した値を取得
+  /** firebaseに追加した値を取得 */
   useEffect(() => {
     firebase
       .firestore()
@@ -54,6 +55,15 @@ const TweetForm = ({
       });
   }, []);
 
+  /** グループのIdを抽出*/
+  const getGroupId = () => {
+    if (!groups) {
+      return;
+    }
+    const muchGroup = groups.find((group) => group.groupId === currentGroup);
+    return muchGroup.groupId;
+  };
+
   // firebaseにデータを追加
   const data = () => {
     db.collection("chat")
@@ -63,6 +73,7 @@ const TweetForm = ({
         createdAt: new Date(),
         content: text,
         image: imageUrl,
+        groupId: getGroupId(),
         user: {
           id: user.uid,
           name: user.displayName,
@@ -185,7 +196,6 @@ const TweetForm = ({
         console.log(err);
       });
   };
-  console.log(user);
 
   return (
     <>
@@ -263,4 +273,9 @@ const TweetForm = ({
   );
 };
 
+// const mapStateToProps = (state) => {
+//   return { chats: state.chats };
+// };
+
 export default TweetForm;
+// export default connect(mapStateToProps, { tweetChats })(TweetForm);
