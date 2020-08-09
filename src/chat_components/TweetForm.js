@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
 import { AuthContext } from "../AuthService";
+
 // import { connect } from "react-redux";
 
 import {
@@ -164,6 +165,7 @@ const TweetForm = ({
       .getDownloadURL()
       .then((fireBaseUrl) => {
         setImageUrl(fireBaseUrl);
+        console.log(fireBaseUrl);
       });
   };
 

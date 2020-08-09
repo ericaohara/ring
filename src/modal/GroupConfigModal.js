@@ -2,7 +2,15 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../AuthService";
 import firebase from "firebase";
 
-import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
+import {
+  Button,
+  Modal,
+  Icon,
+  Form,
+  Input,
+  Checkbox,
+  Responsive,
+} from "semantic-ui-react";
 
 const GroupConfigModal = ({ modal, closeModal }) => {
   const { groups, setGroups, user } = useContext(AuthContext);
@@ -11,6 +19,7 @@ const GroupConfigModal = ({ modal, closeModal }) => {
 
   const db = firebase.firestore();
 
+  /** input入力したらグループ名が変わるようにしたい */
   const onBtnClick = () => {
     setName("");
     db.collection("users")
@@ -25,32 +34,38 @@ const GroupConfigModal = ({ modal, closeModal }) => {
     closeModal();
   };
 
-  // const isChecked = (e) => {
-  //   groups.map((group) => {
-  //     if (e.target.id === group.id) {
-  //       return db
-  //         .collection("users")
-  //         .doc(user.uid)
-  //         .collection("groups")
-  //         .doc()
-  //         .update({
-  //           checked: false,
-  //         });
-  //     } else {
-  //       return group;
-  //     }
-  //   });
-  // setGroups(checkedGroup);
-  // };
-
+  /** チェックボックス管理 */
   const checkBox = (id) => {
-    const idCheck = groups.map((group) => group.groupId === id);
-    if (idCheck) {
-      return setIsDone(!isDone);
-    } else {
-      return setIsDone(isDone);
-    }
+    const conf = groups.find((group) => {
+      if (group.groupId === id) {
+        db.collection("users")
+          .doc(user.uid)
+          .collection("groups")
+          .where("group.groupId", "==", "id")
+          .update({
+            checked: true,
+          });
+      } else {
+        db.collection("users").doc(user.uid).collection("groups").doc().update({
+          checked: false,
+        });
+      }
+    });
+    return setGroups(conf);
   };
+
+  // return groups.find((group) => {
+  //   if (group.groupId === id) {
+  //     db.collection("users")
+  //       .doc(user.uid)
+  //       .collection("groups")
+  //       .where("groupId", "==", "id")
+  //       .get()
+  //       .then((response) => {
+  //         console.log(response);
+  //       });
+  //   }
+  // });
 
   /** チェックボックス付きのグループ名表示 */
   const chooseGroup = () => {
@@ -59,17 +74,18 @@ const GroupConfigModal = ({ modal, closeModal }) => {
     }
     return groups.map((group) => {
       return (
-        <div>
+        <Form.Field>
           <Checkbox
-            checked={isDone}
+            radio
+            checked={group.checked}
+            id={group.groupId}
             onClick={(e) => {
               checkBox(e.target.id);
             }}
-            id={groups.groupId}
             style={{ marginRight: "10px" }}
           />
           {group.groupName}
-        </div>
+        </Form.Field>
       );
     });
   };

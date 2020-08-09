@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import GroupConfigModal from "./GroupConfigModal.js";
+import shortid from "shortid";
 
 import { Button, Modal, Icon, Form, Input } from "semantic-ui-react";
 
@@ -11,7 +12,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   );
 
   const [groupName, setGroupName] = useState("");
-  const [firstLoad, setFirstLoad] = useState(true);
   const [configModal, setConfigModal] = useState(false);
 
   const openGroupConfigModal = () => setConfigModal(true);
@@ -23,6 +23,11 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   const onFormSubmit = (groupName) => {
     if (groupName === "") {
       alert("グループ名を入力して下さい！");
+    } else if (
+      groups.filter((group) => group.groupName === groupName).length > 1
+    ) {
+      alert("既に同じ名前のグループが存在します");
+      return;
     } else {
       setGroupName("");
       addGroup();
@@ -51,7 +56,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       .doc()
       .set({
         groupName: groupName,
-        groupId: groupName,
+        groupId: shortid.generate(),
         checked: false,
         createdUserName: getName(),
       })

@@ -33,19 +33,19 @@ const TweetItem = ({
       .then(() => console.log("削除成功"))
       .catch((err) => console.log(err));
 
-    storage
-      .refFromURL(imageUrl)
-      .delete()
-      .then(() => {
-        console.log("画像削除成功");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (imageUrl) {
+      storage
+        .refFromURL(imageUrl)
+        .delete()
+        .then(() => {
+          console.log("画像削除成功");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
-  // メッセージが作成されてからの経過時間がわかる→momentのfromNowメソッド
-  // moment使わない方がいいかも？
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   return (

@@ -3,6 +3,7 @@ import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Spinner from "../Spinner";
 
 import {
   Grid,

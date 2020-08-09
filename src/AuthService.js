@@ -8,8 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState(null);
   const [groups, setGroups] = useState("");
   const [currentGroup, setCurrentGroup] = useState(null);
-
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 現在のログインユーザーの取得
@@ -46,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     }
     firebase
       .firestore()
-      .collection(`users/${user.uid}/groups`)
+      .collection(`users/${user.uid}/groups/`)
       .onSnapshot((snapshot) => {
         const groupContent = snapshot.docs.map((doc) => {
           return {
@@ -68,6 +67,8 @@ export const AuthProvider = ({ children }) => {
         users,
         currentGroup,
         setCurrentGroup,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
