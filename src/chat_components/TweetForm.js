@@ -30,6 +30,13 @@ const TweetForm = ({
 }) => {
   const { user, users, groups, currentGroup } = useContext(AuthContext);
 
+  const pullImage = () => {
+    if (users && user) {
+      const conf = users.find((pull) => user.uid === pull.id);
+      return conf.avatar;
+    }
+  };
+
   // firebase
   const db = firebase.firestore();
 
@@ -65,6 +72,27 @@ const TweetForm = ({
     return muchGroup.groupId;
   };
 
+  const pullId = () => {
+    if (users) {
+      const conf = users.find((pull) => pull.id === user.uid);
+      return conf.id;
+    }
+  };
+
+  const pullName = () => {
+    if (users) {
+      const conf = users.find((pull) => pull.id === user.uid);
+      return conf.name;
+    }
+  };
+
+  const pullAvatar = () => {
+    if (users) {
+      const conf = users.find((pull) => pull.id === user.uid);
+      return conf.avatar;
+    }
+  };
+
   // firebaseにデータを追加
   const data = () => {
     db.collection("chat")
@@ -76,9 +104,9 @@ const TweetForm = ({
         image: imageUrl,
         groupId: getGroupId(),
         user: {
-          id: user.uid,
-          name: user.displayName,
-          avatar: user.photoURL,
+          id: pullId(),
+          name: pullName(),
+          avatar: pullAvatar(),
         },
       })
       .then(() => {
@@ -204,7 +232,7 @@ const TweetForm = ({
       <Segment>
         <List>
           <List.Item>
-            <Image avatar src={user ? user.photoURL : null} size="tiny" />
+            <Image avatar src={user ? pullImage() : null} size="tiny" />
             <List.Content>
               <Form>
                 <TextArea

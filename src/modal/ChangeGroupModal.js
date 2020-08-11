@@ -40,12 +40,12 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     closeModal();
   };
 
-  /**user.uidを取得する為の関数 */
+  /**users.nameを取得する為の関数 */
   const getName = () => {
-    if (!user) {
+    if (!users) {
       return;
     }
-    return user.displayName;
+    return users.find((pull) => pull.name);
   };
 
   /**firebaseへグループの追加*/

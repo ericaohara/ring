@@ -65,7 +65,7 @@ const ProfileModal = ({ modal, closeModal }) => {
 
   const onBtnClick = (name, birth) => {
     // 現在ログインしているユーザーを取得
-    const information = firebase.auth().currentUser;
+    // const information = firebase.auth().currentUser;
 
     // プロフィール
     // 何も変更なければ閉じる
@@ -91,19 +91,19 @@ const ProfileModal = ({ modal, closeModal }) => {
         .catch((err) => console.log(err));
 
       // authの更新
-      information
-        .updateProfile({
-          // 名前変更
-          displayName: name,
-        })
-        .then(() => {
-          console.log("auth,name,update");
-          setName("");
-          closeModal();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      //   information
+      //     .updateProfile({
+      //       // 名前変更
+      //       displayName: name,
+      //     })
+      //     .then(() => {
+      //       console.log("auth,name,update");
+      //       setName("");
+      //       closeModal();
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
     }
 
     if (avatarImage) {
@@ -124,18 +124,18 @@ const ProfileModal = ({ modal, closeModal }) => {
         .catch((err) => console.log(err));
 
       // authの更新
-      information
-        .updateProfile({
-          // 画像変更
-          photoURL: avatarUrl,
-        })
-        .then(() => {
-          console.log("auth,avatar更新成功");
-          closeModal();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // information
+      //   .updateProfile({
+      //     // 画像変更
+      //     photoURL: avatarUrl,
+      //   })
+      //   .then(() => {
+      //     console.log("auth,avatar更新成功");
+      //     closeModal();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
 
     // 誕生日
@@ -239,6 +239,85 @@ const ProfileModal = ({ modal, closeModal }) => {
       });
   };
 
+  const pullName = () => {
+    if (user && users) {
+      const conf = users.find((usersName) => user.uid === usersName.id);
+      return conf.name;
+    }
+  };
+
+  const image = () => {
+    if (!avatarUrl) {
+      return (
+        <Image
+          src={user ? user.photoURL : null}
+          height={120}
+          width={120}
+          size="small"
+          circular
+          style={{ margin: "0 auto" }}
+        />
+      );
+    } else if (avatarUrl && upload && users && user && user.uid === users.id) {
+      return (
+        <Image
+          src={users.avatar}
+          height={120}
+          width={120}
+          size="small"
+          circular
+          style={{ margin: "0 auto" }}
+        />
+      );
+    }
+  };
+
+  const imageAvatar = () => {
+    if (users) {
+      const conf = users.find((pullImage) => pullImage.id === user.uid);
+      return conf.avatar;
+    }
+  };
+
+  const checkPrev = () => {
+    if (upload) {
+      return (
+        <Image
+          src={avatarUrl}
+          height={120}
+          width={120}
+          size="small"
+          circular
+          style={{ margin: "0 auto" }}
+        />
+      );
+    } else {
+      return (
+        <>
+          {imageAvatar() ? (
+            <Image
+              src={users && imageAvatar()}
+              height={120}
+              width={120}
+              size="small"
+              circular
+              style={{ margin: "0 auto" }}
+            />
+          ) : (
+            <Image
+              src={user ? user.photoURL : null}
+              height={120}
+              width={120}
+              size="small"
+              circular
+              style={{ margin: "0 auto" }}
+            />
+          )}
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <Modal open={modal} onClose={closeModal}>
@@ -246,25 +325,7 @@ const ProfileModal = ({ modal, closeModal }) => {
         <Modal.Content style={{ width: "100%" }}>
           <Grid.Column container>
             <Grid.Row>
-              {upload ? (
-                <Image
-                  src={avatarUrl}
-                  height={120}
-                  width={120}
-                  size="small"
-                  circular
-                  style={{ margin: "0 auto" }}
-                />
-              ) : (
-                <Image
-                  src={user ? user.photoURL : null}
-                  height={120}
-                  width={120}
-                  size="small"
-                  circular
-                  style={{ margin: "0 auto" }}
-                />
-              )}
+              {checkPrev()}
               <Button color="green" onClick={prevAvatar} inverted>
                 <Icon name="checkmark" />
                 　アバタープレビュー
@@ -284,7 +345,7 @@ const ProfileModal = ({ modal, closeModal }) => {
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
-                placeholder={user ? user.displayName : ""}
+                placeholder={user ? pullName() : ""}
               />
             </Form.Field>
             <Form.Field>

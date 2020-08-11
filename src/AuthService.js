@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState(null);
   const [groups, setGroups] = useState("");
   const [currentGroup, setCurrentGroup] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // 現在のログインユーザーの取得
@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
           };
         });
         setUsers(userContent);
+        console.log(userContent);
       });
   }, []);
 
@@ -53,7 +54,9 @@ export const AuthProvider = ({ children }) => {
           };
         });
         console.log(groupContent);
-        setCurrentGroup(groupContent[0].groupId);
+        if (groupContent.length > 0) {
+          setCurrentGroup(groupContent[0].groupId);
+        }
         setGroups(groupContent);
       });
   }, [user]);
@@ -67,8 +70,8 @@ export const AuthProvider = ({ children }) => {
         users,
         currentGroup,
         setCurrentGroup,
-        isLoading,
-        setIsLoading,
+        loading,
+        setLoading,
       }}
     >
       {children}

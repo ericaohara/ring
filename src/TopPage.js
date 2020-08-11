@@ -4,48 +4,37 @@ import { CalendarApp } from "./calendar_components/CalendarApp";
 import ChatApp from "./chat_components/ChatApp";
 import SideBar from "./SideBar";
 import { AuthContext } from "./AuthService";
-import Spinner from "./Spinner";
 
 import { Grid, Image } from "semantic-ui-react";
 
 const TopPage = () => {
-  const { groups, user, currentGroup, isLoading, setIsLoading } = useContext(
-    AuthContext
-  );
+  const { groups, user, users, currentGroup } = useContext(AuthContext);
 
-  if (user) {
-    setIsLoading(false);
-  }
-
-  const name = () => {
-    if (groups) {
-      groups.map((group) => {
-        if (group.groupId === currentGroup) {
-          return group.groupName;
-        }
-      });
+  const pullImage = () => {
+    if (user && users) {
+      const conf = users.find((pull) => user.uid === pull.id);
+      return conf.avatar;
     }
   };
 
-  // 関数にするとでないこれはでる
-  if (groups) {
-    groups.map((group) => {
-      if (group.groupId === currentGroup) {
-        console.log(group.groupName);
-      }
-    });
-  }
+  const pullName = () => {
+    if (groups) {
+      const conf = groups.find((group) => group.groupId === currentGroup);
+      return conf.groupName;
+    }
+  };
 
   return (
     <>
-      {isLoading && <Spinner />}
       <Grid columns="equal">
         <SideBar />
         <Grid.Column style={{ marginLeft: 350 }}>
           {groups && (
-            <div style={{ fontFamily: "M PLUS 1p,sans-serif" }}>{name()}</div>
+            <div style={{ fontFamily: "M PLUS 1p,sans-serif" }}>
+              {pullName()}
+            </div>
           )}
-          {user ? <Image src={user.photoURL} avatar /> : ""}
+          {users ? <Image src={pullImage()} avatar /> : ""}
           <ChatApp />
         </Grid.Column>
         <div className="vertical">
@@ -62,5 +51,3 @@ const TopPage = () => {
 };
 
 export default TopPage;
-
-// style={{ position: "fixed", right: 0, top: 0 }}

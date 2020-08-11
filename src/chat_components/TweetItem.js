@@ -15,7 +15,7 @@ const TweetItem = ({
   userId,
   groupId,
 }) => {
-  const { user, currentGroup } = useContext(AuthContext);
+  const { user, users, currentGroup } = useContext(AuthContext);
   const db = firebase.firestore();
 
   const image = () => {
@@ -46,6 +46,12 @@ const TweetItem = ({
     }
   };
 
+  const idCheck = () => {
+    if (users) {
+      const conf = users.find((pull) => user.uid === pull.id);
+      return conf.id;
+    }
+  };
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   return (
@@ -56,10 +62,10 @@ const TweetItem = ({
             <Grid.Row stretched>
               <List size="big">
                 <List.Item className="tweet__item">
-                  <Image avatar src={avatar} size="tiny" />
+                  {users && <Image avatar src={avatar} size="tiny" />}
                   <List.Content style={{ margin: "30px 0" }}>
                     <div style={{ display: "flex", marginBottom: "20px" }}>
-                      <List.Header as="a">{name}</List.Header>
+                      <List.Header as="a">{users && name}</List.Header>
                       <List.Description
                         style={{ color: "grey", marginLeft: "20px" }}
                       >
@@ -69,19 +75,23 @@ const TweetItem = ({
                     {content}
                   </List.Content>
                   <div>{imageUrl ? image() : null}</div>
-                  {userId === user.uid ? (
-                    <Button
-                      circular
-                      basic
-                      icon="times"
-                      size="mini"
-                      color="gray"
-                      className="tweet__delete"
-                      onClick={() => {
-                        deleteData(id);
-                      }}
-                    />
-                  ) : null}
+                  {users && (
+                    <>
+                      {userId === idCheck() ? (
+                        <Button
+                          circular
+                          basic
+                          icon="times"
+                          size="mini"
+                          color="gray"
+                          className="tweet__delete"
+                          onClick={() => {
+                            deleteData(id);
+                          }}
+                        />
+                      ) : null}
+                    </>
+                  )}
                 </List.Item>
               </List>
             </Grid.Row>

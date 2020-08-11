@@ -35,37 +35,36 @@ const GroupConfigModal = ({ modal, closeModal }) => {
   };
 
   /** チェックボックス管理 */
-  const checkBox = (id) => {
-    const conf = groups.find((group) => {
-      if (group.groupId === id) {
-        db.collection("users")
-          .doc(user.uid)
-          .collection("groups")
-          .where("group.groupId", "==", "id")
-          .update({
-            checked: true,
-          });
-      } else {
-        db.collection("users").doc(user.uid).collection("groups").doc().update({
-          checked: false,
+  const checkBox = async (id) => {
+    await db
+      .collection("users")
+      .doc(user.uid)
+      .collection("groups")
+      .doc()
+      .update({
+        checked: false,
+      });
+    await db
+      .collection("users")
+      .doc(user.uid)
+      .collection("groups")
+      .where("groupId", "==", id)
+      .update({
+        checked: true,
+      });
+    const groupsUpdate = await db
+      .collection("users")
+      .doc(user.uid)
+      .collection("groups")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.data();
         });
-      }
-    });
-    return setGroups(conf);
-  };
+      });
 
-  // return groups.find((group) => {
-  //   if (group.groupId === id) {
-  //     db.collection("users")
-  //       .doc(user.uid)
-  //       .collection("groups")
-  //       .where("groupId", "==", "id")
-  //       .get()
-  //       .then((response) => {
-  //         console.log(response);
-  //       });
-  //   }
-  // });
+    return setGroups(groupsUpdate);
+  };
 
   /** チェックボックス付きのグループ名表示 */
   const chooseGroup = () => {
