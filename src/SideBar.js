@@ -2,24 +2,19 @@ import React, { useState, useContext } from "react";
 import ProfileModal from "./modal/ProfileModal";
 import ConfigModal from "./modal/ConfigModal";
 import ChangeGroupModal from "./modal/ChangeGroupModal";
-import firebase from "./config/firebase";
-import { AuthContext } from "./AuthService";
+import { animateScroll as scroll } from "react-scroll";
+import { CalendarApp } from "./calendar_components/CalendarApp";
+import { Sidebar, Menu, Divider, Button, Grid, Icon } from "semantic-ui-react";
+import { NewMemberModal } from "./modal/NewMemberModal";
 
-import {
-  Sidebar,
-  Menu,
-  Divider,
-  Button,
-  Grid,
-  Popup,
-  Icon,
-} from "semantic-ui-react";
-
-const SideBar = () => {
-  const { user } = useContext(AuthContext);
+const SideBar = ({
+  modalChangeGroup,
+  setModalChangeGroup,
+  openChangeGroupModal,
+}) => {
   const [modalProfile, setModalProfile] = useState(false);
   const [modalConfig, setModalConfig] = useState(false);
-  const [modalChangeGroup, setModalChangeGroup] = useState(false);
+  // const [modalChangeGroup, setModalChangeGroup] = useState(false);
 
   // モーダル
   const openProfileModal = () => setModalProfile(true);
@@ -28,67 +23,55 @@ const SideBar = () => {
   const openConfigModal = () => setModalConfig(true);
   const closeConfigModal = () => setModalConfig(false);
 
-  const openChangeGroupModal = () => setModalChangeGroup(true);
+  // const openChangeGroupModal = () => setModalChangeGroup(true);
   const closeChangeGroupModal = () => setModalChangeGroup(false);
+
+  const scrollToTop = () => {
+    scroll.scrollToTop();
+  };
 
   return (
     <>
-      <Sidebar
-        as={Menu}
-        animation="push"
-        icon="labeled"
-        vertical
-        visible
-        width="wide"
-      >
+      <Sidebar as={Menu} icon="labeled" vertical visible width="wide">
         <Divider style={{ marginBottom: 50 }} />
-        <span style={{ fontSize: "80px", fontFamily: "Pacifico,cursive" }}>
+        <span
+          onClick={scrollToTop}
+          style={{ fontSize: "80px", fontFamily: "Pacifico,cursive" }}
+        >
           rin<span style={{ color: "red" }}>G</span>
         </span>
         <Grid.Row>
           <Grid.Column style={{ marginTop: 80 }}>
-            <Popup
-              trigger={
-                <Button
-                  // プロフィール
-                  circular
-                  color="blue"
-                  size="big"
-                  onClick={openProfileModal}
-                  inverted
-                >
-                  <Icon name="user circle" /> プロフィール
-                </Button>
-              }
-              content="プロフィール"
-              basic
-            />
+            <Button
+              // プロフィール
+              circular
+              color="blue"
+              size="big"
+              onClick={openProfileModal}
+              inverted
+            >
+              <Icon name="user circle" /> プロフィール
+            </Button>
           </Grid.Column>
           <ProfileModal modal={modalProfile} closeModal={closeProfileModal} />
           <Grid.Column style={{ marginTop: 40 }}>
-            <Popup
-              trigger={
-                <Button
-                  // グループ設定
-                  circular
-                  size="big"
-                  color="orange"
-                  onClick={openChangeGroupModal}
-                  inverted
-                >
-                  <Icon name="sync alternate" />
-                  グループ設定
-                </Button>
-              }
-              content="グループ設定"
-              basic
-            />
+            <Button
+              // グループ設定
+              circular
+              size="big"
+              color="orange"
+              onClick={openChangeGroupModal}
+              inverted
+            >
+              <Icon name="sync alternate" />
+              グループ設定
+            </Button>
           </Grid.Column>
           <ChangeGroupModal
             modal={modalChangeGroup}
             closeModal={closeChangeGroupModal}
           />
-          <Grid.Column style={{ marginTop: 40 }}>
+          {/* <Grid.Column style={{ marginTop: 40 }}>
             <Popup
               trigger={
                 <Button
@@ -107,61 +90,30 @@ const SideBar = () => {
               content="お問合せ"
               basic
             />
-          </Grid.Column>
+          </Grid.Column> */}
           <ConfigModal modal={modalConfig} closeModal={closeConfigModal} />
           <Grid.Column
             style={{
               marginTop: 40,
             }}
           >
-            <Popup
-              trigger={
-                <Button
-                  size="huge"
-                  icon="sign-out"
-                  circular
-                  color="red"
-                  inverted
-                  onClick={() => {
-                    firebase
-                      .auth()
-                      .signOut()
-                      .then((obj) => {
-                        console.log(obj, "signOutObj");
-                      })
-                      .catch((err) => {
-                        console.log(err, "signOutErr");
-                      });
-                    // ログイン状態の監視
-                    // ログイン状態が変わったらコールバックが発火してログアウトしてしまう
-                    // firebase.auth().onAuthStateChanged((firebaseUser) => {
-                    //   firebase
-                    //     .auth()
-                    //     .signOut()
-                    //     .then(() => {
-                    //       console.log("ログアウト");
-                    //     });
-                    // });
-                  }}
-                />
-              }
-              content="ログアウト"
-              basic
-            />
+            <CalendarApp />
           </Grid.Column>
         </Grid.Row>
       </Sidebar>
+      <NewMemberModal close={modalChangeGroup} />
     </>
   );
 };
 
 export default SideBar;
-// firebase
-//   .auth()
-//   .signOut()
-//   .then((obj) => {
-//     console.log(obj, "signOutObj");
-//   })
-//   .catch((err) => {
-//     console.log(err, "signOutErr");
-//   });
+// ログイン状態の監視
+// ログイン状態が変わったらコールバックが発火してログアウトしてしまう
+// firebase.auth().onAuthStateChanged((firebaseUser) => {
+//   firebase
+//     .auth()
+//     .signOut()
+//     .then(() => {
+//       console.log("ログアウト");
+//     });
+// });

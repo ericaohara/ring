@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthService";
 import firebase, { storage } from "../config/firebase";
+import { AlertModal } from "../atoms/AlertModal";
 
 import {
   Button,
@@ -22,6 +23,11 @@ const ProfileModal = ({ modal, closeModal }) => {
   const [reset, setReset] = useState("");
   const [passwordModal, setPasswordModal] = useState(false);
   const [upload, setUpload] = useState(false);
+
+  const [alertOpen, setAlertOpen] = useState(false);
+
+  const AlertOpen = () => setAlertOpen(true);
+  const AlertClose = () => setAlertOpen(false);
 
   const { users, user } = useContext(AuthContext);
   const db = firebase.firestore();
@@ -64,15 +70,14 @@ const ProfileModal = ({ modal, closeModal }) => {
   };
 
   const onBtnClick = (name, birth) => {
-    // 現在ログインしているユーザーを取得
-    // const information = firebase.auth().currentUser;
-
     // プロフィール
     // 何も変更なければ閉じる
-    if (!name || !avatarImage || !birth) {
+    if (!name || !avatarImage) {
+      // AlertOpen();
+
+      alert("何も変更されてませんがよろしいですか？");
       closeModal();
     }
-
     // firestoreの更新
     if (name) {
       db.collection("users")
@@ -323,11 +328,10 @@ const ProfileModal = ({ modal, closeModal }) => {
       <Modal open={modal} onClose={closeModal}>
         <Modal.Header>プロフィール</Modal.Header>
         <Modal.Content style={{ width: "100%" }}>
-          <Grid.Column container>
-            <Grid.Row>
+          <Grid.Column style={{ margin: "0 auto", width: "25%" }}>
+            <Grid.Row centered>
               {checkPrev()}
-              <Button color="green" onClick={prevAvatar} inverted>
-                <Icon name="checkmark" />
+              <Button onClick={prevAvatar} basic>
                 　アバタープレビュー
               </Button>
             </Grid.Row>
@@ -348,7 +352,7 @@ const ProfileModal = ({ modal, closeModal }) => {
                 placeholder={user ? pullName() : ""}
               />
             </Form.Field>
-            <Form.Field>
+            {/* <Form.Field>
               <label>誕生日の設定</label>
               <Input
                 type="date"
@@ -356,15 +360,15 @@ const ProfileModal = ({ modal, closeModal }) => {
                 value={birth}
                 onChange={(e) => setBirth(e.target.value)}
               />
-            </Form.Field>
+            </Form.Field> */}
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button color="green" onClick={openPasswordModal} inverted>
-            <Icon name="checkmark" />
+          <Button onClick={openPasswordModal}>
+            <Icon name="key" />
             　パスワード変更
           </Button>
-          <Button color="red" inverted onClick={closeModal}>
+          <Button color="red" onClick={closeModal}>
             <Icon name="remove" />
             　キャンセル
           </Button>
@@ -373,7 +377,6 @@ const ProfileModal = ({ modal, closeModal }) => {
             onClick={() => {
               onBtnClick(name, email, password, birth);
             }}
-            inverted
           >
             <Icon name="checkmark" />
             　保存
@@ -451,6 +454,12 @@ const ProfileModal = ({ modal, closeModal }) => {
           </Form>
         </Modal.Content>
       </Modal>
+      <AlertModal
+        open={alertOpen}
+        close={AlertClose}
+        title="確認"
+        text="何も変更されてませんがよろしいですか？"
+      />
     </>
   );
 };

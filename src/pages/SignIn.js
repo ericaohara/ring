@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
 // import { connect } from "react-redux";

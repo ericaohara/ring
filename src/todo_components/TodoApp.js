@@ -18,18 +18,20 @@ const TodoApp = () => {
   };
 
   return (
-    <>
-      <h1 style={{}}>TodoList</h1>
-      <Form
-        value={value}
-        setValue={setValue}
-        setTodos={setTodos}
-        todos={todos}
-        setTodos={setTodos}
-        allCheckBox={allCheckBox}
-      />
-      <List todos={todos} setTodos={setTodos} value={value} />
-    </>
+    <div>
+      <div>
+        <h1>TodoList</h1>
+        <Form
+          value={value}
+          setValue={setValue}
+          setTodos={setTodos}
+          todos={todos}
+          setTodos={setTodos}
+          allCheckBox={allCheckBox}
+        />
+        <List todos={todos} setTodos={setTodos} value={value} />
+      </div>
+    </div>
   );
 };
 
