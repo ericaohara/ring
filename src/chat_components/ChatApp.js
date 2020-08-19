@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import TweetForm from "./TweetForm";
 import TweetList from "./TweetList";
 import { AuthContext } from "../AuthService";
-import { Segment } from "semantic-ui-react";
 
 // 絵文字
 import { Picker } from "emoji-mart";
@@ -72,9 +71,7 @@ const ChatApp = () => {
           native
         />
       )}
-      <Segment>
-        <TweetList tweets={tweets} setTweets={setTweets} imageUrl={imageUrl} />
-      </Segment>
+      <TweetList tweets={tweets} setTweets={setTweets} imageUrl={imageUrl} />
     </>
   );
 };

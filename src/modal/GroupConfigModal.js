@@ -1,70 +1,71 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthService";
 import firebase from "firebase";
 
-import {
-  Button,
-  Modal,
-  Icon,
-  Form,
-  Input,
-  Checkbox,
-  Responsive,
-} from "semantic-ui-react";
+import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
 
 const GroupConfigModal = ({ modal, closeModal }) => {
   const { groups, setGroups, user } = useContext(AuthContext);
   const [name, setName] = useState("");
-  const [isDone, setIsDone] = useState(false);
+  const [updateGroupId, setUpdateGroupId] = useState(null);
 
   const db = firebase.firestore();
 
   /** input入力したらグループ名が変わるようにしたい */
   const onBtnClick = () => {
-    setName("");
+    console.log(updateGroupId);
     db.collection("users")
-      .doc("user.uid")
+      .doc(user.uid)
       .collection("groups")
-      .doc()
-      .update({
-        groupName: name,
-      })
-      .then(() => console.log("nameUpdate"))
-      .catch((err) => console.log(err));
+      .where("groupId", "==", updateGroupId)
+      .get()
+      .then((details) => {
+        // ref = DocumentReference
+        details.docs[0].ref.update({
+          groupName: name,
+        });
+      });
     closeModal();
   };
 
-  /** チェックボックス管理 */
-  const checkBox = async (id) => {
-    await db
-      .collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .doc()
-      .update({
-        checked: false,
-      });
-    await db
-      .collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .where("groupId", "==", id)
-      .update({
-        checked: true,
-      });
-    const groupsUpdate = await db
-      .collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          doc.data();
-        });
-      });
+  // const checkBox = async (id) => {
+  //   // updateは非同期
+  //   await db
+  //     .collection("users")
+  //     .doc(user.uid)
+  //     .collection("groups")
+  //     .doc()
+  //     .update({
+  //       checked: false,
+  //     });
+  //   await db
+  //     .collection("users")
+  //     .doc(user.uid)
+  //     .collection("groups")
+  //     .where("groupId", "==", id)
+  //     .update({
+  //       checked: true,
+  //     });
+  //   const groupsUpdate = await db
+  //     .collection("users")
+  //     .doc(user.uid)
+  //     .collection("groups")
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         doc.data();
+  //       });
+  //     });
 
-    return setGroups(groupsUpdate);
-  };
+  //   return setGroups(groupsUpdate);
+  // };
+
+  useEffect(() => {
+    if (!groups) {
+      return;
+    }
+    setUpdateGroupId(groups[0].groupId);
+  }, [groups]);
 
   /** チェックボックス付きのグループ名表示 */
   const chooseGroup = () => {
@@ -72,14 +73,15 @@ const GroupConfigModal = ({ modal, closeModal }) => {
       return;
     }
     return groups.map((group) => {
+      const checkId = group.groupId === updateGroupId;
       return (
         <Form.Field>
           <Checkbox
             radio
-            checked={group.checked}
+            checked={checkId}
             id={group.groupId}
             onClick={(e) => {
-              checkBox(e.target.id);
+              setUpdateGroupId(e.target.id);
             }}
             style={{ marginRight: "10px" }}
           />
@@ -101,31 +103,27 @@ const GroupConfigModal = ({ modal, closeModal }) => {
             </Form.Field>
             <Form.Field>
               <label>グループ名変更</label>
-              {isDone ? (
-                <Input
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-              ) : (
-                <Input disabled />
-              )}
+              <Input
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              />
             </Form.Field>
           </Form>
         </Modal.Content>
         <Modal.Actions>
           <Button color="green" inverted>
             <Icon name="plus" />
-            　メンバーを招待
+            メンバーを招待
           </Button>
           <Button color="green" onClick={onBtnClick} inverted>
             <Icon name="checkmark" />
-            　決定
+            決定
           </Button>
           <Button color="red" inverted onClick={closeModal}>
             <Icon name="remove" />
-            　キャンセル
+            キャンセル
           </Button>
         </Modal.Actions>
       </Modal>

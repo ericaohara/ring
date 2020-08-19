@@ -46,7 +46,7 @@ const TopPage = () => {
           openChangeGroupModal={openChangeGroupModal}
         />
         <Grid.Column width={8} style={{ marginLeft: 350 }}>
-          {groups && <div>{pullName()}</div>}
+          {groups ? <div>{pullName()}</div> : null}
           {users ? <Image src={pullImage()} size="tiny" avatar /> : ""}
           <ChatApp />
         </Grid.Column>
