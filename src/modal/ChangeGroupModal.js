@@ -57,7 +57,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       .set({
         groupName: groupName,
         groupId: shortid.generate(),
-        checked: false,
         createdUserName: getName(),
       })
       .then(() => {

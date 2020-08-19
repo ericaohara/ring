@@ -2,15 +2,9 @@ import React, { useContext } from "react";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import TopPage from "./TopPage";
-// import { Spinner } from "./Spinner";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider, AuthContext } from "./AuthService";
+import { AuthProvider } from "./AuthService";
 import LoggedInRoute from "./LoggedInRoute";
-
-// const { isLoading } = useContext(AuthContext);
-// return isLoading ? (
-//   <Spinner />
-// ) : (
 
 const App = () => {
   return (

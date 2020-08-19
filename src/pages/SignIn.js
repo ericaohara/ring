@@ -4,8 +4,6 @@ import { AuthContext } from "../AuthService";
 import { Redirect, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
-// import { connect } from "react-redux";
-// import { isLoading } from "./actions";
 
 import {
   Grid,
@@ -24,9 +22,10 @@ const SignIn = ({ history }) => {
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
   const [reset, setReset] = useState("");
-  const { user } = useContext(AuthContext);
+  const { user, users, loading, setLoading } = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     if (!email) {
       alert("メールアドレスを入力してください");
@@ -40,6 +39,7 @@ const SignIn = ({ history }) => {
       .then(() => {
         history.push("/");
         console.log("ログイン成功");
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err, "signin");
@@ -67,95 +67,97 @@ const SignIn = ({ history }) => {
       .catch((err) => console.log(err));
   };
 
+  console.log(loading);
+
   return (
     <>
-      {/* {!user ? (
+      {loading ? (
         <Spinner />
-      ) : ( */}
-      <>
-        <Grid textAlign="center" verticalAlign="middle" className="app">
-          <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as="h2" icon color="grey" textAlign="center">
-              <Icon name="lightbulb outline" className="signIn__color" />
-              ログイン
-            </Header>
-            <Form>
-              <Segment stacked>
-                <Form.Input
-                  fluid
-                  type="email"
-                  icon="mail"
-                  iconPosition="left"
-                  name="email"
-                  placeholder="メールアドレス"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                />
-                <Form.Input
-                  fluid
-                  type="password"
-                  icon="lock open"
-                  iconPosition="left"
-                  name="password"
-                  placeholder="パスワード"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                />
-                <Button
-                  basic
-                  variant="contained"
-                  size="medium"
-                  style={{ marginTop: 10 }}
-                  onClick={onClickSubmit}
-                >
-                  ログイン
-                </Button>
-              </Segment>
-            </Form>
-            <Message>
-              新規登録は
-              <Link to="/SignUp">こちら</Link>
-            </Message>
-            <Message>
-              パスワードをお忘れの方は
-              <div onClick={openModal} style={{ color: "blue" }}>
-                こちら
-              </div>
-            </Message>
-          </Grid.Column>
-        </Grid>
-        <Modal open={modal} onClose={closeModal}>
-          <Modal.Header>パスワード再設定</Modal.Header>
-          <Modal.Content>
-            <Form
-              onSubmit={() => {
-                resetPassword(reset);
-              }}
-            >
-              <label>アドレスを入力</label>
-              <Input
-                type="email"
-                value={reset}
-                onChange={(e) => {
-                  setReset(e.target.value);
-                }}
-              />
-              <Button
-                onClick={() => {
+      ) : (
+        <>
+          <Grid textAlign="center" verticalAlign="middle" className="app">
+            <Grid.Column style={{ maxWidth: 450 }}>
+              <Header as="h2" icon color="grey" textAlign="center">
+                <Icon name="lightbulb outline" className="signIn__color" />
+                ログイン
+              </Header>
+              <Form>
+                <Segment stacked>
+                  <Form.Input
+                    fluid
+                    type="email"
+                    icon="mail"
+                    iconPosition="left"
+                    name="email"
+                    placeholder="メールアドレス"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                  <Form.Input
+                    fluid
+                    type="password"
+                    icon="lock open"
+                    iconPosition="left"
+                    name="password"
+                    placeholder="パスワード"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+                  <Button
+                    basic
+                    variant="contained"
+                    size="medium"
+                    style={{ marginTop: 10 }}
+                    onClick={onClickSubmit}
+                  >
+                    ログイン
+                  </Button>
+                </Segment>
+              </Form>
+              <Message>
+                新規登録は
+                <Link to="/SignUp">こちら</Link>
+              </Message>
+              <Message>
+                パスワードをお忘れの方は
+                <div onClick={openModal} style={{ color: "blue" }}>
+                  こちら
+                </div>
+              </Message>
+            </Grid.Column>
+          </Grid>
+          <Modal open={modal} onClose={closeModal}>
+            <Modal.Header>パスワード再設定</Modal.Header>
+            <Modal.Content>
+              <Form
+                onSubmit={() => {
                   resetPassword(reset);
                 }}
               >
-                送信
-              </Button>
-              <Button onClick={closeModal}>キャンセル</Button>
-            </Form>
-          </Modal.Content>
-        </Modal>
-      </>
+                <label>アドレスを入力</label>
+                <Input
+                  type="email"
+                  value={reset}
+                  onChange={(e) => {
+                    setReset(e.target.value);
+                  }}
+                />
+                <Button
+                  onClick={() => {
+                    resetPassword(reset);
+                  }}
+                >
+                  送信
+                </Button>
+                <Button onClick={closeModal}>キャンセル</Button>
+              </Form>
+            </Modal.Content>
+          </Modal>
+        </>
       )}
     </>
   );

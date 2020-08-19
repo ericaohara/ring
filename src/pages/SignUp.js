@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import firebase from "../config/firebase";
+import { AuthContext } from "../AuthService";
+import shortid from "shortid";
 
 import {
   Grid,
@@ -18,6 +20,8 @@ const SignUp = ({ history }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [userName, setUserName] = useState("");
 
+  const { users } = useContext(AuthContext);
+
   const db = firebase.firestore();
 
   const onClickSubmit = (e) => {
@@ -27,6 +31,13 @@ const SignUp = ({ history }) => {
       alert("パスワードが一致しません。もう一度お試し下さい。");
       return;
     }
+
+    const getName = () => {
+      if (!users) {
+        return;
+      }
+      return users.find((pull) => pull.name);
+    };
 
     firebase
       .auth()
@@ -51,6 +62,16 @@ const SignUp = ({ history }) => {
               id: user.uid,
               birth: "",
             });
+
+            db.collection("users")
+              .doc(user.uid)
+              .collection("groups")
+              .doc()
+              .set({
+                groupName: "ホーム",
+                groupId: shortid.generate(),
+                createdUserName: getName(),
+              });
 
             history.push("/");
           })

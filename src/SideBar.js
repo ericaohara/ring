@@ -5,7 +5,6 @@ import ChangeGroupModal from "./modal/ChangeGroupModal";
 import { animateScroll as scroll } from "react-scroll";
 import { CalendarApp } from "./calendar_components/CalendarApp";
 import { Sidebar, Menu, Divider, Button, Grid, Icon } from "semantic-ui-react";
-import { NewMemberModal } from "./modal/NewMemberModal";
 
 const SideBar = ({
   modalChangeGroup,
@@ -101,7 +100,6 @@ const SideBar = ({
           </Grid.Column>
         </Grid.Row>
       </Sidebar>
-      <NewMemberModal close={modalChangeGroup} />
     </>
   );
 };

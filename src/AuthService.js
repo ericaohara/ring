@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState(null);
   const [groups, setGroups] = useState("");
   const [currentGroup, setCurrentGroup] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 現在のログインユーザーの取得
