@@ -13,7 +13,10 @@ const GroupConfigModal = ({ modal, closeModal }) => {
 
   /** input入力したらグループ名が変わるようにしたい */
   const onBtnClick = () => {
-    console.log(updateGroupId);
+    if (!name) {
+      alert("グループ名を入力して下さい！");
+      return;
+    }
     db.collection("users")
       .doc(user.uid)
       .collection("groups")
@@ -25,7 +28,28 @@ const GroupConfigModal = ({ modal, closeModal }) => {
           groupName: name,
         });
       });
+    setName("");
     closeModal();
+  };
+
+  /**　グループ消したい */
+  const removeGroup = () => {
+    db.collection("users")
+      .doc(user.uid)
+      .collection("groups")
+      .where("groupId", "==", updateGroupId)
+      .get()
+      .then((el) => {
+        const getId = el.docs.map((doc) => {
+          return doc.data().groupId;
+        });
+        if (getId === updateGroupId) {
+          el.delete();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // const checkBox = async (id) => {
@@ -113,17 +137,21 @@ const GroupConfigModal = ({ modal, closeModal }) => {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button color="green" inverted>
-            <Icon name="plus" />
-            メンバーを招待
-          </Button>
-          <Button color="green" onClick={onBtnClick} inverted>
-            <Icon name="checkmark" />
-            決定
-          </Button>
-          <Button color="red" inverted onClick={closeModal}>
+          <Button basic color="red" onClick={closeModal}>
             <Icon name="remove" />
             キャンセル
+          </Button>
+          <Button basic color="orange">
+            <Icon name="users" />
+            メンバーを招待
+          </Button>
+          <Button basic color="grey" onClick={removeGroup}>
+            <Icon name="trash alternate outline" />
+            削除
+          </Button>
+          <Button basic color="green" onClick={onBtnClick}>
+            <Icon name="sync alternate" />
+            変更
           </Button>
         </Modal.Actions>
       </Modal>

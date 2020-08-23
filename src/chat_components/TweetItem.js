@@ -60,19 +60,27 @@ const TweetItem = ({
         <Segment className="tweet__list">
           <Grid>
             <Grid.Row stretched>
-              <List divided relaxed size="big">
+              <List
+                divided
+                relaxed
+                size="big"
+                style={{ textDecoration: "none" }}
+              >
                 <List.Item className="tweet__item">
                   {users && <Image avatar src={avatar} size="tiny" circular />}
-                  <List.Content style={{ margin: "30px 0" }}>
+                  <List.Content>
                     <div style={{ display: "flex" }}>
-                      <List.Header as="a">{users && name}</List.Header>
+                      <div>{users && name}</div>
                       <List.Description
-                        style={{ color: "grey", marginLeft: "20px" }}
+                        style={{
+                          color: "grey",
+                          marginLeft: "20px",
+                        }}
                       >
                         <div>{timeFromNow(time)}</div>
                       </List.Description>
                     </div>
-                    {content}
+                    <div style={{ marginTop: 20, fontSize: 18 }}>{content}</div>
                   </List.Content>
                   <div>{imageUrl ? image() : null}</div>
                   {users && (

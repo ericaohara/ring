@@ -13,6 +13,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
 
   const [groupName, setGroupName] = useState("");
   const [configModal, setConfigModal] = useState(false);
+  const [searchGroupId, setSearchGroupId] = useState("");
 
   const openGroupConfigModal = () => setConfigModal(true);
   const closeGroupConfigModal = () => setConfigModal(false);
@@ -58,6 +59,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         groupName: groupName,
         groupId: shortid.generate(),
         createdUserName: getName(),
+        createdAt: new Date(),
       })
       .then(() => {
         console.log("グループ追加成功！");
@@ -91,46 +93,60 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         );
       });
     }
-
-    // 配列の中の配列から値を取り出すパターン１
-    // const dbUser = users.find((_user) => _user.id === user.uid);
-    // return dbUser.groups.map((group) => {
-    //   return (
-    //     <Button
-    //       id={group.id}
-    //       onClick={changeGroup}
-    //       type="button"
-    //       basic
-    //       color="blue"
-    //       active={group.id === activeGroup}
-    //     >
-    //       {group.groupName}
-    //     </Button>
-    //   );
-    // });
-
-    // 配列の中の配列から値を取り出すパターン２
-    // let groupButtons;
-    // users.forEach((dbUser) => {
-    //   if (dbUser.id === user.uid) {
-    //     groupButtons = dbUser.groups.map((group) => {
-    //       return (
-    //         <Button
-    //           id={group.id}
-    //           onClick={changeGroup}
-    //           type="button"
-    //           basic
-    //           color="blue"
-    //           active={group.id === activeGroup}
-    //         >
-    //           {group.groupName}
-    //         </Button>
-    //       );
-    //     });
-    //   }
-    // });
-    // return groupButtons;
   };
+
+  const searchGroup = () => {
+    setSearchGroupId("");
+    db.collection("users")
+      .doc(user.uid)
+      .collection("groups")
+      .where("groupId", "==", searchGroupId)
+      .onSnapshot((snap) => {
+        console.log(snap.docs);
+        // snap.map((doc) => {
+        //   console.log(doc.data(), "検索");
+        // });
+      });
+  };
+
+  // 配列の中の配列から値を取り出すパターン１
+  // const dbUser = users.find((_user) => _user.id === user.uid);
+  // return dbUser.groups.map((group) => {
+  //   return (
+  //     <Button
+  //       id={group.id}
+  //       onClick={changeGroup}
+  //       type="button"
+  //       basic
+  //       color="blue"
+  //       active={group.id === activeGroup}
+  //     >
+  //       {group.groupName}
+  //     </Button>
+  //   );
+  // });
+
+  // 配列の中の配列から値を取り出すパターン２
+  // let groupButtons;
+  // users.forEach((dbUser) => {
+  //   if (dbUser.id === user.uid) {
+  //     groupButtons = dbUser.groups.map((group) => {
+  //       return (
+  //         <Button
+  //           id={group.id}
+  //           onClick={changeGroup}
+  //           type="button"
+  //           basic
+  //           color="blue"
+  //           active={group.id === activeGroup}
+  //         >
+  //           {group.groupName}
+  //         </Button>
+  //       );
+  //     });
+  //   }
+  // });
+  // return groupButtons;
 
   // const handleFirstGroup = () => {
   //   const firstGroup = groups[0];
@@ -173,31 +189,39 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
             </Form.Field>
             <Form.Field>
               <label>グループ切替</label>
-              {/* <Button type="button" basic color="blue" onClick={home}>
-                ホーム
-              </Button> */}
               {users ? addBtn() : ""}
+            </Form.Field>
+          </Form>
+          <Form>
+            <Form.Field>
+              <Input
+                value={searchGroupId}
+                onChange={(e) => {
+                  setSearchGroupId(e.target.value);
+                }}
+              />
+              <Button onClick={searchGroup}>検索</Button>
             </Form.Field>
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button color="green" onClick={openGroupConfigModal} inverted>
-            <Icon name="checkmark" onClick={openGroupConfigModal} />
-            　設定
+          <Button basic color="red" onClick={closeModal}>
+            <Icon name="remove" />
+            キャンセル
+          </Button>
+          <Button basic color="black" onClick={openGroupConfigModal}>
+            <Icon name="whmcs" onClick={openGroupConfigModal} />
+            設定
           </Button>
           <Button
+            basic
             color="green"
             onClick={() => {
               onFormSubmit(groupName);
             }}
-            inverted
           >
-            <Icon name="checkmark" />
-            　追加
-          </Button>
-          <Button color="red" inverted onClick={closeModal}>
-            <Icon name="remove" />
-            　キャンセル
+            <Icon name="plus" />
+            追加
           </Button>
         </Modal.Actions>
       </Modal>

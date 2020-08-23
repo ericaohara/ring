@@ -5,7 +5,7 @@ import Item from "./Item";
 
 const List = ({ todos, setTodos }) => {
   return (
-    <ul style={{ listStyle: "none" }}>
+    <ul style={{ listStyle: "none", padding: 0 }}>
       {todos.map((todo) => {
         return (
           <>

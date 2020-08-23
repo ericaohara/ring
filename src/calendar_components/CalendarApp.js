@@ -58,7 +58,7 @@ export const CalendarApp = () => {
     <div className="Sample">
       <div className="Sample__container">
         <main className="Sample__container__content">
-          <Calendar onClickDay={openModal} onChange={onChange} value={value} />
+          <Calendar onChange={onChange} value={value} />
         </main>
         <Modal size="small" open={dayModal} onClose={closeModal}>
           <Modal.Header>予定管理</Modal.Header>

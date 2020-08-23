@@ -12,7 +12,7 @@ const TodoApp = () => {
   const allCheckBox = () => {
     const allSelect = todos.map((todo) => {
       // 全部選択するだけでいいからtrueに設定
-      return { ...todo, isDone: true };
+      return { ...todo, isDone: !todo.isDone };
     });
     setTodos(allSelect);
   };

@@ -364,22 +364,23 @@ const ProfileModal = ({ modal, closeModal }) => {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={openPasswordModal}>
+          <Button onClick={openPasswordModal} basic color="blue">
             <Icon name="key" />
-            　パスワード変更
+            パスワード変更
           </Button>
-          <Button color="red" onClick={closeModal}>
+          <Button onClick={closeModal} basic color="red">
             <Icon name="remove" />
-            　キャンセル
+            キャンセル
           </Button>
           <Button
+            basic
             color="green"
             onClick={() => {
               onBtnClick(name, email, password, birth);
             }}
           >
             <Icon name="checkmark" />
-            　保存
+            保存
           </Button>
         </Modal.Actions>
       </Modal>
@@ -387,12 +388,6 @@ const ProfileModal = ({ modal, closeModal }) => {
       <Modal open={passwordModal} onClose={closePasswordModal}>
         <Modal.Header style={{ width: "100%", display: "flex" }}>
           <span>メールアドレスorパスワード再設定</span>
-          <Button
-            onClick={closePasswordModal}
-            style={{ justifyContent: "spaceBetween" }}
-          >
-            キャンセル
-          </Button>
         </Modal.Header>
         <Modal.Content>
           <Form>
@@ -420,6 +415,8 @@ const ProfileModal = ({ modal, closeModal }) => {
               />
             </Form.Field>
             <Button
+              basic
+              color="green"
               onClick={() => {
                 ChangeAddress(email, password);
               }}
@@ -445,11 +442,21 @@ const ProfileModal = ({ modal, closeModal }) => {
               />
             </Form.Field>
             <Button
+              basic
+              color="green"
               onClick={() => {
                 onPasswordClick(reset);
               }}
             >
               送信
+            </Button>
+            <Button
+              basic
+              color="red"
+              style={{ float: "right" }}
+              onClick={closePasswordModal}
+            >
+              戻る
             </Button>
           </Form>
         </Modal.Content>
