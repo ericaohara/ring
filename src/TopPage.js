@@ -77,6 +77,7 @@ const TopPage = () => {
                           .then((obj) => {
                             // setLoading(false);
                             console.log(obj, "signOutObj");
+                            setLoading(false);
                           })
                           .catch((err) => {
                             console.log(err, "signOutErr");

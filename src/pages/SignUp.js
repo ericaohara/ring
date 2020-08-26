@@ -33,10 +33,10 @@ const SignUp = ({ history }) => {
     }
 
     const getName = () => {
-      if (!users) {
-        return;
-      }
-      return users.find((pull) => pull.name);
+      // if (!user) {
+      //   return;
+      // }
+      // return user.find((pull) => pull.name);
     };
 
     firebase
@@ -63,6 +63,7 @@ const SignUp = ({ history }) => {
               birth: "",
             });
 
+            // デフォルトグループ作成
             db.collection("users")
               .doc(user.uid)
               .collection("groups")
@@ -70,7 +71,7 @@ const SignUp = ({ history }) => {
               .set({
                 groupName: "ホーム",
                 groupId: shortid.generate(),
-                createdUserName: getName(),
+                // createdUserName: getName(),
               });
 
             history.push("/");
@@ -146,7 +147,7 @@ const SignUp = ({ history }) => {
             </Segment>
           </Form>
           <Message>
-            アカウント登録済みの方は <Link to="/SignIn">こちら</Link>
+            アカウント登録済みの方は <Link to="/signin">こちら</Link>
           </Message>
         </Grid.Column>
       </Grid>

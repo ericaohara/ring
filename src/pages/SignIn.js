@@ -50,6 +50,10 @@ const SignIn = ({ history }) => {
     return <Redirect to="/" />;
   }
 
+  if (!user || !users) {
+    setLoading(false);
+  }
+
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
 
@@ -120,7 +124,7 @@ const SignIn = ({ history }) => {
               </Form>
               <Message>
                 新規登録は
-                <Link to="/SignUp">こちら</Link>
+                <Link to="/signup">こちら</Link>
               </Message>
               <Message>
                 パスワードをお忘れの方は

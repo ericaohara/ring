@@ -3,13 +3,13 @@ import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "./AuthService";
 
 const LoggedInRoute = ({ component: Component, ...rest }) => {
-  const { user } = useContext(AuthContext);
+  const { user, users, setLoading } = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        user ? <Component {...props} /> : <Redirect to={"/SignIn"} />
+        user ? <Component {...props} /> : <Redirect to={"/signin"} />
       }
     />
   );
