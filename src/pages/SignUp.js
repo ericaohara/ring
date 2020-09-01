@@ -64,14 +64,13 @@ const SignUp = ({ history }) => {
             });
 
             // デフォルトグループ作成
-            db.collection("users")
-              .doc(user.uid)
-              .collection("groups")
+            db.collection("groups")
               .doc()
               .set({
                 groupName: "ホーム",
-                groupId: shortid.generate(),
-                // createdUserName: getName(),
+                owner: db.doc(`/users/${user.uid}`),
+                users: [db.doc(`/users/${user.uid}`)],
+                createdAt: new Date(),
               });
 
             history.push("/");

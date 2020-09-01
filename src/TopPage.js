@@ -18,17 +18,17 @@ const TopPage = () => {
 
   const pullImage = () => {
     if (user && users) {
-      const conf = users.find((pull) => user.uid === pull.id);
+      const conf = users.find((pull) => pull.id === user.uid);
       return conf.avatar;
     }
   };
 
+  // データが入る順番でカレントユーザーがなくてエラーになってるかも？
   const pullName = () => {
-    if (!groups) {
-      return;
+    if (groups) {
+      const conf = groups.find((group) => group.id === currentGroup);
+      return conf.groupName;
     }
-    const conf = groups.find((group) => group.groupId === currentGroup);
-    return conf.groupName;
     // Cannot read property 'groupName' of undefined
   };
 

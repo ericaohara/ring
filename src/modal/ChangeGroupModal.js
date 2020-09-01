@@ -39,22 +39,15 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
     closeModal();
   };
 
-  /**users.nameを取得する為の関数 */
-  const getName = () => {
-    if (users) {
-      return users.find((pull) => pull.name);
-    }
-  };
-
   /**firebaseへグループの追加*/
   const addGroup = () => {
     db.collection("groups")
       .doc()
       .set({
         groupName,
-        owner: `/users/${user.uid}`,
-        users: [`/users/${user.uid}`],
-        // createdAt: new Date(),
+        owner: db.doc(`/users/${user.uid}`),
+        users: [db.doc(`/users/${user.uid}`)],
+        createdAt: new Date(),
       })
       .then(() => {
         console.log("グループ追加成功！");
@@ -64,29 +57,44 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       });
   };
 
+  // const testGr = () => {
+  //   if (groups) {
+  //     return groups.map((g) => {
+  //       return g.users.map((user) => {
+  //         user.get().then((res) => {
+  //           return res.data().id === user.uid;
+  //         });
+  //       });
+  //     });
+  //   }
+  // };
+
+  // console.log(testGr()); undefined
+
+  // 自分がもってるグループだけ表示させたい
+  // 現状全部のグループが出力されている
   /** グループ毎にボタンを増やす関数*/
   const addBtn = () => {
-    if (!groups) {
-      return;
-    }
-    const checkId = groups.map((group) => currentGroup === group.groupId);
+    if (groups) {
+      const checkId = groups.find((group) => group.id === currentGroup);
 
-    if (checkId) {
-      return groups.map((group) => {
-        return (
-          <Button
-            id={group.groupId}
-            onClick={() => {
-              changeGroup(group.groupId);
-            }}
-            type="button"
-            basic
-            color="blue"
-          >
-            {group.groupName}
-          </Button>
-        );
-      });
+      if (checkId) {
+        return groups.map((group) => {
+          return (
+            <Button
+              id={group.id}
+              onClick={() => {
+                changeGroup(group.id);
+              }}
+              type="button"
+              basic
+              color="blue"
+            >
+              {group.groupName}
+            </Button>
+          );
+        });
+      }
     }
   };
 
@@ -159,7 +167,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         <Modal.Content>
           <Form>
             <Form.Field>
-              <label>グループ名</label>
+              <label>グループ追加</label>
               <Input
                 value={groupName}
                 onChange={(e) => {

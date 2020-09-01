@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
 import { AuthContext } from "../AuthService";
-import shortid from "shortid";
 
 import {
   Modal,
@@ -17,7 +16,6 @@ import {
 const TweetForm = ({
   text,
   setText,
-  tweets,
   setTweets,
   setEmojiType,
   emojiType,
@@ -56,17 +54,6 @@ const TweetForm = ({
       });
   }, []);
 
-  console.log(tweets);
-
-  /** グループのIdを抽出*/
-  const getGroupId = () => {
-    if (!groups) {
-      return;
-    }
-    const muchGroup = groups.find((group) => group.groupId === currentGroup);
-    return muchGroup.groupId;
-  };
-
   /** アバター取得 */
   const displayAvatar = () => {
     if (users && user) {
@@ -84,12 +71,7 @@ const TweetForm = ({
         createdAt: new Date(),
         content: text,
         image: imageUrl,
-        groupId: getGroupId(),
-        // user: {
-        //   id: pullId(),
-        //   name: pullName(),
-        //   avatar: pullAvatar(),
-        // },
+        groupId: db.doc(`groups/${currentGroup}`),
       })
       .then(() => {
         console.log("データ追加成功");
@@ -98,6 +80,8 @@ const TweetForm = ({
         console.log(err);
       });
   };
+
+  console.log(currentGroup);
 
   // ツイート追加
   const onClickTweet = (e) => {

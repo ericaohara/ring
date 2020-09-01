@@ -10,37 +10,29 @@ const TweetItem = ({ imageUrl, id, content, time, groupId }) => {
   const db = firebase.firestore();
 
   const image = () => {
-    return (
-      <>
-        <Image centered src={imageUrl} alt="uploadImage" size="small" />
-      </>
-    );
+    return <Image centered src={imageUrl} alt="uploadImage" size="small" />;
   };
-  console.log(id);
 
   const deleteData = (id) => {
     db.collection("chat")
       .doc(id)
       .get()
       .then((res) => {
-        // res.docs.map((doc) => {
-        //   console.log(doc.data());
-        // });
         res.ref.delete();
       })
       .catch((err) => console.log(err));
 
-    // if (imageUrl) {
-    //   storage
-    //     .refFromURL(imageUrl)
-    //     .delete()
-    //     .then(() => {
-    //       console.log("画像削除成功");
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
+    if (imageUrl) {
+      storage
+        .refFromURL(imageUrl)
+        .delete()
+        .then(() => {
+          console.log("画像削除成功");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
@@ -60,6 +52,9 @@ const TweetItem = ({ imageUrl, id, content, time, groupId }) => {
       return name.name;
     }
   };
+
+  console.log(currentGroup);
+  console.log(id);
 
   return (
     <>

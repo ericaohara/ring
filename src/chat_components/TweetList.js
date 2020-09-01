@@ -2,7 +2,6 @@ import React from "react";
 import TweetItem from "./TweetItem";
 
 const TweetList = ({ tweets, setTweets }) => {
-  console.log(tweets);
   return (
     <>
       {tweets.map((tweet) => {
@@ -11,9 +10,9 @@ const TweetList = ({ tweets, setTweets }) => {
             content={tweet.content}
             imageUrl={tweet.image}
             id={tweet.id}
+            groupId={tweet.groupId}
             setTweets={setTweets}
             time={tweet.createdAt}
-            groupId={tweet.groupId}
           />
         );
       })}

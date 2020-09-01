@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { AuthContext } from "../AuthService";
 import firebase from "../config/firebase";
-import shortid from "shortid";
 
 import { Button, Input, Grid } from "semantic-ui-react";
 
@@ -35,15 +34,12 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
 
   /**firestoreにtodoデータを追加*/
   const todoData = () => {
-    const id = shortid.generate();
-
     db.collection("todos")
-      .doc(id)
+      .doc()
       .set({
         content: value,
         isDone: false,
-        id: id,
-        groupId: currentGroup,
+        groupId: db.doc(`groups/${currentGroup}`),
       })
       .then(() => {
         console.log("todo データ追加成功");
@@ -60,7 +56,10 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       .collection("todos")
       .onSnapshot((snapshot) => {
         const todo = snapshot.docs.map((doc) => {
-          return doc.data();
+          return {
+            ...doc.data(),
+            id: doc.id,
+          };
         });
         setTodos(todo);
       });

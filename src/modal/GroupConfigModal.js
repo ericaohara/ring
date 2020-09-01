@@ -22,14 +22,12 @@ const GroupConfigModal = ({ modal, closeModal }) => {
       alert("グループ名を入力して下さい！");
       return;
     }
-    db.collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .where("groupId", "==", updateGroupId)
+    db.collection("groups")
+      .doc(updateGroupId)
       .get()
       .then((details) => {
         // ref = DocumentReference
-        details.docs[0].ref.update({
+        details.ref.update({
           groupName: name,
         });
       });
@@ -37,16 +35,14 @@ const GroupConfigModal = ({ modal, closeModal }) => {
     closeModal();
   };
 
-  /**　グループ消したい */
+  /** グループ消したい */
   const removeGroup = () => {
-    db.collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .where("groupId", "==", updateGroupId)
+    db.collection(groups)
+      .doc("")
       .get()
       .then((el) => {
         const getId = el.docs.map((doc) => {
-          return doc.data().groupId;
+          return doc.data().id;
         });
         if (getId === updateGroupId) {
           el.delete();
@@ -93,7 +89,7 @@ const GroupConfigModal = ({ modal, closeModal }) => {
     if (!groups) {
       return;
     }
-    setUpdateGroupId(groups[0].groupId);
+    setUpdateGroupId(groups[0].id);
   }, [groups]);
 
   /** チェックボックス付きのグループ名表示 */
@@ -102,13 +98,13 @@ const GroupConfigModal = ({ modal, closeModal }) => {
       return;
     }
     return groups.map((group) => {
-      const checkId = group.groupId === updateGroupId;
+      const checkId = group.id === updateGroupId;
       return (
         <Form.Field>
           <Checkbox
             radio
             checked={checkId}
-            id={group.groupId}
+            id={group.id}
             onClick={(e) => {
               setUpdateGroupId(e.target.id);
             }}

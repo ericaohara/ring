@@ -39,24 +39,22 @@ export const AuthProvider = ({ children }) => {
       });
   }, []);
 
-  /**　サブコレクションのgroupを取得する関数 */
+  /** groupを取得する関数 */
   useEffect(() => {
-    if (!user) {
-      return;
-    }
     firebase
       .firestore()
-      .collection(`users/${user.uid}/groups/`)
+      .collection("groups")
       .onSnapshot((snapshot) => {
         const groupContent = snapshot.docs.map((doc) => {
           return {
             ...doc.data(),
+            id: doc.id,
           };
         });
         console.log(groupContent);
-        if (groupContent.length > 0) {
-          setCurrentGroup(groupContent[0].groupId);
-        }
+        // if (groupContent.length > 0) {
+        // }
+        setCurrentGroup(groupContent[0].id);
         setGroups(groupContent);
       });
   }, [user]);
