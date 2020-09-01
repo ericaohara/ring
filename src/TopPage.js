@@ -24,10 +24,11 @@ const TopPage = () => {
   };
 
   const pullName = () => {
-    if (groups) {
-      const conf = groups.find((group) => group.groupId === currentGroup);
-      return conf.groupName;
+    if (!groups) {
+      return;
     }
+    const conf = groups.find((group) => group.groupId === currentGroup);
+    return conf.groupName;
     // Cannot read property 'groupName' of undefined
   };
 
@@ -44,52 +45,52 @@ const TopPage = () => {
       ) : (
         <>
           <Grid>
-            <SideBar
-              modalChangeGroup={modalChangeGroup}
-              setModalChangeGroup={setModalChangeGroup}
-              openChangeGroupModal={openChangeGroupModal}
-            />
-            <Grid.Column width={8} style={{ marginLeft: 350 }}>
-              {groups ? <div>{pullName()}</div> : null}
-              {users ? <Image src={pullImage()} size="tiny" avatar /> : ""}
-              <ChatApp />
-            </Grid.Column>
-            <div className="vertical">
-              <Grid.Column
-                width={4}
-                style={{ marginLeft: 50 }}
-                className="fixed_item"
-              >
-                <TodoApp />
-                <Popup
-                  trigger={
-                    <Button
-                      size="huge"
-                      icon="sign-out"
-                      circular
-                      color="red"
-                      inverted
-                      className="fixed_btn"
-                      onClick={() => {
-                        firebase
-                          .auth()
-                          .signOut()
-                          .then((obj) => {
-                            // setLoading(false);
-                            console.log(obj, "signOutObj");
-                            setLoading(false);
-                          })
-                          .catch((err) => {
-                            console.log(err, "signOutErr");
-                          });
-                      }}
-                    />
-                  }
-                  content="ログアウト"
-                  basic
+            <Grid.Row>
+              <Grid.Column width={4}>
+                <SideBar
+                  modalChangeGroup={modalChangeGroup}
+                  setModalChangeGroup={setModalChangeGroup}
+                  openChangeGroupModal={openChangeGroupModal}
                 />
               </Grid.Column>
-            </div>
+              <Grid.Column width={9}>
+                {groups ? <div>{pullName()}</div> : null}
+                {users ? <Image src={pullImage()} size="tiny" avatar /> : ""}
+                <ChatApp />
+              </Grid.Column>
+              <Grid.Column width={3} className="fixed_item">
+                <div className="fixed_item">
+                  <TodoApp />
+                  <Popup
+                    trigger={
+                      <Button
+                        size="huge"
+                        icon="sign-out"
+                        circular
+                        color="red"
+                        inverted
+                        className="fixed_btn"
+                        onClick={() => {
+                          firebase
+                            .auth()
+                            .signOut()
+                            .then((obj) => {
+                              // setLoading(false);
+                              console.log(obj, "signOutObj");
+                              setLoading(false);
+                            })
+                            .catch((err) => {
+                              console.log(err, "signOutErr");
+                            });
+                        }}
+                      />
+                    }
+                    content="ログアウト"
+                    basic
+                  />
+                </div>
+              </Grid.Column>
+            </Grid.Row>
           </Grid>
         </>
       )}

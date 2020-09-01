@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import firebase, { storage } from "../config/firebase";
 import { AuthContext } from "../AuthService";
-
-// import { connect } from "react-redux";
+import shortid from "shortid";
 
 import {
   Modal,
@@ -18,6 +17,7 @@ import {
 const TweetForm = ({
   text,
   setText,
+  tweets,
   setTweets,
   setEmojiType,
   emojiType,
@@ -29,13 +29,6 @@ const TweetForm = ({
   setUpload,
 }) => {
   const { user, users, groups, currentGroup } = useContext(AuthContext);
-
-  const pullImage = () => {
-    if (users && user) {
-      const conf = users.find((pull) => user.uid === pull.id);
-      return conf.avatar;
-    }
-  };
 
   // firebase
   const db = firebase.firestore();
@@ -63,6 +56,8 @@ const TweetForm = ({
       });
   }, []);
 
+  console.log(tweets);
+
   /** グループのIdを抽出*/
   const getGroupId = () => {
     if (!groups) {
@@ -72,24 +67,11 @@ const TweetForm = ({
     return muchGroup.groupId;
   };
 
-  const pullId = () => {
-    if (users) {
-      const conf = users.find((pull) => pull.id === user.uid);
-      return conf.id;
-    }
-  };
-
-  const pullName = () => {
-    if (users) {
-      const conf = users.find((pull) => pull.id === user.uid);
-      return conf.name;
-    }
-  };
-
-  const pullAvatar = () => {
-    if (users) {
-      const conf = users.find((pull) => pull.id === user.uid);
-      return conf.avatar;
+  /** アバター取得 */
+  const displayAvatar = () => {
+    if (users && user) {
+      const avatar = users.find((pick) => pick.id === user.uid);
+      return avatar.avatar;
     }
   };
 
@@ -103,11 +85,11 @@ const TweetForm = ({
         content: text,
         image: imageUrl,
         groupId: getGroupId(),
-        user: {
-          id: pullId(),
-          name: pullName(),
-          avatar: pullAvatar(),
-        },
+        // user: {
+        //   id: pullId(),
+        //   name: pullName(),
+        //   avatar: pullAvatar(),
+        // },
       })
       .then(() => {
         console.log("データ追加成功");
@@ -232,7 +214,7 @@ const TweetForm = ({
       <Segment>
         <List>
           <List.Item>
-            <Image avatar src={user ? pullImage() : null} size="tiny" />
+            <Image avatar src={displayAvatar()} size="tiny" />
             <List.Content>
               <Form>
                 <TextArea

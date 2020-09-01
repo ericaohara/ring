@@ -1,20 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import firebase, { storage } from "../config/firebase";
 import moment from "moment";
 import { AuthContext } from "../AuthService";
 
 import { Button, List, Segment, Grid, Image } from "semantic-ui-react";
 
-const TweetItem = ({
-  imageUrl,
-  id,
-  content,
-  time,
-  name,
-  avatar,
-  userId,
-  groupId,
-}) => {
+const TweetItem = ({ imageUrl, id, content, time, groupId }) => {
   const { user, users, currentGroup } = useContext(AuthContext);
   const db = firebase.firestore();
 
@@ -25,34 +16,50 @@ const TweetItem = ({
       </>
     );
   };
+  console.log(id);
 
   const deleteData = (id) => {
     db.collection("chat")
       .doc(id)
-      .delete()
-      .then(() => console.log("削除成功"))
+      .get()
+      .then((res) => {
+        // res.docs.map((doc) => {
+        //   console.log(doc.data());
+        // });
+        res.ref.delete();
+      })
       .catch((err) => console.log(err));
 
-    if (imageUrl) {
-      storage
-        .refFromURL(imageUrl)
-        .delete()
-        .then(() => {
-          console.log("画像削除成功");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    // if (imageUrl) {
+    //   storage
+    //     .refFromURL(imageUrl)
+    //     .delete()
+    //     .then(() => {
+    //       console.log("画像削除成功");
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
+  };
+
+  const timeFromNow = (timestamp) => moment(timestamp).fromNow();
+
+  /** アバター取得 */
+  const displayAvatar = () => {
+    if (users && user) {
+      const avatar = users.find((pick) => pick.id === user.uid);
+      return avatar.avatar;
     }
   };
 
-  const idCheck = () => {
-    if (users) {
-      const conf = users.find((pull) => user.uid === pull.id);
-      return conf.id;
+  /** ユーザーネーム取得 */
+  const displayName = () => {
+    if (users && user) {
+      const name = users.find((pick) => pick.id === user.uid);
+      return name.name;
     }
   };
-  const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
   return (
     <>
@@ -67,10 +74,10 @@ const TweetItem = ({
                 style={{ textDecoration: "none" }}
               >
                 <List.Item className="tweet__item">
-                  {users && <Image avatar src={avatar} size="tiny" circular />}
+                  <Image avatar src={displayAvatar()} size="tiny" circular />
                   <List.Content>
                     <div style={{ display: "flex" }}>
-                      <div>{users && name}</div>
+                      <div>{displayName()}</div>
                       <List.Description
                         style={{
                           color: "grey",
@@ -83,23 +90,17 @@ const TweetItem = ({
                     <div style={{ marginTop: 20, fontSize: 18 }}>{content}</div>
                   </List.Content>
                   <div>{imageUrl ? image() : null}</div>
-                  {users && (
-                    <>
-                      {userId === idCheck() ? (
-                        <Button
-                          circular
-                          basic
-                          icon="times"
-                          size="mini"
-                          color="gray"
-                          className="tweet__delete"
-                          onClick={() => {
-                            deleteData(id);
-                          }}
-                        />
-                      ) : null}
-                    </>
-                  )}
+                  <Button
+                    circular
+                    basic
+                    icon="times"
+                    size="mini"
+                    color="gray"
+                    className="tweet__delete"
+                    onClick={() => {
+                      deleteData(id);
+                    }}
+                  />
                 </List.Item>
               </List>
             </Grid.Row>

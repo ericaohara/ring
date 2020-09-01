@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthService";
 import firebase from "firebase";
+import MemberPlusModal from "./MemberPlusModal";
 
 import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
 
@@ -8,8 +9,12 @@ const GroupConfigModal = ({ modal, closeModal }) => {
   const { groups, setGroups, user } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [updateGroupId, setUpdateGroupId] = useState(null);
+  const [modalMemberPlus, setModalMemberPlus] = useState(false);
 
   const db = firebase.firestore();
+
+  const openMemberPlusModal = () => setModalMemberPlus(true);
+  const closeMemberPlusModal = () => setModalMemberPlus(false);
 
   /** input入力したらグループ名が変わるようにしたい */
   const onBtnClick = () => {
@@ -141,7 +146,7 @@ const GroupConfigModal = ({ modal, closeModal }) => {
             <Icon name="remove" />
             キャンセル
           </Button>
-          <Button basic color="orange">
+          <Button onClick={openMemberPlusModal} basic color="orange">
             <Icon name="users" />
             メンバーを招待
           </Button>
@@ -153,6 +158,11 @@ const GroupConfigModal = ({ modal, closeModal }) => {
             <Icon name="sync alternate" />
             変更
           </Button>
+          <MemberPlusModal
+            modal={modalMemberPlus}
+            closeModal={closeMemberPlusModal}
+            groupId={updateGroupId}
+          />
         </Modal.Actions>
       </Modal>
     </>

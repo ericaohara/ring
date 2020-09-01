@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
 import GroupConfigModal from "./GroupConfigModal.js";
-import shortid from "shortid";
 
 import { Button, Modal, Icon, Form, Input } from "semantic-ui-react";
 
@@ -13,7 +12,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
 
   const [groupName, setGroupName] = useState("");
   const [configModal, setConfigModal] = useState(false);
-  const [searchGroupId, setSearchGroupId] = useState("");
 
   const openGroupConfigModal = () => setConfigModal(true);
   const closeGroupConfigModal = () => setConfigModal(false);
@@ -43,23 +41,20 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
 
   /**users.nameを取得する為の関数 */
   const getName = () => {
-    if (!users) {
-      return;
+    if (users) {
+      return users.find((pull) => pull.name);
     }
-    return users.find((pull) => pull.name);
   };
 
   /**firebaseへグループの追加*/
   const addGroup = () => {
-    db.collection("users")
-      .doc(user.uid)
-      .collection("groups")
+    db.collection("groups")
       .doc()
       .set({
-        groupName: groupName,
-        groupId: shortid.generate(),
-        createdUserName: getName(),
-        createdAt: new Date(),
+        groupName,
+        owner: `/users/${user.uid}`,
+        users: [`/users/${user.uid}`],
+        // createdAt: new Date(),
       })
       .then(() => {
         console.log("グループ追加成功！");
@@ -93,20 +88,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         );
       });
     }
-  };
-
-  const searchGroup = () => {
-    setSearchGroupId("");
-    db.collection("users")
-      .doc(user.uid)
-      .collection("groups")
-      .where("groupId", "==", searchGroupId)
-      .onSnapshot((snap) => {
-        console.log(snap.docs);
-        // snap.map((doc) => {
-        //   console.log(doc.data(), "検索");
-        // });
-      });
   };
 
   // 配列の中の配列から値を取り出すパターン１
@@ -190,17 +171,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
             <Form.Field>
               <label>グループ切替</label>
               {users ? addBtn() : ""}
-            </Form.Field>
-          </Form>
-          <Form>
-            <Form.Field>
-              <Input
-                value={searchGroupId}
-                onChange={(e) => {
-                  setSearchGroupId(e.target.value);
-                }}
-              />
-              <Button onClick={searchGroup}>検索</Button>
             </Form.Field>
           </Form>
         </Modal.Content>
