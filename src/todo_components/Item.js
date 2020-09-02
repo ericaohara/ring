@@ -32,32 +32,25 @@ const Item = ({ value, todos, setTodos, isDone, id, groupId }) => {
 
   return (
     <>
-      {currentGroup === groupId ? (
-        <List.Item style={{ fontSize: "18px", marginTop: "20px" }}>
-          <Checkbox
-            color="blue"
-            // valueにstate入れるのと同じ考え方
-            checked={isDone}
-            id={id}
-            onClick={onClickSelect}
-            style={{ marginRight: "10px" }}
-          />
-          <span
-            style={{
-              textDecoration: isDone ? "line-through" : "none",
-            }}
-          >
-            {value}
-          </span>
-        </List.Item>
-      ) : null}
+      <div style={{ fontSize: "18px", marginTop: "20px" }}>
+        <Checkbox
+          color="blue"
+          // valueにstate入れるのと同じ考え方
+          checked={isDone}
+          id={id}
+          onClick={onClickSelect}
+          style={{ margin: "0 10px" }}
+        />
+        <span
+          style={{
+            textDecoration: isDone ? "line-through" : "none",
+          }}
+        >
+          {value}
+        </span>
+      </div>
     </>
   );
 };
 
 export default Item;
-
-/* <button onClick={() => {
-  console.log(todos);
-}}>ボタン</button> */
-// color: isDone ? 'red' : 'block'

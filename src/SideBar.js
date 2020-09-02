@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import ProfileModal from "./modal/ProfileModal";
-import MemberPlusModal from "./modal/MemberPlusModal";
 import ChangeGroupModal from "./modal/ChangeGroupModal";
 import { animateScroll as scroll } from "react-scroll";
 import { CalendarApp } from "./calendar_components/CalendarApp";
@@ -27,7 +26,7 @@ const SideBar = ({
 
   return (
     <>
-      <div className="fixed_item">
+      <div>
         <Grid>
           <Grid.Row style={{ marginTop: 20 }}>
             <div

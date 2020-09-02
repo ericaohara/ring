@@ -71,7 +71,8 @@ const TweetForm = ({
         createdAt: new Date(),
         content: text,
         image: imageUrl,
-        groupId: db.doc(`groups/${currentGroup}`),
+        groupId: currentGroup,
+        // groupId: db.doc(`groups/${currentGroup}`),
       })
       .then(() => {
         console.log("データ追加成功");
@@ -80,8 +81,6 @@ const TweetForm = ({
         console.log(err);
       });
   };
-
-  console.log(currentGroup);
 
   // ツイート追加
   const onClickTweet = (e) => {

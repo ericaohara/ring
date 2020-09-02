@@ -53,9 +53,6 @@ const TweetItem = ({ imageUrl, id, content, time, groupId }) => {
     }
   };
 
-  console.log(currentGroup);
-  console.log(id);
-
   return (
     <>
       {currentGroup === groupId ? (

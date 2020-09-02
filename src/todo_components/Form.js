@@ -39,7 +39,8 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       .set({
         content: value,
         isDone: false,
-        groupId: db.doc(`groups/${currentGroup}`),
+        groupId: currentGroup,
+        // groupId: db.doc(`groups/${currentGroup}`),
       })
       .then(() => {
         console.log("todo データ追加成功");
@@ -97,23 +98,31 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       />
       <br />
       <br />
-      <Grid>
-        <Grid.Row columns={4}>
-          <Grid.Column>
+      <Grid style={{ width: "240px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: 0,
+            margin: "10px 16px",
+          }}
+        >
+          <div>
             <Button
               basic
               circular
               icon="trash alternate outline"
               onClick={deleteTodo}
             />
-          </Grid.Column>
-          <Grid.Column>
+          </div>
+          <div>
             <Button basic circular icon="check" onClick={allSelectButton} />
-          </Grid.Column>
-          <Grid.Column>
+          </div>
+          <div>
             <Button basic circular icon="edit" onClick={onButtonClick} />
-          </Grid.Column>
-        </Grid.Row>
+          </div>
+        </div>
       </Grid>
     </>
   );

@@ -45,8 +45,10 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       .doc()
       .set({
         groupName,
-        owner: db.doc(`/users/${user.uid}`),
-        users: [db.doc(`/users/${user.uid}`)],
+        owner: user.uid,
+        users: firebase.firestore.FieldValue.arrayUnion(user.uid),
+        // owner: db.doc(`/users/${user.uid}`),
+        // users: [db.doc(`/users/${user.uid}`)],
         createdAt: new Date(),
       })
       .then(() => {
@@ -75,14 +77,13 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   // 現状全部のグループが出力されている
   /** グループ毎にボタンを増やす関数*/
   const addBtn = () => {
-    if (groups) {
-      const checkId = groups.find((group) => group.id === currentGroup);
-
-      if (checkId) {
-        return groups.map((group) => {
+    // usersのIDが合うグループを表示させる方法が分からない
+    if (groups && user && users) {
+      return groups.map((group) => {
+        const checkId = group.users.filter((u) => u === user.uid);
+        if (checkId) {
           return (
             <Button
-              id={group.id}
               onClick={() => {
                 changeGroup(group.id);
               }}
@@ -93,10 +94,36 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
               {group.groupName}
             </Button>
           );
-        });
-      }
+        }
+      });
     }
   };
+
+  console.log(groups);
+  // const addBtn = () => {
+  //   if (groups) {
+  //     const checkId = groups.find((group) => group.id === currentGroup);
+  //     // 現在のgroupIDとgroupsのIDが合っていたらグループ名のボタンを表示
+
+  //     if (checkId) {
+  //       return groups.map((group) => {
+  //         return (
+  //           <Button
+  //             id={group.id}
+  //             onClick={() => {
+  //               changeGroup(group.id);
+  //             }}
+  //             type="button"
+  //             basic
+  //             color="blue"
+  //           >
+  //             {group.groupName}
+  //           </Button>
+  //         );
+  //       });
+  //     }
+  //   }
+  // };
 
   // 配列の中の配列から値を取り出すパターン１
   // const dbUser = users.find((_user) => _user.id === user.uid);
@@ -178,7 +205,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
             </Form.Field>
             <Form.Field>
               <label>グループ切替</label>
-              {users ? addBtn() : ""}
+              {addBtn()}
             </Form.Field>
           </Form>
         </Modal.Content>

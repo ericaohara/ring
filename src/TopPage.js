@@ -5,8 +5,9 @@ import SideBar from "./SideBar";
 import { AuthContext } from "./AuthService";
 import firebase from "./config/firebase";
 import Spinner from "./Spinner";
+import TopBar from "./TopBar";
 
-import { Grid, Image, Button, Popup } from "semantic-ui-react";
+import { Grid, Image, Button, Popup, Responsive } from "semantic-ui-react";
 
 const TopPage = () => {
   const { groups, user, users, currentGroup, loading, setLoading } = useContext(
@@ -44,54 +45,69 @@ const TopPage = () => {
         <Spinner />
       ) : (
         <>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={4}>
-                <SideBar
-                  modalChangeGroup={modalChangeGroup}
-                  setModalChangeGroup={setModalChangeGroup}
-                  openChangeGroupModal={openChangeGroupModal}
-                />
-              </Grid.Column>
-              <Grid.Column width={9}>
-                {groups ? <div>{pullName()}</div> : null}
-                {users ? <Image src={pullImage()} size="tiny" avatar /> : ""}
-                <ChatApp />
-              </Grid.Column>
-              <Grid.Column width={3} className="fixed_item">
+          <div className="fixed_item" style={{ zIndex: 10 }}>
+            <Responsive maxWidth={1030}>
+              <TopBar
+                modalChangeGroup={modalChangeGroup}
+                setModalChangeGroup={setModalChangeGroup}
+                openChangeGroupModal={openChangeGroupModal}
+              />
+            </Responsive>
+          </div>
+          <div style={{ padding: "1em" }}>
+            <Grid>
+              <Grid.Row>
                 <div className="fixed_item">
-                  <TodoApp />
-                  <Popup
-                    trigger={
-                      <Button
-                        size="huge"
-                        icon="sign-out"
-                        circular
-                        color="red"
-                        inverted
-                        className="fixed_btn"
-                        onClick={() => {
-                          firebase
-                            .auth()
-                            .signOut()
-                            .then((obj) => {
-                              // setLoading(false);
-                              console.log(obj, "signOutObj");
-                              setLoading(false);
-                            })
-                            .catch((err) => {
-                              console.log(err, "signOutErr");
-                            });
-                        }}
+                  <Grid.Column width={4}>
+                    <Responsive minWidth={1031}>
+                      <SideBar
+                        modalChangeGroup={modalChangeGroup}
+                        setModalChangeGroup={setModalChangeGroup}
+                        openChangeGroupModal={openChangeGroupModal}
                       />
-                    }
-                    content="ログアウト"
-                    basic
-                  />
+                    </Responsive>
+                  </Grid.Column>
                 </div>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+                <Grid.Column width={9}>
+                  {groups ? <div>{pullName()}</div> : null}
+                  {users ? <Image src={pullImage()} size="mini" avatar /> : ""}
+                  <ChatApp />
+                </Grid.Column>
+                <Grid.Column width={3} className="fixed_item">
+                  <div className="fixed_item">
+                    <TodoApp />
+                    <Popup
+                      trigger={
+                        <Button
+                          size="huge"
+                          icon="sign-out"
+                          circular
+                          color="red"
+                          inverted
+                          className="fixed_btn"
+                          onClick={() => {
+                            firebase
+                              .auth()
+                              .signOut()
+                              .then((obj) => {
+                                // setLoading(false);
+                                console.log(obj, "signOutObj");
+                                setLoading(false);
+                              })
+                              .catch((err) => {
+                                console.log(err, "signOutErr");
+                              });
+                          }}
+                        />
+                      }
+                      content="ログアウト"
+                      basic
+                    />
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </div>
         </>
       )}
     </>

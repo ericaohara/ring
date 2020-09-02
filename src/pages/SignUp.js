@@ -68,8 +68,8 @@ const SignUp = ({ history }) => {
               .doc()
               .set({
                 groupName: "ホーム",
-                owner: db.doc(`/users/${user.uid}`),
-                users: [db.doc(`/users/${user.uid}`)],
+                owner: user.uid,
+                users: firebase.firestore.FieldValue.arrayUnion(user.uid),
                 createdAt: new Date(),
               });
 

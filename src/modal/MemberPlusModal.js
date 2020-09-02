@@ -29,9 +29,7 @@ const MemberPlusModal = ({ modal, closeModal, groupId }) => {
       .doc(groupIdGet())
       .update({
         // 配列にメンバーを追加
-        users: firebase.firestore.FieldValue.arrayUnion(
-          firebase.firestore().doc(`/users/${id}`)
-        ),
+        users: firebase.firestore.FieldValue.arrayUnion(id),
       });
     setAddUserId("");
     closeModal();
