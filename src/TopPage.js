@@ -45,7 +45,13 @@ const TopPage = () => {
         <Spinner />
       ) : (
         <>
-          <div className="fixed_item" style={{ zIndex: 10 }}>
+          <div
+            style={{
+              zIndex: 10,
+              position: "fixed",
+              backgroundColor: "white",
+            }}
+          >
             <Responsive maxWidth={1030}>
               <TopBar
                 modalChangeGroup={modalChangeGroup}
@@ -54,7 +60,8 @@ const TopPage = () => {
               />
             </Responsive>
           </div>
-          <div style={{ padding: "1em" }}>
+          <div style={{ height: 50 }} />
+          <div style={{ padding: "1em", marginTop: 30 }}>
             <Grid>
               <Grid.Row>
                 <div className="fixed_item">
@@ -74,7 +81,7 @@ const TopPage = () => {
                   <ChatApp />
                 </Grid.Column>
                 <Grid.Column width={3} className="fixed_item">
-                  <div className="fixed_item">
+                  <div style={{ position: "fixed" }}>
                     <TodoApp />
                     <Popup
                       trigger={

@@ -3,7 +3,7 @@ import ProfileModal from "./modal/ProfileModal";
 import ChangeGroupModal from "./modal/ChangeGroupModal";
 
 import { animateScroll as scroll } from "react-scroll";
-import { Divider, Button, Icon } from "semantic-ui-react";
+import { Responsive, Button, Icon } from "semantic-ui-react";
 
 const TopBar = ({
   modalChangeGroup,
@@ -23,7 +23,12 @@ const TopBar = ({
   return (
     <>
       <div
-        style={{ width: 768, display: "flex", justifyContent: "space-between" }}
+        style={{
+          width: 768,
+          display: "flex",
+          justifyContent: "space-between",
+          borderBottom: "1px solid gray",
+        }}
       >
         <div
           onClick={scrollToTop}
@@ -38,7 +43,7 @@ const TopBar = ({
           rin<span style={{ color: "red" }}>G</span>
         </div>
         <div style={{ marginRight: 10 }}>
-          <div style={{ marginTop: 10 }}>
+          <div style={{ margin: 10 }}>
             <Button
               circular
               color="blue"
@@ -49,7 +54,7 @@ const TopBar = ({
               <Icon name="user circle" /> プロフィール
             </Button>
             <ProfileModal modal={modalProfile} closeModal={closeProfileModal} />
-            <div style={{ marginTop: 5 }}>
+            <div style={{ marginTop: 5, marginRight: 50 }}>
               <Button
                 // グループ設定
                 circular
@@ -69,7 +74,6 @@ const TopBar = ({
           </div>
         </div>
       </div>
-      <Divider />
     </>
   );
 };
