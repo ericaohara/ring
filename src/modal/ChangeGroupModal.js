@@ -77,11 +77,10 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
   // 現状全部のグループが出力されている
   /** グループ毎にボタンを増やす関数*/
   const addBtn = () => {
-    // usersのIDが合うグループを表示させる方法が分からない
     if (groups && user && users) {
       return groups.map((group) => {
         const checkId = group.users.filter((u) => u === user.uid);
-        if (checkId) {
+        if (checkId.length > 0) {
           return (
             <Button
               onClick={() => {
@@ -97,9 +96,28 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         }
       });
     }
+    // if (groups && user && users) {
+    //   return groups.map((group) => {
+    //     const checkId = group.users.filter((u) => u === user.uid);
+    //     console.log(checkId);
+    //     if (checkId.length > 0) {
+    //       return (
+    //         <Button
+    //           onClick={() => {
+    //             changeGroup(group.id);
+    //           }}
+    //           type="button"
+    //           basic
+    //           color="blue"
+    //         >
+    //           {group.groupName}
+    //         </Button>
+    //       );
+    //     }
+    //   });
+    // }
   };
 
-  console.log(groups);
   // const addBtn = () => {
   //   if (groups) {
   //     const checkId = groups.find((group) => group.id === currentGroup);

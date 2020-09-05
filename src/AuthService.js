@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import firebase from "./config/firebase";
+import { Redirect } from "react-router-dom";
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState(null);
-  const [groups, setGroups] = useState("");
+  const [groups, setGroups] = useState(null);
   const [currentGroup, setCurrentGroup] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,23 +41,27 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   /** groupを取得する関数 */
+  // ログインユーザーがいるグループのみ取得
   useEffect(() => {
-    firebase
-      .firestore()
-      .collection("groups")
-      .onSnapshot((snapshot) => {
-        const groupContent = snapshot.docs.map((doc) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-          };
+    if (user) {
+      firebase
+        .firestore()
+        .collection("groups")
+        .where("users", "array-contains", user.uid)
+        .onSnapshot((snapshot) => {
+          const groupContent = snapshot.docs.map((doc) => {
+            return {
+              ...doc.data(),
+              id: doc.id,
+            };
+          });
+          console.log(groupContent);
+          // if (groupContent.length > 0) {
+          // }
+          setCurrentGroup(groupContent[0].id);
+          setGroups(groupContent);
         });
-        console.log(groupContent);
-        // if (groupContent.length > 0) {
-        // }
-        setCurrentGroup(groupContent[0].id);
-        setGroups(groupContent);
-      });
+    }
   }, [user]);
 
   return (

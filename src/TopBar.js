@@ -54,23 +54,44 @@ const TopBar = ({
               <Icon name="user circle" /> プロフィール
             </Button>
             <ProfileModal modal={modalProfile} closeModal={closeProfileModal} />
-            <div style={{ marginTop: 5, marginRight: 50 }}>
-              <Button
-                // グループ設定
-                circular
-                size="mini"
-                color="orange"
-                onClick={openChangeGroupModal}
-                inverted
-              >
-                <Icon name="sync alternate" />
-                グループ設定
-              </Button>
-              <ChangeGroupModal
-                modal={modalChangeGroup}
-                closeModal={closeChangeGroupModal}
-              />
-            </div>
+            <Responsive minWidth={376}>
+              <div style={{ marginTop: 5, marginRight: 50 }}>
+                <Button
+                  // グループ設定
+                  circular
+                  size="mini"
+                  color="orange"
+                  onClick={openChangeGroupModal}
+                  inverted
+                >
+                  <Icon name="sync alternate" />
+                  グループ設定
+                </Button>
+                <ChangeGroupModal
+                  modal={modalChangeGroup}
+                  closeModal={closeChangeGroupModal}
+                />
+              </div>
+            </Responsive>
+            <Responsive maxWidth={375}>
+              <div style={{ marginTop: 5, marginRight: 400 }}>
+                <Button
+                  // グループ設定
+                  circular
+                  size="mini"
+                  color="orange"
+                  onClick={openChangeGroupModal}
+                  inverted
+                >
+                  <Icon name="sync alternate" />
+                  グループ設定
+                </Button>
+                <ChangeGroupModal
+                  modal={modalChangeGroup}
+                  closeModal={closeChangeGroupModal}
+                />
+              </div>
+            </Responsive>
           </div>
         </div>
       </div>
