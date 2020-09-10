@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import TodoApp from "./todo_components/TodoApp";
 import ChatApp from "./chat_components/ChatApp";
 import SideBar from "./SideBar";
@@ -17,25 +17,18 @@ const TopPage = () => {
   const [modalChangeGroup, setModalChangeGroup] = useState(false);
   const openChangeGroupModal = () => setModalChangeGroup(true);
 
-  const pullImage = () => {
-    if (user && users) {
-      const conf = users.find((pull) => pull.id === user.uid);
-      return conf.avatar;
-    }
-  };
-
-  // データが入る順番でカレントユーザーがなくてエラーになってるかも？
+  useEffect(() => {}, [groups, currentGroup]);
   const pullName = () => {
-    if (groups) {
+    if (currentGroup && groups) {
       const conf = groups.find((group) => group.id === currentGroup);
+      console.log(conf);
+      console.log(groups);
       return conf.groupName;
     }
     // Cannot read property 'groupName' of undefined
   };
 
-  if (!user || !users) {
-    setLoading(true);
-  } else {
+  if (user || users) {
     setLoading(false);
   }
 
@@ -76,8 +69,7 @@ const TopPage = () => {
                   </Grid.Column>
                 </div>
                 <Grid.Column width={9}>
-                  {groups ? <div>{pullName()}</div> : null}
-                  {users ? <Image src={pullImage()} size="mini" avatar /> : ""}
+                  <div>{pullName()}</div>
                   <ChatApp />
                 </Grid.Column>
                 <Grid.Column width={3} className="fixed_item">

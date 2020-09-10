@@ -17,7 +17,7 @@ const List = ({ todos, setTodos }) => {
               todos={todos}
               setTodos={setTodos}
               isDone={todo.isDone}
-              groupId={todo.groupId}
+              userId={todo.createdBy}
             />
           </>
         );

@@ -22,10 +22,9 @@ const SignIn = ({ history }) => {
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
   const [reset, setReset] = useState("");
-  const { user, users, loading, setLoading } = useContext(AuthContext);
+  const { user, users, loading, setLoading, groups } = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
-    setLoading(true);
     e.preventDefault();
     if (!email) {
       alert("メールアドレスを入力してください");
@@ -49,8 +48,7 @@ const SignIn = ({ history }) => {
   if (user) {
     return <Redirect to="/" />;
   }
-
-  if (!user || !users) {
+  if (user || users) {
     setLoading(false);
   }
 
@@ -70,8 +68,6 @@ const SignIn = ({ history }) => {
       })
       .catch((err) => console.log(err));
   };
-
-  console.log(loading);
 
   return (
     <>
@@ -167,9 +163,4 @@ const SignIn = ({ history }) => {
   );
 };
 
-// const mapStateTopProps = (state) => {
-//   return { loading: state.loading };
-// };
-
 export default SignIn;
-// export default connect(mapStateTopProps, { isLoading })(SignIn);

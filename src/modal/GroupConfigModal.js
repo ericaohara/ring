@@ -35,18 +35,16 @@ const GroupConfigModal = ({ modal, closeModal }) => {
     closeModal();
   };
 
-  /** グループ消したい */
-  const removeGroup = () => {
-    db.collection(groups)
-      .doc("")
+  /** グループ削除 */
+  const removeGroup = (id) => {
+    db.collection("groups")
+      .where("id", "==", id)
       .get()
-      .then((el) => {
-        const getId = el.docs.map((doc) => {
-          return doc.data().id;
+      .then((res) => {
+        console.log(res);
+        res.docs.map((doc) => {
+          doc.ref.delete();
         });
-        if (getId === updateGroupId) {
-          el.delete();
-        }
       })
       .catch((err) => {
         console.log(err);
@@ -146,7 +144,14 @@ const GroupConfigModal = ({ modal, closeModal }) => {
             <Icon name="users" />
             メンバーを招待
           </Button>
-          <Button basic color="grey" onClick={removeGroup}>
+          <Button
+            basic
+            color="grey"
+            id={updateGroupId}
+            onClick={(e) => {
+              removeGroup(e.target.id);
+            }}
+          >
             <Icon name="trash alternate outline" />
             削除
           </Button>

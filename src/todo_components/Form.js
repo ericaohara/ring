@@ -5,7 +5,7 @@ import firebase from "../config/firebase";
 import { Button, Input, Grid } from "semantic-ui-react";
 
 const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
-  const { currentGroup } = useContext(AuthContext);
+  const { currentGroup, user } = useContext(AuthContext);
   // 追加
   const onButtonClick = (e) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       .set({
         content: value,
         isDone: false,
-        groupId: currentGroup,
+        createdBy: user.uid,
         // groupId: db.doc(`groups/${currentGroup}`),
       })
       .then(() => {
@@ -55,6 +55,7 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
     firebase
       .firestore()
       .collection("todos")
+      .orderBy("content")
       .onSnapshot((snapshot) => {
         const todo = snapshot.docs.map((doc) => {
           return {

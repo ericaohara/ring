@@ -3,8 +3,8 @@ import { AuthContext } from "../AuthService";
 
 import { Checkbox, List } from "semantic-ui-react";
 
-const Item = ({ value, todos, setTodos, isDone, id, groupId }) => {
-  const { currentGroup } = useContext(AuthContext);
+const Item = ({ value, todos, setTodos, isDone, id, userId }) => {
+  const { user } = useContext(AuthContext);
 
   // 一個のチェックボックスだけにチェック出来る処理
   const onClickSelect = (e) => {
@@ -32,23 +32,27 @@ const Item = ({ value, todos, setTodos, isDone, id, groupId }) => {
 
   return (
     <>
-      <div style={{ fontSize: "18px", marginTop: "20px" }}>
-        <Checkbox
-          color="blue"
-          // valueにstate入れるのと同じ考え方
-          checked={isDone}
-          id={id}
-          onClick={onClickSelect}
-          style={{ margin: "0 10px" }}
-        />
-        <span
-          style={{
-            textDecoration: isDone ? "line-through" : "none",
-          }}
-        >
-          {value}
-        </span>
-      </div>
+      {user.uid === userId && (
+        <>
+          <div style={{ fontSize: "18px", marginTop: "20px" }}>
+            <Checkbox
+              color="blue"
+              // valueにstate入れるのと同じ考え方
+              checked={isDone}
+              id={id}
+              onClick={onClickSelect}
+              style={{ margin: "0 10px" }}
+            />
+            <span
+              style={{
+                textDecoration: isDone ? "line-through" : "none",
+              }}
+            >
+              {value}
+            </span>
+          </div>
+        </>
+      )}
     </>
   );
 };

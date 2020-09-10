@@ -23,6 +23,7 @@ const ProfileModal = ({ modal, closeModal }) => {
   const [reset, setReset] = useState("");
   const [passwordModal, setPasswordModal] = useState(false);
   const [upload, setUpload] = useState(false);
+  const [avatarCheck, setAvatarCheck] = useState(false);
 
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -69,14 +70,12 @@ const ProfileModal = ({ modal, closeModal }) => {
     setAvatarImage(file);
   };
 
-  const onBtnClick = (name, birth) => {
+  const onBtnClick = () => {
     // プロフィール
     // 何も変更なければ閉じる
-    if (!name || !avatarImage) {
-      // AlertOpen();
-
-      alert("何も変更されてませんがよろしいですか？");
-      closeModal();
+    if (!name && !avatarCheck) {
+      alert("何も変更されてません");
+      return;
     }
     // firestoreの更新
     if (name) {
@@ -92,6 +91,7 @@ const ProfileModal = ({ modal, closeModal }) => {
           //   name,
           // });
           console.log("store,name,update");
+          closeModal();
         })
         .catch((err) => console.log(err));
 
@@ -125,6 +125,8 @@ const ProfileModal = ({ modal, closeModal }) => {
           //   avatar: avatarUrl,
           // });
           console.log("store,avatar,update");
+          closeModal();
+          setAvatarCheck(false);
         })
         .catch((err) => console.log(err));
 
@@ -206,6 +208,7 @@ const ProfileModal = ({ modal, closeModal }) => {
       return;
     }
     setUpload(true);
+    setAvatarCheck(true);
     // アバターアップロード
     const uploadTask = storage
       .ref(`/icons/${avatarImage.name}`)
@@ -372,13 +375,7 @@ const ProfileModal = ({ modal, closeModal }) => {
             <Icon name="remove" />
             キャンセル
           </Button>
-          <Button
-            basic
-            color="green"
-            onClick={() => {
-              onBtnClick(name, email, password, birth);
-            }}
-          >
+          <Button basic color="green" onClick={onBtnClick}>
             <Icon name="checkmark" />
             保存
           </Button>

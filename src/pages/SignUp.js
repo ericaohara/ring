@@ -32,13 +32,6 @@ const SignUp = ({ history }) => {
       return;
     }
 
-    const getName = () => {
-      // if (!user) {
-      //   return;
-      // }
-      // return user.find((pull) => pull.name);
-    };
-
     firebase
       .auth()
       // emailとpasswordを元にユーザーを作る
