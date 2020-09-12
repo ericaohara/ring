@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
-import { Redirect, useParams } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Spinner from "../Spinner";
 
@@ -25,6 +25,7 @@ const SignIn = ({ history }) => {
   const { user, users, loading, setLoading, groups } = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     if (!email) {
       alert("メールアドレスを入力してください");
@@ -46,9 +47,15 @@ const SignIn = ({ history }) => {
   };
 
   if (user) {
+    setLoading(true);
     return <Redirect to="/" />;
-  }
-  if (user || users) {
+  } else {
+    // 有：リロード時にスピーナーでない×
+    // ログイン画面でリロードしても無限スピナーにはならない◎
+    // ログイン直後にアイコンが表示されない×
+    // (ログイン画面で1回リロードするとアイコンでない)
+    // 無：ログインページでリロードすると無限スピナーになる×
+    // リロード時にスピナー出る◎
     setLoading(false);
   }
 

@@ -197,7 +197,9 @@ const TweetForm = ({
       <Segment>
         <List>
           <List.Item>
-            <Image avatar src={displayAvatar()} size="tiny" />
+            {user && users && (
+              <Image avatar src={displayAvatar()} size="tiny" />
+            )}
             <List.Content>
               <Form>
                 <TextArea

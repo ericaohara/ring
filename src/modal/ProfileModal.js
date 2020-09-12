@@ -281,7 +281,7 @@ const ProfileModal = ({ modal, closeModal }) => {
   };
 
   const imageAvatar = () => {
-    if (users) {
+    if (users && user) {
       const conf = users.find((pullImage) => pullImage.id === user.uid);
       return conf.avatar;
     }

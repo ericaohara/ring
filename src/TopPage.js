@@ -7,25 +7,34 @@ import firebase from "./config/firebase";
 import Spinner from "./Spinner";
 import TopBar from "./TopBar";
 
-import { Grid, Image, Button, Popup, Responsive } from "semantic-ui-react";
+import {
+  Grid,
+  Image,
+  Button,
+  Popup,
+  Responsive,
+  StepGroup,
+} from "semantic-ui-react";
 
 const TopPage = () => {
-  const { groups, user, users, currentGroup, loading, setLoading } = useContext(
-    AuthContext
-  );
+  const {
+    groups,
+    setGroups,
+    user,
+    users,
+    currentGroup,
+    loading,
+    setLoading,
+  } = useContext(AuthContext);
 
   const [modalChangeGroup, setModalChangeGroup] = useState(false);
   const openChangeGroupModal = () => setModalChangeGroup(true);
 
-  useEffect(() => {}, [groups, currentGroup]);
   const pullName = () => {
     if (currentGroup && groups) {
       const conf = groups.find((group) => group.id === currentGroup);
-      console.log(conf);
-      console.log(groups);
       return conf.groupName;
     }
-    // Cannot read property 'groupName' of undefined
   };
 
   if (user || users) {
@@ -89,9 +98,9 @@ const TopPage = () => {
                               .auth()
                               .signOut()
                               .then((obj) => {
-                                // setLoading(false);
                                 console.log(obj, "signOutObj");
                                 setLoading(false);
+                                setGroups(null);
                               })
                               .catch((err) => {
                                 console.log(err, "signOutErr");
