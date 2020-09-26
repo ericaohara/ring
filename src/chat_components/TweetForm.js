@@ -41,14 +41,18 @@ const TweetForm = ({
       // 引数は変更後の値
       // 昇順
       .orderBy("createdAt", "desc")
-      .onSnapshot((snapshot) => {
-        const message = snapshot.docs.map((doc) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-            createdAt: doc.data().createdAt.toDate().toString(),
-          };
-        });
+      .onSnapshot(async (snapshot) => {
+        const message = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const userRef = await doc.data().createUser;
+            return {
+              ...doc.data(),
+              id: doc.id,
+              createdAt: doc.data().createdAt.toDate().toString(),
+              createUser: userRef,
+            };
+          })
+        );
         // firebaseから複製した配列でstateを更新
         setTweets(message);
       });
@@ -64,6 +68,7 @@ const TweetForm = ({
 
   // firebaseにデータを追加
   const data = () => {
+    const userRef = db.collection("users").doc(user.uid);
     db.collection("chat")
       .doc()
       .set({
@@ -72,7 +77,7 @@ const TweetForm = ({
         content: text,
         image: imageUrl,
         groupId: currentGroup,
-        // groupId: db.doc(`groups/${currentGroup}`),
+        createUser: userRef,
       })
       .then(() => {
         console.log("データ追加成功");
@@ -197,9 +202,7 @@ const TweetForm = ({
       <Segment>
         <List>
           <List.Item>
-            {user && users && (
-              <Image avatar src={displayAvatar()} size="tiny" />
-            )}
+            <Image avatar src={displayAvatar()} size="tiny" />
             <List.Content>
               <Form>
                 <TextArea

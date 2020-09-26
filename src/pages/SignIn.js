@@ -47,16 +47,8 @@ const SignIn = ({ history }) => {
   };
 
   if (user) {
-    setLoading(true);
+    // setLoading(true);
     return <Redirect to="/" />;
-  } else {
-    // 有：リロード時にスピーナーでない×
-    // ログイン画面でリロードしても無限スピナーにはならない◎
-    // ログイン直後にアイコンが表示されない×
-    // (ログイン画面で1回リロードするとアイコンでない)
-    // 無：ログインページでリロードすると無限スピナーになる×
-    // リロード時にスピナー出る◎
-    setLoading(false);
   }
 
   const openModal = () => setModal(true);

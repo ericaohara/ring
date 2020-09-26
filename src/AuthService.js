@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import firebase from "./config/firebase";
 import { Redirect } from "react-router-dom";
 
@@ -14,8 +14,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // 現在のログインユーザーの取得
     firebase.auth().onAuthStateChanged((firebaseUser) => {
-      console.log(firebaseUser, "user");
       setUser(firebaseUser);
+      if (firebaseUser == null) {
+        console.log(firebaseUser, "user");
+        setLoading(false);
+      }
     });
     // unmount
     return () => {
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   /** dbのuser情報を取得する関数 */
-  useEffect(() => {
+  useLayoutEffect(() => {
     firebase
       .firestore()
       .collection("users")
@@ -42,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   /** groupを取得する関数 */
   // ログインユーザーがいるグループのみ取得
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (user) {
       firebase
         .firestore()

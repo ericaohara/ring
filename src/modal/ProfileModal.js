@@ -127,6 +127,7 @@ const ProfileModal = ({ modal, closeModal }) => {
           console.log("store,avatar,update");
           closeModal();
           setAvatarCheck(false);
+          setAvatarImage("");
         })
         .catch((err) => console.log(err));
 
@@ -143,13 +144,6 @@ const ProfileModal = ({ modal, closeModal }) => {
       //   .catch((err) => {
       //     console.log(err);
       //   });
-    }
-
-    // 誕生日
-    if (birth) {
-      db.collection("users").doc(user.uid).update({
-        birth,
-      });
     }
   };
 
@@ -254,32 +248,6 @@ const ProfileModal = ({ modal, closeModal }) => {
     }
   };
 
-  const image = () => {
-    if (!avatarUrl) {
-      return (
-        <Image
-          src={user ? user.photoURL : null}
-          height={120}
-          width={120}
-          size="small"
-          circular
-          style={{ margin: "0 auto" }}
-        />
-      );
-    } else if (avatarUrl && upload && users && user && user.uid === users.id) {
-      return (
-        <Image
-          src={users.avatar}
-          height={120}
-          width={120}
-          size="small"
-          circular
-          style={{ margin: "0 auto" }}
-        />
-      );
-    }
-  };
-
   const imageAvatar = () => {
     if (users && user) {
       const conf = users.find((pullImage) => pullImage.id === user.uid);
@@ -335,7 +303,7 @@ const ProfileModal = ({ modal, closeModal }) => {
             <Grid.Row centered>
               {checkPrev()}
               <Button onClick={prevAvatar} basic>
-                　アバタープレビュー
+                アバタープレビュー
               </Button>
             </Grid.Row>
           </Grid.Column>
@@ -355,15 +323,6 @@ const ProfileModal = ({ modal, closeModal }) => {
                 placeholder={user ? pullName() : ""}
               />
             </Form.Field>
-            {/* <Form.Field>
-              <label>誕生日の設定</label>
-              <Input
-                type="date"
-                placeholder="生年月日"
-                value={birth}
-                onChange={(e) => setBirth(e.target.value)}
-              />
-            </Form.Field> */}
           </Form>
         </Modal.Content>
         <Modal.Actions>
