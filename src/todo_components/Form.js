@@ -9,19 +9,12 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
   // 追加
   const onButtonClick = (e) => {
     e.preventDefault();
-    // addTodo(value);
     if (value === "") {
       return;
     }
     todoData();
     setValue("");
   };
-
-  // 削除
-  // const deleteButton = (e) => {
-  //   e.preventDefault();
-  //   deleteTodo();
-  // };
 
   // 全選択
   const allSelectButton = (e) => {
@@ -67,13 +60,6 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       });
   }, []);
 
-  // 削除
-  // const deleteTodo = () => {
-  // todosからisDoneを参照(ループ)
-  // isDoneがfalse(未チェック)のものをリストに残す(消さない)
-  //   setTodos(todos.filter((todo) => todo.isDone !== true)); // true
-  // };
-
   const deleteTodo = () => {
     todos
       // isDoneがtrueだったら
@@ -81,8 +67,6 @@ const Form = ({ value, setValue, allCheckBox, todos, setTodos }) => {
       // idを探して削除
       .forEach(({ id }) => {
         db.collection("todos")
-          // ドキュメントが欲しいのはfirebaseのidであって
-          // こっちで指定したidではない
           .doc(id)
           .delete()
           .then(() => console.log("todo削除"))

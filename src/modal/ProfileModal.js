@@ -36,42 +36,13 @@ const ProfileModal = ({ modal, closeModal }) => {
   const openPasswordModal = () => setPasswordModal(true);
   const closePasswordModal = () => setPasswordModal(false);
 
-  // firebaseへ情報を追加
-  // const userDetails = async () => {
-  // docにuser.uidを指定するパターン
-  // db.collection("users")
-  //   .doc(user.uid)
-  //   .set({
-  //     user: {
-  //       id: user.uid,
-  //       name,
-  //       avatar: avatarUrl,
-  //       birth: birth,
-  //     },
-  //   });
-
-  // whereで指定するパターン
-  // const dbUser = await db
-  //   .collection("users")
-  //   .where("id", "==", user.uid)
-  //   .get();
-  // dbUser.docs[0].ref.set({
-  //   user: {
-  //     id: user.uid,
-  //     name,
-  //     avatar: avatarUrl,
-  //     birth: birth,
-  //   },
-  // });
-  // };
-
   const handlePreview = (e) => {
     const file = e.target.files[0];
     setAvatarImage(file);
   };
 
+  // プロフィール
   const onBtnClick = () => {
-    // プロフィール
     // 何も変更なければ閉じる
     if (!name && !avatarCheck) {
       alert("何も変更されてません");
@@ -80,70 +51,31 @@ const ProfileModal = ({ modal, closeModal }) => {
     // firestoreの更新
     if (name) {
       db.collection("users")
-        // .where("id", "==", user.uid)
-        // .get()
         .doc(user.uid)
         .update({
           name,
         })
         .then(() => {
-          // conf.docs[0].ref.update({
-          //   name,
-          // });
           console.log("store,name,update");
           closeModal();
         })
         .catch((err) => console.log(err));
-
-      // authの更新
-      //   information
-      //     .updateProfile({
-      //       // 名前変更
-      //       displayName: name,
-      //     })
-      //     .then(() => {
-      //       console.log("auth,name,update");
-      //       setName("");
-      //       closeModal();
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
     }
 
     if (avatarImage) {
       // firestoreの更新
       db.collection("users")
-        // .where("id", "==", user.uid)
-        // .get()
         .doc(user.uid)
         .update({
           avatar: avatarUrl,
         })
         .then(() => {
-          // conf.docs[0].ref.update({
-          //   avatar: avatarUrl,
-          // });
           console.log("store,avatar,update");
           closeModal();
           setAvatarCheck(false);
           setAvatarImage("");
         })
         .catch((err) => console.log(err));
-
-      // authの更新
-      // information
-      //   .updateProfile({
-      //     // 画像変更
-      //     photoURL: avatarUrl,
-      //   })
-      //   .then(() => {
-      //     console.log("auth,avatar更新成功");
-      //     closeModal();
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     }
   };
 

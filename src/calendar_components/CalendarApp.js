@@ -1,58 +1,11 @@
 import React, { useState } from "react";
 
-// フルカレンダー
-// import FullCalendar from "@fullcalendar/react";
-// import dayGridPlugin from "@fullcalendar/daygrid";
-
-// export const CalendarApp = () => {
-//   return <FullCalendar
-//   plugins={[dayGridPlugin]}
-//   initialView="dayGridMonth"
-//   />;
-// };
-
-// googleAPI
-// import CalendarApi from './CalendarApi'
-
-// export const CalendarApp = ()=>{
-//   const [calendar, setCalendar] = useState('')
-
-//   const getCalendar = async ()=>{
-//     const response = await CalendarApi.get("/calendars",{
-//       params:{
-//         "kind": "calendar#calendar",
-//         "etag": etag,
-//         "id": string,
-//         "summary": string,
-//         "description": string,
-//         "location": string,
-//         "timeZone": string,
-//         "conferenceProperties": {
-//           "allowedConferenceSolutionTypes": [
-//             string
-//           ]
-//         }
-//       }
-//     })
-//     setCalendar(response.data.ja.japanese#holiday@group.v.calendar.google.com)
-
-//   }
-
-//   return <div>{getCalendar}</div>
-
-// }
-
-// reactカレンダー;
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button, Modal, Icon, Form } from "semantic-ui-react";
 
 export const CalendarApp = () => {
   const [value, onChange] = useState(new Date());
-  const [dayModal, setDayModal] = useState(false);
-
-  const openModal = () => setDayModal(true);
-  const closeModal = () => setDayModal(false);
 
   return (
     <div className="Sample">
@@ -60,7 +13,7 @@ export const CalendarApp = () => {
         <main className="Sample__container__content">
           <Calendar onChange={onChange} value={value} />
         </main>
-        <Modal size="small" open={dayModal} onClose={closeModal}>
+        <Modal size="small">
           <Modal.Header>予定管理</Modal.Header>
           <Modal.Content>
             <Form>
@@ -72,7 +25,7 @@ export const CalendarApp = () => {
           <Modal.Actions>
             <Icon name="checkmark" />
             　追加
-            <Button color="red" inverted onClick={closeModal}>
+            <Button color="red" inverted>
               <Icon name="remove" />
               　キャンセル
             </Button>

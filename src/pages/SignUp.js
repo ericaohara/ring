@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import firebase from "../config/firebase";
 import { AuthContext } from "../AuthService";
-import shortid from "shortid";
 
 import {
   Grid,
@@ -34,11 +33,8 @@ const SignUp = ({ history }) => {
 
     firebase
       .auth()
-      // emailとpasswordを元にユーザーを作る
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        // ユーザーのプロフィールを更新
-        // createUserWithEmailAndPasswordの返り値
         const user = firebase.auth().currentUser;
 
         user

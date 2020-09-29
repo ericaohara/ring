@@ -6,7 +6,7 @@ import MemberPlusModal from "./MemberPlusModal";
 import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
 
 const GroupConfigModal = ({ modal, closeModal }) => {
-  const { groups, setGroups, user } = useContext(AuthContext);
+  const { groups } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [updateGroupId, setUpdateGroupId] = useState(null);
   const [modalMemberPlus, setModalMemberPlus] = useState(false);
@@ -50,38 +50,6 @@ const GroupConfigModal = ({ modal, closeModal }) => {
         console.log(err);
       });
   };
-
-  // const checkBox = async (id) => {
-  //   // updateは非同期
-  //   await db
-  //     .collection("users")
-  //     .doc(user.uid)
-  //     .collection("groups")
-  //     .doc()
-  //     .update({
-  //       checked: false,
-  //     });
-  //   await db
-  //     .collection("users")
-  //     .doc(user.uid)
-  //     .collection("groups")
-  //     .where("groupId", "==", id)
-  //     .update({
-  //       checked: true,
-  //     });
-  //   const groupsUpdate = await db
-  //     .collection("users")
-  //     .doc(user.uid)
-  //     .collection("groups")
-  //     .get()
-  //     .then((querySnapshot) => {
-  //       querySnapshot.forEach((doc) => {
-  //         doc.data();
-  //       });
-  //     });
-
-  //   return setGroups(groupsUpdate);
-  // };
 
   useEffect(() => {
     if (!groups) {
@@ -171,39 +139,3 @@ const GroupConfigModal = ({ modal, closeModal }) => {
 };
 
 export default GroupConfigModal;
-
-// 追加処理
-
-// const [columns, setColumns] = useState([]);
-
-//   const addColumn = () => {
-//     setColumns([...columns, { id: `id${columns.length + 1}`, value: "" }]);
-//     console.log(email);
-//   };
-
-//   const columnPlus = columns.map((input) => {
-//     const handleChange = (e) => {
-//       const plus = columns.map((column) => {
-//         if (column.id === e.target.id) {
-//           return { ...column, value: e.target.value };
-//         } else {
-//           return column;
-//         }
-//       });
-//       setColumns(plus);
-//     };
-
-//     return (
-//       <Input
-//         type="email"
-//         id={input.id}
-//         value={input.value}
-//         onChange={handleChange}
-//         placeholder="アドレスを入力"
-//         icon={<Icon name="minus circle" inverted color="red" link />}
-//         // action={{ icon: "minus circle", color: "red" }}
-//         style={{ marginTop: "10px" }}
-//         // onClick={columnDelete}
-//       />
-//     );
-//   });

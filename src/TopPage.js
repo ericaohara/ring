@@ -123,6 +123,3 @@ const TopPage = () => {
 };
 
 export default TopPage;
-
-// <Grid.Column>{/* <CalendarApp /> */}</Grid.Column>;
-// columns = "equal";

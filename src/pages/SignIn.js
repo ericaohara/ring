@@ -47,7 +47,6 @@ const SignIn = ({ history }) => {
   };
 
   if (user) {
-    // setLoading(true);
     return <Redirect to="/" />;
   }
 

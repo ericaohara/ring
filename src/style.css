@@ -2,7 +2,6 @@ html,
 body,
 .app {
   height: 100vh;
-  /* background: #fff5ee; */
   font-size: 16px;
 }
 
@@ -14,17 +13,7 @@ body,
   color: #ffdab9;
 }
 
-/* .main__tweet {
-  height: 100vh;
-  overflow-y: scroll;
-} */
-
 .tweet__form {
-  /* position: fixed !important;
-  margin-left: 150px;
-  margin-top: 0;
-  left: 0;
-  right: 1rem;   */
   z-index: 10;
   position: relative;
 }
@@ -42,23 +31,17 @@ body,
   position: absolute;
   top: 20px;
   right: 10px;
-
-  /* top: -70px;
-  right: -300px; */
 }
 
 .form__btn {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  /* margin-left: 200px; */
 }
 
 .vertical {
-  /* height: 100vh; */
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 }
 
 .chat__style {
@@ -68,16 +51,6 @@ body,
 .react-calendar__month-view__days__day--weekend {
   color: blue;
 }
-
-/* .react-calendar__tile--active {
-  background: red;
-  color: white;
-} */
-
-/* .react-calendar__tile--active:enabled:hover,
-.react-calendar__tile--active:enabled:focus {
-  background: red;
-} */
 
 .fixed_item {
   position: -webkit-sticky;
@@ -101,67 +74,3 @@ body,
   color: #fff;
   padding: 20px;
 }
-
-.top__bar {
-}
-
-/* ファイルボタン変えたい
-.input__file {
-  border: 0;
-  border-radius: 0;
-  background: #ccc;
-} */
-
-/* body {
-  margin: 0;
-  font-family: Segoe UI, Tahoma, sans-serif;
-}
-
-.Sample {
-  input,
-  button {
-    appearance: none;
-    border: 0;
-    border-radius: 5px;
-    background: #4676d7;
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 16px;
-  }
-
-  header {
-    background-color: rgb(50, 54, 57);
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    color: white;
-  }
-
-  &__container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    margin: 10px 0;
-    padding: 10px;
-
-    & > * {
-      & > * {
-        margin: 10px;
-      }
-    }
-
-    &__content {
-      display: flex;
-      max-width: 100%;
-      flex-basis: 420px;
-      flex-direction: column;
-      flex-grow: 100;
-      align-items: stretch;
-      padding-top: 1em;
-
-      .react-calendar {
-        margin: 0 auto;
-      }
-    }
-  }
-} */

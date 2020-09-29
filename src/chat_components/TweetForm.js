@@ -26,7 +26,7 @@ const TweetForm = ({
   upload,
   setUpload,
 }) => {
-  const { user, users, groups, currentGroup } = useContext(AuthContext);
+  const { user, users, currentGroup } = useContext(AuthContext);
 
   // firebase
   const db = firebase.firestore();
@@ -36,9 +36,6 @@ const TweetForm = ({
     firebase
       .firestore()
       .collection("chat")
-      // chatの変更を監視
-      // 変更があったらコールバック関数を発火
-      // 引数は変更後の値
       // 昇順
       .orderBy("createdAt", "desc")
       .onSnapshot(async (snapshot) => {
@@ -53,7 +50,6 @@ const TweetForm = ({
             };
           })
         );
-        // firebaseから複製した配列でstateを更新
         setTweets(message);
       });
   }, []);
@@ -273,9 +269,4 @@ const TweetForm = ({
   );
 };
 
-// const mapStateToProps = (state) => {
-//   return { chats: state.chats };
-// };
-
 export default TweetForm;
-// export default connect(mapStateToProps, { tweetChats })(TweetForm);

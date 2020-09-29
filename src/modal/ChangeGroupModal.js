@@ -47,8 +47,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         groupName,
         owner: user.uid,
         users: firebase.firestore.FieldValue.arrayUnion(user.uid),
-        // owner: db.doc(`/users/${user.uid}`),
-        // users: [db.doc(`/users/${user.uid}`)],
         createdAt: new Date(),
       })
       .then(() => {
@@ -59,22 +57,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
       });
   };
 
-  // const testGr = () => {
-  //   if (groups) {
-  //     return groups.map((g) => {
-  //       return g.users.map((user) => {
-  //         user.get().then((res) => {
-  //           return res.data().id === user.uid;
-  //         });
-  //       });
-  //     });
-  //   }
-  // };
-
-  // console.log(testGr()); undefined
-
-  // 自分がもってるグループだけ表示させたい
-  // 現状全部のグループが出力されている
   /** グループ毎にボタンを増やす関数*/
   const addBtn = () => {
     if (groups && user && users) {
@@ -96,114 +78,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         }
       });
     }
-    // if (groups && user && users) {
-    //   return groups.map((group) => {
-    //     const checkId = group.users.filter((u) => u === user.uid);
-    //     console.log(checkId);
-    //     if (checkId.length > 0) {
-    //       return (
-    //         <Button
-    //           onClick={() => {
-    //             changeGroup(group.id);
-    //           }}
-    //           type="button"
-    //           basic
-    //           color="blue"
-    //         >
-    //           {group.groupName}
-    //         </Button>
-    //       );
-    //     }
-    //   });
-    // }
   };
-
-  // const addBtn = () => {
-  //   if (groups) {
-  //     const checkId = groups.find((group) => group.id === currentGroup);
-  //     // 現在のgroupIDとgroupsのIDが合っていたらグループ名のボタンを表示
-
-  //     if (checkId) {
-  //       return groups.map((group) => {
-  //         return (
-  //           <Button
-  //             id={group.id}
-  //             onClick={() => {
-  //               changeGroup(group.id);
-  //             }}
-  //             type="button"
-  //             basic
-  //             color="blue"
-  //           >
-  //             {group.groupName}
-  //           </Button>
-  //         );
-  //       });
-  //     }
-  //   }
-  // };
-
-  // 配列の中の配列から値を取り出すパターン１
-  // const dbUser = users.find((_user) => _user.id === user.uid);
-  // return dbUser.groups.map((group) => {
-  //   return (
-  //     <Button
-  //       id={group.id}
-  //       onClick={changeGroup}
-  //       type="button"
-  //       basic
-  //       color="blue"
-  //       active={group.id === activeGroup}
-  //     >
-  //       {group.groupName}
-  //     </Button>
-  //   );
-  // });
-
-  // 配列の中の配列から値を取り出すパターン２
-  // let groupButtons;
-  // users.forEach((dbUser) => {
-  //   if (dbUser.id === user.uid) {
-  //     groupButtons = dbUser.groups.map((group) => {
-  //       return (
-  //         <Button
-  //           id={group.id}
-  //           onClick={changeGroup}
-  //           type="button"
-  //           basic
-  //           color="blue"
-  //           active={group.id === activeGroup}
-  //         >
-  //           {group.groupName}
-  //         </Button>
-  //       );
-  //     });
-  //   }
-  // });
-  // return groupButtons;
-
-  // const handleFirstGroup = () => {
-  //   const firstGroup = groups[0];
-  //   if (firstLoad && groups.length > 0) {
-  //     setCurrentGroup(firstGroup);
-  //     setActiveGroup(firstGroup);
-  //   }
-  //   setFirstLoad(false);
-  // };
-
-  // const addId =()=>{
-  //   const groupDateIds = users.find((user)=>{user.id === user.uid})
-  //   const groupGetId = groupDateIds.map((groupDateId) => {
-  //     return groupDateId.
-  //   });
-  // }
-
-  // const addId = () => {
-  //   if (!users) {
-  //     return;
-  //   }
-  //   return users.map((user) => user.id);
-  // };
 
   return (
     <>
@@ -257,21 +132,3 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
 };
 
 export default ChangeGroupModal;
-
-// const add = buttons.map((button) => {
-//   const addBtn = (e) => {
-//     const add = buttons.map((button) => {
-//       if (button.name === e.target.name) {
-//         return { ...button, name: e.target.name };
-//       } else {
-//         return button;
-//       }
-//     });
-//     setButtons(add);
-//   };
-//   return (
-//     <Button name={button.name} basic color="blue">
-//       {groupName}
-//     </Button>
-//   );
-// });
