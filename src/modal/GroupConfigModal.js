@@ -14,7 +14,7 @@ import {
 } from "semantic-ui-react";
 
 const GroupConfigModal = ({ modal, closeModal }) => {
-  const { groups } = useContext(AuthContext);
+  const { groups, setCurrentGroup } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [updateGroupId, setUpdateGroupId] = useState(null);
   const [modalMemberPlus, setModalMemberPlus] = useState(false);
@@ -41,21 +41,6 @@ const GroupConfigModal = ({ modal, closeModal }) => {
       });
     setName("");
     closeModal();
-  };
-
-  /** グループ削除 */
-  const removeGroup = (id) => {
-    db.collection("groups")
-      .where("id", "==", id)
-      .get()
-      .then((res) => {
-        res.docs.map((doc) => {
-          doc.ref.delete();
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   useEffect(() => {
@@ -113,26 +98,15 @@ const GroupConfigModal = ({ modal, closeModal }) => {
         <Modal.Actions>
           <Button basic color="red" onClick={closeModal}>
             <Icon name="remove" />
-            {Responsive.onlyMobile.minWidth ? "" : "キャンセル"}
+            キャンセル
           </Button>
           <Button onClick={openMemberPlusModal} basic color="orange">
             <Icon name="users" />
-            {Responsive.onlyMobile.minWidth ? "" : "メンバーを招待"}
-          </Button>
-          <Button
-            basic
-            color="grey"
-            id={updateGroupId}
-            onClick={(e) => {
-              removeGroup(e.target.id);
-            }}
-          >
-            <Icon name="trash alternate outline" />
-            {Responsive.onlyMobile.minWidth ? "" : "削除"}
+            メンバーを招待
           </Button>
           <Button basic color="green" onClick={onBtnClick}>
             <Icon name="sync alternate" />
-            {Responsive.onlyMobile.minWidth ? "" : "変更"}
+            変更
           </Button>
           <MemberPlusModal
             modal={modalMemberPlus}

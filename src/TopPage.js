@@ -202,7 +202,7 @@ const TopPage = () => {
               </div>
               {/* humbargerMenu */}
               <Grid.Column>
-                <Sidebar.Pushable as={Segment}>
+                <Sidebar.Pushable as={Segment} style={{ position: "fixed" }}>
                   <Sidebar
                     as={Menu}
                     animation="overlay"

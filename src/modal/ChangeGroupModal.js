@@ -6,9 +6,7 @@ import GroupConfigModal from "./GroupConfigModal.js";
 import { Button, Modal, Icon, Form, Input } from "semantic-ui-react";
 
 const ChangeGroupModal = ({ modal, closeModal }) => {
-  const { groups, users, user, currentGroup, setCurrentGroup } = useContext(
-    AuthContext
-  );
+  const { groups, users, user, setCurrentGroup } = useContext(AuthContext);
 
   const [groupName, setGroupName] = useState("");
   const [configModal, setConfigModal] = useState(false);

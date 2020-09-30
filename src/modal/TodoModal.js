@@ -7,7 +7,7 @@ const TodoModal = ({ modal, closeModal }) => {
     <>
       <Modal size="small" open={modal} onClose={closeModal}>
         <Modal.Header>TODO</Modal.Header>
-        <Modal.Content>
+        <Modal.Content style={{ height: 500, overflowY: "scroll" }}>
           <TodoApp />
         </Modal.Content>
         <Modal.Actions>

@@ -144,7 +144,3 @@ const SignUp = ({ history }) => {
 };
 
 export default SignUp;
-
-// ねこ
-// "https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/avatar%2Fanimal_chara_bad4_neko.png?alt=media&token=783201be-929d-44f4-8841-78d2d4d40733",
-// "https://firebasestorage.googleapis.com/v0/b/ring-6c2f7.appspot.com/o/images%2Fmonster05.png?alt=media&token=afabf18c-ef7f-41a9-9465-2f44f0d17fd5"

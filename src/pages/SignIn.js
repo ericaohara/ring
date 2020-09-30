@@ -22,7 +22,7 @@ const SignIn = ({ history }) => {
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
   const [reset, setReset] = useState("");
-  const { user, users, loading, setLoading, groups } = useContext(AuthContext);
+  const { user, loading, setLoading } = useContext(AuthContext);
 
   const onClickSubmit = (e) => {
     setLoading(true);
@@ -122,9 +122,9 @@ const SignIn = ({ history }) => {
               </Message>
               <Message>
                 パスワードをお忘れの方は
-                <div onClick={openModal} style={{ color: "blue" }}>
+                <span onClick={openModal} style={{ color: "#4183c4" }}>
                   こちら
-                </div>
+                </span>
               </Message>
             </Grid.Column>
           </Grid>

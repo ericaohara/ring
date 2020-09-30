@@ -75,11 +75,11 @@ const MemberPlusModal = ({ modal, closeModal, groupId }) => {
         <Modal.Actions>
           <Button basic color="red" onClick={closeModal}>
             <Icon name="remove" />
-            　キャンセル
+            キャンセル
           </Button>
           <Button basic color="green">
             <Icon name="checkmark" />
-            　保存
+            保存
           </Button>
         </Modal.Actions>
       </Modal>
