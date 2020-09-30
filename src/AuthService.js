@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser == null) {
-        console.log(firebaseUser, "user");
         setLoading(false);
       }
     });
@@ -39,7 +38,6 @@ export const AuthProvider = ({ children }) => {
           };
         });
         setUsers(userContent);
-        console.log(userContent);
       });
   }, []);
 
@@ -58,9 +56,6 @@ export const AuthProvider = ({ children }) => {
               id: doc.id,
             };
           });
-          console.log(groupContent);
-          // if (groupContent.length > 0) {
-          // }
           setCurrentGroup(groupContent[0].id);
           setGroups(groupContent);
         });

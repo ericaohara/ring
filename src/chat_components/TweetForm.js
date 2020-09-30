@@ -65,22 +65,14 @@ const TweetForm = ({
   // firebaseにデータを追加
   const data = () => {
     const userRef = db.collection("users").doc(user.uid);
-    db.collection("chat")
-      .doc()
-      .set({
-        // タイムスタンプ
-        createdAt: new Date(),
-        content: text,
-        image: imageUrl,
-        groupId: currentGroup,
-        createUser: userRef,
-      })
-      .then(() => {
-        console.log("データ追加成功");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    db.collection("chat").doc().set({
+      // タイムスタンプ
+      createdAt: new Date(),
+      content: text,
+      image: imageUrl,
+      groupId: currentGroup,
+      createUser: userRef,
+    });
   };
 
   // ツイート追加
@@ -131,20 +123,7 @@ const TweetForm = ({
     setOpen(false);
     // アップロード処理
     const uploadTask = storage.ref(`/images/${images.name}`).put(images);
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      next,
-      error,
-      complete
-    );
-  };
-
-  const next = (snapshot) => {
-    // 進行中のsnapshotを得る
-    // アップロードの進行度を表示
-    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log(percent + "% done");
-    console.log(snapshot);
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, error, complete);
   };
 
   // エラーハンドリング
@@ -159,7 +138,6 @@ const TweetForm = ({
       .getDownloadURL()
       .then((fireBaseUrl) => {
         setImageUrl(fireBaseUrl);
-        console.log(fireBaseUrl);
       });
   };
 
@@ -183,14 +161,7 @@ const TweetForm = ({
     setUpload(false);
     // firebase画像消し方
     const desertRef = storage.ref(`/images/${images.name}`);
-    desertRef
-      .delete()
-      .then(() => {
-        console.log("画像削除成功");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    desertRef.delete();
   };
 
   return (

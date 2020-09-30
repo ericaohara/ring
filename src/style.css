@@ -52,6 +52,10 @@ body,
   color: blue;
 }
 
+.Sample {
+  width: 80%;
+}
+
 .fixed_item {
   position: -webkit-sticky;
   position: sticky;

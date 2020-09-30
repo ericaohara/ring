@@ -23,15 +23,7 @@ const TweetItem = ({ imageUrl, id, content, time, groupId }) => {
       .catch((err) => console.log(err));
 
     if (imageUrl) {
-      storage
-        .refFromURL(imageUrl)
-        .delete()
-        .then(() => {
-          console.log("画像削除成功");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      storage.refFromURL(imageUrl).delete();
     }
   };
 

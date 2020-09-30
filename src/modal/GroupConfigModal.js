@@ -3,7 +3,15 @@ import { AuthContext } from "../AuthService";
 import firebase from "firebase";
 import MemberPlusModal from "./MemberPlusModal";
 
-import { Button, Modal, Icon, Form, Input, Checkbox } from "semantic-ui-react";
+import {
+  Button,
+  Modal,
+  Icon,
+  Form,
+  Input,
+  Checkbox,
+  Responsive,
+} from "semantic-ui-react";
 
 const GroupConfigModal = ({ modal, closeModal }) => {
   const { groups } = useContext(AuthContext);
@@ -41,7 +49,6 @@ const GroupConfigModal = ({ modal, closeModal }) => {
       .where("id", "==", id)
       .get()
       .then((res) => {
-        console.log(res);
         res.docs.map((doc) => {
           doc.ref.delete();
         });
@@ -106,11 +113,11 @@ const GroupConfigModal = ({ modal, closeModal }) => {
         <Modal.Actions>
           <Button basic color="red" onClick={closeModal}>
             <Icon name="remove" />
-            キャンセル
+            {Responsive.onlyMobile.minWidth ? "" : "キャンセル"}
           </Button>
           <Button onClick={openMemberPlusModal} basic color="orange">
             <Icon name="users" />
-            メンバーを招待
+            {Responsive.onlyMobile.minWidth ? "" : "メンバーを招待"}
           </Button>
           <Button
             basic
@@ -121,11 +128,11 @@ const GroupConfigModal = ({ modal, closeModal }) => {
             }}
           >
             <Icon name="trash alternate outline" />
-            削除
+            {Responsive.onlyMobile.minWidth ? "" : "削除"}
           </Button>
           <Button basic color="green" onClick={onBtnClick}>
             <Icon name="sync alternate" />
-            変更
+            {Responsive.onlyMobile.minWidth ? "" : "変更"}
           </Button>
           <MemberPlusModal
             modal={modalMemberPlus}

@@ -9,9 +9,9 @@ const SideBar = ({
   modalChangeGroup,
   setModalChangeGroup,
   openChangeGroupModal,
+  modalProfile,
+  setModalProfile,
 }) => {
-  const [modalProfile, setModalProfile] = useState(false);
-
   // モーダル
   const openProfileModal = () => setModalProfile(true);
   const closeProfileModal = () => setModalProfile(false);
@@ -26,7 +26,7 @@ const SideBar = ({
       <div>
         {/* pc */}
         <Responsive minWidth={1031}>
-          <Grid style={{ width: "45%" }}>
+          <Grid>
             <Grid.Row>
               <div
                 onClick={scrollToTop}
@@ -43,7 +43,6 @@ const SideBar = ({
             <Grid.Row style={{ marginTop: 50 }}>
               <div style={{ width: "100%", textAlign: "center" }}>
                 <Button
-                  // プロフィール
                   circular
                   color="blue"
                   size="big"
@@ -61,7 +60,6 @@ const SideBar = ({
             <Grid.Row style={{ marginTop: 30 }}>
               <div style={{ width: "100%", textAlign: "center" }}>
                 <Button
-                  // グループ設定
                   circular
                   size="big"
                   color="orange"
@@ -82,6 +80,7 @@ const SideBar = ({
             </Grid.Row>
           </Grid>
         </Responsive>
+
         {/* tab */}
         <Responsive maxWidth={1030}>
           <Grid>
@@ -99,9 +98,8 @@ const SideBar = ({
               </div>
             </Grid.Row>
             <Grid.Row style={{ marginTop: 50 }}>
-              <div style={{ width: "100%", textAlign: "center" }}>
+              <div style={{ width: "100%" }}>
                 <Button
-                  // プロフィール
                   circular
                   color="blue"
                   size="big"
@@ -117,9 +115,8 @@ const SideBar = ({
               </div>
             </Grid.Row>
             <Grid.Row style={{ marginTop: 30 }}>
-              <div style={{ width: "100%", textAlign: "center" }}>
+              <div style={{ width: "100%" }}>
                 <Button
-                  // グループ設定
                   circular
                   size="big"
                   color="orange"

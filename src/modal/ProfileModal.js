@@ -56,7 +56,6 @@ const ProfileModal = ({ modal, closeModal }) => {
           name,
         })
         .then(() => {
-          console.log("store,name,update");
           closeModal();
         })
         .catch((err) => console.log(err));
@@ -70,7 +69,6 @@ const ProfileModal = ({ modal, closeModal }) => {
           avatar: avatarUrl,
         })
         .then(() => {
-          console.log("store,avatar,update");
           closeModal();
           setAvatarCheck(false);
           setAvatarImage("");
@@ -90,7 +88,6 @@ const ProfileModal = ({ modal, closeModal }) => {
     auth
       .sendPasswordResetEmail(emailAddress)
       .then(() => {
-        console.log("パスワードリセット");
         closePasswordModal();
         setReset("");
       })
@@ -106,7 +103,6 @@ const ProfileModal = ({ modal, closeModal }) => {
       alert("メールアドレスを入力してください");
     } else if (!password) {
       alert("パスワードを入力してください");
-      console.log(password, "pass");
     } else {
       const credential = firebase
         .auth()
@@ -116,7 +112,6 @@ const ProfileModal = ({ modal, closeModal }) => {
       information
         .updateEmail(email)
         .then(() => {
-          console.log("アドレス変更完了");
           setEmail("");
           setPassword("");
           closeModal();
@@ -139,19 +134,7 @@ const ProfileModal = ({ modal, closeModal }) => {
     const uploadTask = storage
       .ref(`/icons/${avatarImage.name}`)
       .put(avatarImage);
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      next,
-      error,
-      complete
-    );
-  };
-
-  const next = (snapshot) => {
-    // 進行中のsnapshotを得る
-    // アップロードの進行度を表示
-    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log(percent + "% done");
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, error, complete);
   };
 
   // エラーハンドリング
@@ -230,15 +213,19 @@ const ProfileModal = ({ modal, closeModal }) => {
     <>
       <Modal open={modal} onClose={closeModal}>
         <Modal.Header>プロフィール</Modal.Header>
-        <Modal.Content style={{ width: "100%" }}>
-          <Grid.Column style={{ margin: "0 auto", width: "25%" }}>
-            <Grid.Row centered>
-              {checkPrev()}
-              <Button onClick={prevAvatar} basic>
-                アバタープレビュー
-              </Button>
-            </Grid.Row>
-          </Grid.Column>
+        <Modal.Content>
+          {checkPrev()}
+          <div
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Button
+              onClick={prevAvatar}
+              basic
+              style={{ width: "70%", margin: "0 auto" }}
+            >
+              アバタープレビュー
+            </Button>
+          </div>
           <Form>
             <Form.Field>
               <label>アバターの変更</label>
@@ -257,7 +244,7 @@ const ProfileModal = ({ modal, closeModal }) => {
             </Form.Field>
           </Form>
         </Modal.Content>
-        <Modal.Actions>
+        <Modal.Actions style={{ width: "100%" }}>
           <Button onClick={openPasswordModal} basic color="blue">
             <Icon name="key" />
             パスワード変更

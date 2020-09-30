@@ -48,12 +48,6 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
         owner: user.uid,
         users: firebase.firestore.FieldValue.arrayUnion(user.uid),
         createdAt: new Date(),
-      })
-      .then(() => {
-        console.log("グループ追加成功！");
-      })
-      .catch((err) => {
-        console.log(err);
       });
   };
 
@@ -108,7 +102,7 @@ const ChangeGroupModal = ({ modal, closeModal }) => {
             キャンセル
           </Button>
           <Button basic color="black" onClick={openGroupConfigModal}>
-            <Icon name="whmcs" onClick={openGroupConfigModal} />
+            <Icon name="setting" onClick={openGroupConfigModal} />
             設定
           </Button>
           <Button
