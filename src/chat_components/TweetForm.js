@@ -123,7 +123,20 @@ const TweetForm = ({
     setOpen(false);
     // アップロード処理
     const uploadTask = storage.ref(`/images/${images.name}`).put(images);
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, error, complete);
+    uploadTask.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      next,
+      error,
+      complete
+    );
+  };
+
+  const next = (snapshot) => {
+    // 進行中のsnapshotを得る
+    // アップロードの進行度を表示
+    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(percent + "% done");
+    console.log(snapshot);
   };
 
   // エラーハンドリング

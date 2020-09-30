@@ -134,7 +134,19 @@ const ProfileModal = ({ modal, closeModal }) => {
     const uploadTask = storage
       .ref(`/icons/${avatarImage.name}`)
       .put(avatarImage);
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, error, complete);
+    uploadTask.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      next,
+      error,
+      complete
+    );
+  };
+
+  const next = (snapshot) => {
+    // 進行中のsnapshotを得る
+    // アップロードの進行度を表示
+    const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log(percent + "% done");
   };
 
   // エラーハンドリング
